@@ -551,19 +551,21 @@
     }
 
     @php
-    $achievementsJson = $achievements - > map(function($a) {
+    $achievementsJson = $achievements->map(function($a) {
         return [
-            'id' => $a - > id,
-            'title' => $a - > title,
-            'description' => $a - > description,
-            'level' => $a - > level,
-            'date' => \Carbon\ Carbon::parse($a - > date) - > format('d M Y'),
-            'attachment' => $a - > attachment ? Storage::url($a - > attachment) : null,
-            'attachment_name' => $a - > attachment ? basename($a - > attachment) : null,
+            'id' => $a->id,
+            'title' => $a->title,
+            'description' => $a->description,
+            'level' => $a->level,
+            'date' => \Carbon\Carbon::parse($a->date)->format('d M Y'),
+            'attachment' => $a->attachment ? Storage::url($a->attachment) : null,
+            'attachment_name' => $a->attachment ? basename($a->attachment) : null,
         ];
     });
     @endphp
+
     var achievementsData = @json($achievementsJson);
+
 
     function showAchievement(id) {
         var ach = achievementsData.find(function(a) {

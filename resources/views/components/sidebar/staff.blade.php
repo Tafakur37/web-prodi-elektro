@@ -6,9 +6,7 @@
     </li>
 
     <!-- AKADEMIK -->
-    <li class="nav-item mt-3 mb-1 px-3 text-uppercase text-muted" style="font-size: 0.75rem; letter-spacing: 1px; font-weight: 600;">
-        Akademik
-    </li>
+    <li class="sidebar-heading">Akademik</li>
     <li class="nav-item">
         <a class="nav-link {{ request()->routeIs('staff.schedules.*') ? 'active' : '' }}" href="{{ route('staff.schedules.index') }}">
             <i class="bi bi-calendar-check me-3 fs-5"></i> Jadwal Kuliah
@@ -31,9 +29,7 @@
     </li>
 
     <!-- KESISWAAN -->
-    <li class="nav-item mt-3 mb-1 px-3 text-uppercase text-muted" style="font-size: 0.75rem; letter-spacing: 1px; font-weight: 600;">
-        Kesiswaan
-    </li>
+    <li class="sidebar-heading">Kesiswaan</li>
     <li class="nav-item">
         <a class="nav-link {{ request()->routeIs('staff.students.*') ? 'active' : '' }}" href="{{ route('staff.students.index') }}">
             <i class="bi bi-people me-3 fs-5"></i> Akun Mahasiswa
@@ -61,9 +57,7 @@
     </li>
 
     <!-- KOMUNIKASI & AKTIVITAS -->
-    <li class="nav-item mt-3 mb-1 px-3 text-uppercase text-muted" style="font-size: 0.75rem; letter-spacing: 1px; font-weight: 600;">
-        Komunikasi & Lainnya
-    </li>
+    <li class="sidebar-heading">Komunikasi & Lainnya</li>
     <li class="nav-item">
         <a class="nav-link {{ request()->routeIs('staff.announcements.*') ? 'active' : '' }}" href="{{ route('staff.announcements.index') }}">
             <i class="bi bi-megaphone me-3 fs-5"></i> Pengumuman
@@ -81,9 +75,7 @@
     </li>
 
     <!-- PENGATURAN -->
-    <li class="nav-item mt-3 mb-1 px-3 text-uppercase text-muted" style="font-size: 0.75rem; letter-spacing: 1px; font-weight: 600;">
-        Pengaturan
-    </li>
+    <li class="sidebar-heading">Pengaturan</li>
     <li class="nav-item">
         <a class="nav-link {{ request()->routeIs('staff.profile') ? 'active' : '' }}" href="{{ route('staff.profile') }}">
             <i class="bi bi-person-circle me-3 fs-5"></i> Pengaturan Profil
