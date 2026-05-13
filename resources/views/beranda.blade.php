@@ -7,7 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         .hero-section {
-            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1517420704952-d9f39e95b43e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background: linear-gradient(rgba(0, 15, 92, 0.6), rgba(2, 12, 57, 0.6)), url('/images/bg-beranda.png');
             background-size: cover;
             color: white;
             padding: 100px 0;
@@ -16,7 +16,8 @@
 </head>
 <body>
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+        <nav class="navbar navbar-expand-lg navbar-dark shadow-sm"
+             style="background-color: #020d34;">
         <div class="container">
             <a class="navbar-brand fw-bold" href="#">ELEKTRO PRODI</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -25,6 +26,7 @@
             <div class="collapse navbar-collapse" id="navbarNav">
     <ul class="navbar-nav ms-auto">
         @auth
+
             <li class="nav-item">
                 <span class="nav-link text-light">Halo, {{ Auth::user()->name }}</span>
             </li>
@@ -70,32 +72,133 @@
         @yield('main_content')
         </div>
 
-    <section class="py-5 bg-light">
-        <div class="container text-center">
-            <div class="row">
-                <div class="col-md-4 mb-4">
-                    <div class="card h-100 border-0 shadow-sm p-3">
-                        <h3>Visi</h3>
-                        <p>Menjadi pusat unggulan pendidikan teknik elektro yang inovatif di tingkat nasional.</p>
-                    </div>
-                </div>
-                <div class="col-md-4 mb-4">
-                    <div class="card h-100 border-0 shadow-sm p-3">
-                        <h3>Akreditasi</h3>
-                        <p>Program studi kami telah terakreditasi "Unggul" oleh BAN-PT dengan standar fasilitas internasional.</p>
-                    </div>
-                </div>
-                <div class="col-md-4 mb-4">
-                    <div class="card h-100 border-0 shadow-sm p-3">
-                        <h3>Karir</h3>
-                        <p>Lulusan kami tersebar di berbagai sektor mulai dari PLN, perusahaan teknologi, hingga industri manufaktur.</p>
-                    </div>
+    <style>
+    .info-card {
+        background: linear-gradient(135deg, #001f3f, #003366);
+        color: white;
+        border-radius: 20px;
+        padding: 30px 20px;
+        transition: 0.3s ease;
+        height: 100%;
+    }
+
+    .info-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    }
+
+    .info-icon {
+        font-size: 50px;
+        margin-bottom: 20px;
+    }
+
+    .info-title {
+        font-weight: bold;
+        margin-bottom: 15px;
+    }
+</style>
+
+<style>
+    .feature-section {
+        background-color: #f8f9fc;
+    }
+
+    .feature-card {
+        background: white;
+        border: none;
+        border-radius: 18px;
+        padding: 35px 30px;
+        height: 100%;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+        border-top: 4px solid #001f3f;
+    }
+
+    .feature-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+    }
+
+    .feature-title {
+        color: #001f3f;
+        font-weight: 700;
+        margin-bottom: 18px;
+        font-size: 1.5rem;
+    }
+
+    .feature-text {
+        color: #555;
+        line-height: 1.8;
+        font-size: 15px;
+    }
+
+    .section-title {
+        color: #001f3f;
+        font-weight: bold;
+    }
+
+    .section-subtitle {
+        color: #6c757d;
+    }
+</style>
+
+<section class="feature-section py-5">
+
+    <div class="container">
+
+        <div class="text-center mb-5">
+            <h2 class="section-title">Teknik Elektro</h2>
+            <p class="section-subtitle">
+                Pendidikan berkualitas untuk membangun inovasi teknologi masa depan
+            </p>
+        </div>
+
+        <div class="row g-4">
+
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <h3 class="feature-title">Visi</h3>
+
+                    <p class="feature-text">
+                        Menjadi pusat unggulan pendidikan teknik elektro
+                        yang inovatif, adaptif terhadap perkembangan teknologi,
+                        dan berdaya saing di tingkat nasional.
+                    </p>
                 </div>
             </div>
-        </div>
-    </section>
 
-    <footer class="bg-dark text-white py-4 text-center">
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <h3 class="feature-title">Akreditasi</h3>
+
+                    <p class="feature-text">
+                        Program studi telah terakreditasi unggul dengan dukungan
+                        fasilitas modern, tenaga pengajar profesional,
+                        dan kurikulum berbasis industri.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <h3 class="feature-title">Karir</h3>
+
+                    <p class="feature-text">
+                        Lulusan memiliki peluang karir luas di bidang energi,
+                        telekomunikasi, otomasi industri, teknologi digital,
+                        dan berbagai sektor strategis lainnya.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+    <footer class="text-white py-4 text-center"
+            style="background-color: #020d34;">
         <div class="container">
             <p>&copy; 2026 Web Prodi Teknik Elektro. All Rights Reserved.</p>
         </div>
