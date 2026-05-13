@@ -33,6 +33,7 @@ class LoginController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
+            $request->session()->flash('just_logged_in', true);
 
             // AMBIL DATA USER YANG BARU LOGIN
             $user = Auth::user();

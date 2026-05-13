@@ -81,7 +81,7 @@ Route::get('/home', function () {
             default     => redirect('/'),
         };
     }
-    return redirect()->route('login');
+    return redirect()->route('beranda');
 })->name('home');
 
 // AUTH

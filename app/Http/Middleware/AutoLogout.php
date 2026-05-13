@@ -25,7 +25,7 @@ class AutoLogout
                 session()->invalidate();
                 session()->regenerateToken();
 
-                return redirect()->route('login')->with('error', 'Sesi Anda telah berakhir karena tidak ada aktivitas.');
+                return redirect()->route('beranda')->with('error', 'Sesi Anda telah berakhir karena tidak ada aktivitas. Silakan login kembali.');
             }
 
             // Exclude AJAX polling requests from extending the session

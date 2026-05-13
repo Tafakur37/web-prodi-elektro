@@ -542,59 +542,59 @@
 </div>
 
 <script>
-    function showAnnouncement(title, message, date) {
-        document.getElementById('announcementModalTitle').textContent = title;
-        document.getElementById('announcementModalBody').textContent = message;
-        document.getElementById('announcementModalDate').innerHTML = '<i class="bi bi-calendar3 me-1"></i> ' + date;
-        var modal = new bootstrap.Modal(document.getElementById('announcementModal'));
-        modal.show();
-    }
+function showAnnouncement(title, message, date) {
+    document.getElementById('announcementModalTitle').textContent = title;
+    document.getElementById('announcementModalBody').textContent = message;
+    document.getElementById('announcementModalDate').innerHTML = '<i class="bi bi-calendar3 me-1"></i> ' + date;
+    var modal = new bootstrap.Modal(document.getElementById('announcementModal'));
+    modal.show();
+}
 
-    @php
-    $achievementsJson = $achievements->map(function($a) {
-        return [
-            'id' => $a->id,
-            'title' => $a->title,
-            'description' => $a->description,
-            'level' => $a->level,
-            'date' => \Carbon\Carbon::parse($a->date)->format('d M Y'),
-            'attachment' => $a->attachment ? Storage::url($a->attachment) : null,
-            'attachment_name' => $a->attachment ? basename($a->attachment) : null,
-        ];
+@php
+$achievementsJson = $achievements->map(function($a) {
+    return [
+        'id' => $a->id,
+        'title' => $a->title,
+        'description' => $a->description,
+        'level' => $a->level,
+        'date' => \Carbon\Carbon::parse($a->date)->format('d M Y'),
+        'attachment' => $a->attachment ? Storage::url($a->attachment) : null,
+        'attachment_name' => $a->attachment ? basename($a->attachment) : null,
+    ];
+});
+@endphp
+
+var achievementsData = @json($achievementsJson);
+
+
+function showAchievement(id) {
+    var ach = achievementsData.find(function(a) {
+        return a.id === id;
     });
-    @endphp
+    if (!ach) return;
 
-    var achievementsData = @json($achievementsJson);
+    document.getElementById('achModalTitle').textContent = ach.title;
+    document.getElementById('achModalLevel').textContent = ach.level || '-';
+    document.getElementById('achModalDate').textContent = ach.date;
+    document.getElementById('achModalDesc').textContent = ach.description || 'Tidak ada deskripsi.';
 
-
-    function showAchievement(id) {
-        var ach = achievementsData.find(function(a) {
-            return a.id === id;
-        });
-        if (!ach) return;
-
-        document.getElementById('achModalTitle').textContent = ach.title;
-        document.getElementById('achModalLevel').textContent = ach.level || '-';
-        document.getElementById('achModalDate').textContent = ach.date;
-        document.getElementById('achModalDesc').textContent = ach.description || 'Tidak ada deskripsi.';
-
-        var attachEl = document.getElementById('achModalAttachment');
-        if (ach.attachment) {
-            attachEl.innerHTML = '<a href="' + ach.attachment +
-                '" target="_blank" class="btn btn-success rounded-pill px-4 fw-bold" download>' +
-                '<i class="bi bi-download me-2"></i>Download Lampiran (' + ach.attachment_name + ')' +
-                '</a>';
-        } else {
-            attachEl.innerHTML =
-                '<span class="text-muted small"><i class="bi bi-x-circle me-1"></i>Tidak ada lampiran.</span>';
-        }
-
-        var modal = new bootstrap.Modal(document.getElementById('achievementModal'));
-        modal.show();
+    var attachEl = document.getElementById('achModalAttachment');
+    if (ach.attachment) {
+        attachEl.innerHTML = '<a href="' + ach.attachment +
+            '" target="_blank" class="btn btn-success rounded-pill px-4 fw-bold" download>' +
+            '<i class="bi bi-download me-2"></i>Download Lampiran (' + ach.attachment_name + ')' +
+            '</a>';
+    } else {
+        attachEl.innerHTML =
+            '<span class="text-muted small"><i class="bi bi-x-circle me-1"></i>Tidak ada lampiran.</span>';
     }
+
+    var modal = new bootstrap.Modal(document.getElementById('achievementModal'));
+    modal.show();
+}
 </script>
 
-<!-- MODAL DETAIL PRESTASI -->
+<!-- MODAL DETAIL PRESTASI -->z
 <div class="modal fade" id="achievementModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content border-0 rounded-4 shadow">

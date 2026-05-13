@@ -12,6 +12,8 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
+        $middleware->redirectGuestsTo(fn () => route('beranda'));
+
         $middleware->alias([
             'role'       => \App\Http\Middleware\RoleManager::class,
             'permission' => \App\Http\Middleware\CheckPermission::class,

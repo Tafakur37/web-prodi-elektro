@@ -820,5 +820,24 @@
     @stack('scripts')
 
     @include('components.session-alert')
+    @auth
+    <form id="strict-tab-logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+        @csrf
+    </form>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            @if(session('just_logged_in'))
+                // Inisialisasi sesi tab setelah login berhasil
+                sessionStorage.setItem('sim_tab_active', '1');
+            @else
+                // Jika tab baru dibuka (sessionStorage kosong) namun server masih menganggap login, paksa logout.
+                // Ini mencegah restore tab atau "Continue where you left off" pada browser.
+                if (!sessionStorage.getItem('sim_tab_active')) {
+                    document.getElementById('strict-tab-logout-form').submit();
+                }
+            @endif
+        });
+    </script>
+    @endauth
 </body>
 </html>
