@@ -285,6 +285,11 @@ Route::middleware(['auth'])->group(function () {
     // =========================================================================
     Route::middleware(['role:sesprodi'])->prefix('sesprodi')->name('sesprodi.')->group(function () {
         Route::get('/dashboard', [SesprodiDashboardController::class, 'index'])->name('dashboard');
+        
+        // Dokumen (Surat & Berkas Masuk)
+        Route::get('documents/{document}/download', [SharedDocumentController::class, 'download'])->name('documents.download');
+        Route::put('documents/{document}/status',   [SharedDocumentController::class, 'updateStatus'])->name('documents.status');
+        Route::resource('documents', SharedDocumentController::class)->only(['index']);
     });
 
     // =========================================================================
@@ -292,5 +297,10 @@ Route::middleware(['auth'])->group(function () {
     // =========================================================================
     Route::middleware(['role:kaprodi'])->prefix('kaprodi')->name('kaprodi.')->group(function () {
         Route::get('/dashboard', [KaprodiDashboardController::class, 'index'])->name('dashboard');
+
+        // Dokumen (Surat & Berkas Masuk)
+        Route::get('documents/{document}/download', [SharedDocumentController::class, 'download'])->name('documents.download');
+        Route::put('documents/{document}/status',   [SharedDocumentController::class, 'updateStatus'])->name('documents.status');
+        Route::resource('documents', SharedDocumentController::class)->only(['index']);
     });
 });

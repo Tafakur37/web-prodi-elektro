@@ -708,8 +708,12 @@
                         {{ auth()->user()->role }}
                     </span>
                 </div>
-                <div class="user-avatar">
-                    <i class="bi bi-person-fill"></i>
+                <div class="user-avatar overflow-hidden">
+                    @if(auth()->user()->profile_photo)
+                        <img src="{{ asset('storage/profiles/' . auth()->user()->profile_photo) }}" alt="Profile" class="w-100 h-100 object-fit-cover">
+                    @else
+                        <i class="bi bi-person-fill"></i>
+                    @endif
                 </div>
             </div>
         </header>

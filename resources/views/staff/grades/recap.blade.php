@@ -84,7 +84,7 @@
                                     <td>
                                         <div class="d-flex align-items-center">
                                             @if($student->profile_photo)
-                                                <img src="{{ Storage::url($student->profile_photo) }}" class="rounded-circle me-3" width="40" height="40" style="object-fit: cover;">
+                                                <img src="{{ asset('storage/profiles/' . $student->profile_photo) }}" class="rounded-circle me-3" width="40" height="40" style="object-fit: cover;">
                                             @else
                                                 <div class="rounded-circle bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center me-3 fw-bold" style="width: 40px; height: 40px;">
                                                     {{ substr($student->name, 0, 1) }}

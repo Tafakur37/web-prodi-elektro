@@ -59,7 +59,10 @@ class MaterialController extends Controller
             // Mahasiswa: lihat materi sesuai angkatan mereka
             $userCohort = auth()->user()->cohort;
             $materials  = $this->materialService->getForMahasiswa($userCohort);
-            return view('mahasiswa.materials.index', compact('materials'));
+            $materialsBySubject = $materials->groupBy(function($item) {
+                return $item->subject->name ?? 'Lainnya';
+            });
+            return view('mahasiswa.materials.index', compact('materialsBySubject'));
 
         } catch (\Throwable $e) {
             Log::error('Material index failed: ' . $e->getMessage(), ['exception' => $e]);
@@ -70,7 +73,7 @@ class MaterialController extends Controller
                 default    => 'mahasiswa.materials.index',
             };
 
-            return view($view, ['materials' => collect(), 'availableCohorts' => collect()])
+            return view($view, ['materials' => collect(), 'materialsBySubject' => collect(), 'availableCohorts' => collect()])
                 ->with('error', 'Data bahan ajar gagal dimuat.');
         }
     }

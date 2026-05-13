@@ -39,10 +39,10 @@ class AdminSettingsController extends Controller
 
         if ($request->hasFile('profile_photo')) {
             if ($user->profile_photo) {
-                Storage::delete('public/profiles/' . $user->profile_photo);
+                Storage::disk('public')->delete('profiles/' . $user->profile_photo);
             }
             $filename = time() . '_' . $request->file('profile_photo')->getClientOriginalName();
-            $request->file('profile_photo')->storeAs('public/profiles', $filename);
+            $request->file('profile_photo')->storeAs('profiles', $filename, 'public');
             $data['profile_photo'] = $filename;
         }
 

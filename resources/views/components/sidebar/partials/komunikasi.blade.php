@@ -18,8 +18,7 @@
 @sidebar_can('komunikasi')
 <div class="sidebar-section">
     <button class="sidebar-group-toggle {{ request()->routeIs([
-        '*.chats.*', '*.announcements.*', '*.submissions.*',
-        '*.documents.*', '*.berkas.*'
+        '*.chats.*', '*.announcements.*'
     ]) ? 'open' : '' }}" data-target="group-komunikasi" aria-label="Toggle Komunikasi">
         <span class="sidebar-icon"><i class="bi bi-chat-square-dots"></i></span>
         <span class="sidebar-label">Komunikasi</span>
@@ -52,35 +51,6 @@
                 <a class="sidebar-sublink {{ request()->routeIs('staff.announcements.*') ? 'active' : '' }}"
                    href="{{ route('staff.announcements.index') }}">
                     <i class="bi bi-megaphone"></i> Pengumuman
-                </a>
-            @endif
-        @endif
-
-        {{-- Surat --}}
-        @if(PermissionHelper::can('documents', 'create') || PermissionHelper::can('documents', 'view_own') || $isAdmin)
-            @php
-                $suratRoute = match($role) {
-                    'admin'    => $hasRoute('admin.documents.index')        ? 'admin.documents.index'        : null,
-                    'staff'    => $hasRoute('staff.documents.index')        ? 'staff.documents.index'        : null,
-                    'mahasiswa'=> $hasRoute('mahasiswa.submissions.index')  ? 'mahasiswa.submissions.index'  : null,
-                    default    => null,
-                };
-            @endphp
-            @if($suratRoute)
-                <a class="sidebar-sublink {{ request()->routeIs('*.documents.*') || request()->routeIs('*.submissions.*') ? 'active' : '' }}"
-                   href="{{ route($suratRoute) }}">
-                    <i class="bi bi-envelope-paper"></i> Surat
-                </a>
-            @endif
-        @endif
-
-        {{-- Berkas (File Explorer) --}}
-        @if(PermissionHelper::can('berkas', 'view_own') || PermissionHelper::can('berkas', 'view_all') || $isAdmin)
-            @php $berkasRoute = "{$prefix}.berkas.index"; @endphp
-            @if($hasRoute($berkasRoute))
-                <a class="sidebar-sublink {{ request()->routeIs('*.berkas.*') ? 'active' : '' }}"
-                   href="{{ route($berkasRoute) }}">
-                    <i class="bi bi-folder2-open"></i> Berkas
                 </a>
             @endif
         @endif

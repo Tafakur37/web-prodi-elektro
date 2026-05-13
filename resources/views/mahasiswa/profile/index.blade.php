@@ -58,6 +58,14 @@
                                 <label class="form-label small fw-bold text-secondary">Foto Profil Baru (Opsional)</label>
                                 <input type="file" name="profile_photo" class="form-control rounded-3" accept="image/*">
                                 <small class="text-muted d-block mt-1" style="font-size: 0.7rem;">Format: JPG/PNG, Maksimal: 2MB.</small>
+                                @if($user->profile_photo)
+                                <div class="form-check mt-2">
+                                    <input class="form-check-input" type="checkbox" name="remove_photo" value="1" id="removePhoto">
+                                    <label class="form-check-label text-danger small" for="removePhoto">
+                                        Hapus foto profil saat ini
+                                    </label>
+                                </div>
+                                @endif
                             </div>
                         </div>
 

@@ -32,11 +32,16 @@ class ProfileController extends Controller
 
         if ($request->hasFile('profile_photo')) {
             if ($user->profile_photo) {
-                Storage::delete('public/profiles/' . $user->profile_photo);
+                Storage::disk('public')->delete('profiles/' . $user->profile_photo);
             }
             $filename = time() . '.' . $request->profile_photo->extension();
-            $request->profile_photo->storeAs('public/profiles', $filename);
+            $request->profile_photo->storeAs('profiles', $filename, 'public');
             $user->profile_photo = $filename;
+        } elseif ($request->has('remove_photo') && $request->remove_photo == '1') {
+            if ($user->profile_photo) {
+                Storage::disk('public')->delete('profiles/' . $user->profile_photo);
+                $user->profile_photo = null;
+            }
         }
 
         if ($request->filled('password')) {

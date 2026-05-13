@@ -31,27 +31,27 @@
                 </td>
 
                 <td>
-                    <input type="number" name="scores[{{ $s->id }}][uts]"
+                    <input type="number" id="uts-{{ $s->id }}" name="scores[{{ $s->id }}][uts]"
                         class="form-control form-control-sm text-center input-uts" data-student="{{ $s->id }}"
-                        data-kkm="{{ $subject->kkm_uts }}" placeholder="0" max="100" step="0.1" value="{{ $grade->uts ?? '' }}" oninput="handleRemedial('{{ $s->id }}', 'uts', this.value, {{ $subject->kkm_uts }})">
+                        data-kkm="{{ $subject->kkm_uts }}" placeholder="0" max="100" step="0.1" value="{{ $grade->uts ?? '' }}" oninput="handleRemedial('{{ $s->id }}', 'uts', this.value, {{ $subject->kkm_uts ?? 0 }})">
                 </td>
                 <td>
-                    {{-- Remedial UTS: readonly instead of disabled so value still submits --}}
+                    {{-- Remedial UTS: disabled if original score >= KKM --}}
                     <input type="number" id="remed-uts-{{ $s->id }}" name="scores[{{ $s->id }}][remedial_uts]"
                         class="form-control form-control-sm text-center border-warning bg-warning-subtle"
-                        placeholder="Remed UTS" value="{{ $grade->remedial_uts ?? '' }}" max="100" step="0.1">
+                        placeholder="Remed UTS" value="{{ $grade->remedial_uts ?? '' }}" max="100" step="0.1" disabled>
                 </td>
 
                 <td>
-                    <input type="number" name="scores[{{ $s->id }}][uas]"
+                    <input type="number" id="uas-{{ $s->id }}" name="scores[{{ $s->id }}][uas]"
                         class="form-control form-control-sm text-center input-uas" data-student="{{ $s->id }}"
-                        data-kkm="{{ $subject->kkm_uas }}" placeholder="0" max="100" step="0.1" value="{{ $grade->uas ?? '' }}" oninput="handleRemedial('{{ $s->id }}', 'uas', this.value, {{ $subject->kkm_uas }})">
+                        data-kkm="{{ $subject->kkm_uas }}" placeholder="0" max="100" step="0.1" value="{{ $grade->uas ?? '' }}" oninput="handleRemedial('{{ $s->id }}', 'uas', this.value, {{ $subject->kkm_uas ?? 0 }})">
                 </td>
                 <td>
-                    {{-- Remedial UAS: readonly instead of disabled so value still submits --}}
+                    {{-- Remedial UAS: disabled if original score >= KKM --}}
                     <input type="number" id="remed-uas-{{ $s->id }}" name="scores[{{ $s->id }}][remedial_uas]"
                         class="form-control form-control-sm text-center border-warning bg-warning-subtle"
-                        placeholder="Remed UAS" value="{{ $grade->remedial_uas ?? '' }}" max="100" step="0.1">
+                        placeholder="Remed UAS" value="{{ $grade->remedial_uas ?? '' }}" max="100" step="0.1" disabled>
                 </td>
 
                 <td>
@@ -92,13 +92,13 @@
     function handleRemedial(studentId, type, score, kkm) {
         const remedId = `remed-${type}-${studentId}`;
         const remedInput = document.getElementById(remedId);
-        const originalInput = document.querySelector(`input[name="scores[${studentId}][${type}]"]`);
+        const originalInput = document.getElementById(`${type}-${studentId}`);
 
-        if (!remedInput) return;
+        if (!remedInput || !originalInput) return;
 
         if (score !== '' && parseFloat(score) < kkm) {
             // Score below KKM: ENABLE remedial field
-            remedInput.readOnly = false;
+            remedInput.disabled = false;
             remedInput.style.opacity = '1';
             remedInput.classList.remove('bg-light');
             remedInput.classList.add('bg-warning-subtle', 'border-warning');
@@ -107,8 +107,8 @@
             originalInput.classList.add('bg-danger', 'text-white');
             originalInput.classList.remove('bg-light', 'text-dark');
         } else {
-            // Score >= KKM or empty: LOCK remedial field (readonly, not disabled)
-            remedInput.readOnly = true;
+            // Score >= KKM or empty: LOCK remedial field completely
+            remedInput.disabled = true;
             remedInput.style.opacity = '0.35';
             remedInput.value = '';
             remedInput.classList.remove('bg-warning-subtle', 'border-warning');
@@ -121,9 +121,9 @@
 
     // Apply remedial lock/unlock state on load for all existing values
     document.querySelectorAll('.input-uts').forEach(input => {
-        handleRemedial(input.dataset.student, 'uts', input.value, parseFloat(input.dataset.kkm));
+        handleRemedial(input.dataset.student, 'uts', input.value, parseFloat(input.dataset.kkm) || 0);
     });
     document.querySelectorAll('.input-uas').forEach(input => {
-        handleRemedial(input.dataset.student, 'uas', input.value, parseFloat(input.dataset.kkm));
+        handleRemedial(input.dataset.student, 'uas', input.value, parseFloat(input.dataset.kkm) || 0);
     });
 </script>

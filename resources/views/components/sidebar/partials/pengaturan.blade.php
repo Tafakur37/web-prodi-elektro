@@ -10,7 +10,7 @@
 @sidebar_can('manajemen')
 <div class="sidebar-section">
     <button class="sidebar-group-toggle {{ request()->routeIs([
-        'admin.users.*', 'admin.logs.*'
+        'admin.users.*', 'admin.logs.*', '*.documents.*', '*.submissions.*', '*.berkas.*'
     ]) ? 'open' : '' }}" data-target="group-manajemen" aria-label="Toggle Manajemen">
         <span class="sidebar-icon"><i class="bi bi-gear-wide-connected"></i></span>
         <span class="sidebar-label">Manajemen</span>
@@ -34,6 +34,45 @@
                 <a class="sidebar-sublink {{ request()->routeIs('admin.logs.*') ? 'active' : '' }}"
                    href="{{ route('admin.logs.index') }}">
                     <i class="bi bi-clock-history"></i> Log Aktivitas
+                </a>
+            @endif
+        @endif
+
+        {{-- Surat --}}
+        @if(PermissionHelper::can('documents', 'create') || PermissionHelper::can('documents', 'view_own') || PermissionHelper::can('documents', 'view_all') || $isAdmin)
+            @php
+                $suratRoute = match($role) {
+                    'admin'    => $hasRoute('admin.documents.index')        ? 'admin.documents.index'        : null,
+                    'staff'    => $hasRoute('staff.documents.index')        ? 'staff.documents.index'        : null,
+                    'mahasiswa'=> $hasRoute('mahasiswa.submissions.index')  ? 'mahasiswa.submissions.index'  : null,
+                    'sesprodi' => $hasRoute('sesprodi.documents.index')     ? 'sesprodi.documents.index'     : null,
+                    'kaprodi'  => $hasRoute('kaprodi.documents.index')      ? 'kaprodi.documents.index'      : null,
+                    default    => null,
+                };
+            @endphp
+            @if($suratRoute)
+                <a class="sidebar-sublink {{ request()->routeIs('*.documents.*') || (request()->routeIs('*.submissions.*') && $role === 'mahasiswa') ? 'active' : '' }}"
+                   href="{{ route($suratRoute) }}">
+                    <i class="bi bi-envelope-paper"></i> Surat
+                </a>
+            @endif
+        @endif
+
+        {{-- Verifikasi Surat Mahasiswa (Staff) --}}
+        @if($role === 'staff' && $hasRoute('staff.submissions.index'))
+            <a class="sidebar-sublink {{ request()->routeIs('staff.submissions.*') ? 'active' : '' }}"
+               href="{{ route('staff.submissions.index') }}">
+                <i class="bi bi-check2-square"></i> Verifikasi Surat
+            </a>
+        @endif
+
+        {{-- Berkas (File Explorer) --}}
+        @if(PermissionHelper::can('berkas', 'view_own') || PermissionHelper::can('berkas', 'view_all') || $isAdmin)
+            @php $berkasRoute = "{$prefix}.berkas.index"; @endphp
+            @if($hasRoute($berkasRoute))
+                <a class="sidebar-sublink {{ request()->routeIs('*.berkas.*') ? 'active' : '' }}"
+                   href="{{ route($berkasRoute) }}">
+                    <i class="bi bi-folder2-open"></i> Berkas
                 </a>
             @endif
         @endif

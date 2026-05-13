@@ -17,14 +17,10 @@ class DocumentService
         return Document::where('receiver_role', $receiverRole)->latest()->get();
     }
 
-    /**
-     * Ambil dokumen masuk untuk admin (dari mahasiswa).
-     */
     public function getIncomingForAdmin()
     {
-        return Document::whereHas('user', function ($q) {
-            $q->where('role', 'mahasiswa');
-        })->latest()->get();
+        // Admin melihat semua dokumen yang ditujukan kepadanya
+        return Document::where('receiver_role', 'admin')->latest()->get();
     }
 
     /**

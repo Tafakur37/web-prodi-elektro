@@ -406,14 +406,27 @@
                         Mengganti password untuk:
                         <strong id="resetTargetName" style="color:#6366f1;"></strong>
                     </p>
-                    <label class="modal-label">Password Baru</label>
-                    <div class="d-flex gap-2">
-                        <input type="password" name="password" id="newPassword" class="modal-input"
-                               placeholder="Minimal 8 karakter" minlength="8" required style="flex:1;">
-                        <button type="button" class="btn btn-light border" onclick="togglePass()"
-                                style="border-radius:10px;padding:9px 14px;">
-                            <i class="bi bi-eye" id="eyeIcon"></i>
-                        </button>
+                    <div class="mb-3">
+                        <label class="modal-label">Password Baru</label>
+                        <div class="d-flex gap-2">
+                            <input type="password" name="password" id="newPassword" class="modal-input"
+                                   placeholder="Minimal 8 karakter" minlength="8" required style="flex:1;">
+                            <button type="button" class="btn btn-light border" onclick="togglePass('newPassword', 'eyeIcon')"
+                                    style="border-radius:10px;padding:9px 14px;">
+                                <i class="bi bi-eye" id="eyeIcon"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="modal-label">Konfirmasi Password</label>
+                        <div class="d-flex gap-2">
+                            <input type="password" name="password_confirmation" id="newPasswordConfirm" class="modal-input"
+                                   placeholder="Ulangi password baru" minlength="8" required style="flex:1;">
+                            <button type="button" class="btn btn-light border" onclick="togglePass('newPasswordConfirm', 'eyeIconConfirm')"
+                                    style="border-radius:10px;padding:9px 14px;">
+                                <i class="bi bi-eye" id="eyeIconConfirm"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer border-0 pt-0 px-4 pb-4 gap-2">
@@ -436,9 +449,9 @@
         modal.show();
     }
 
-    function togglePass() {
-        const x = document.getElementById('newPassword');
-        const icon = document.getElementById('eyeIcon');
+    function togglePass(inputId, iconId) {
+        const x = document.getElementById(inputId);
+        const icon = document.getElementById(iconId);
         if (x.type === 'password') {
             x.type = 'text';
             icon.classList.replace('bi-eye','bi-eye-slash');

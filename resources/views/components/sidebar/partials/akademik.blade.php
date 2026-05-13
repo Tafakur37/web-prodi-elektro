@@ -30,8 +30,14 @@
 
         {{-- Jadwal Kuliah --}}
         @if(PermissionHelper::can('schedules', 'view_all') || $isAdmin)
-            @php $schedRoute = $isAdmin ? 'admin.schedules.index' : ($hasRoute('staff.schedules.index') ? 'staff.schedules.index' : null); @endphp
-            @if($schedRoute && $hasRoute($schedRoute))
+            @php
+                $schedRoute = match($role) {
+                    'admin' => $hasRoute('admin.schedules.index') ? 'admin.schedules.index' : null,
+                    'staff' => $hasRoute('staff.schedules.index') ? 'staff.schedules.index' : null,
+                    default => null,
+                };
+            @endphp
+            @if($schedRoute)
                 <a class="sidebar-sublink {{ request()->routeIs('*.schedules.*') ? 'active' : '' }}"
                    href="{{ route($schedRoute) }}">
                     <i class="bi bi-calendar3"></i> Jadwal Kuliah
@@ -52,11 +58,13 @@
         {{-- Mata Kuliah --}}
         @if(PermissionHelper::can('subjects', 'view_all') || $isAdmin)
             @php
-                $subjectRoute = $isAdmin
-                    ? 'admin.subjects.index'
-                    : ($hasRoute('staff.subjects.index') ? 'staff.subjects.index' : null);
+                $subjectRoute = match($role) {
+                    'admin' => $hasRoute('admin.subjects.index') ? 'admin.subjects.index' : null,
+                    'staff' => $hasRoute('staff.subjects.index') ? 'staff.subjects.index' : null,
+                    default => null,
+                };
             @endphp
-            @if($subjectRoute && $hasRoute($subjectRoute))
+            @if($subjectRoute)
                 <a class="sidebar-sublink {{ request()->routeIs('*.subjects.*') ? 'active' : '' }}"
                    href="{{ route($subjectRoute) }}">
                     <i class="bi bi-book"></i> Mata Kuliah

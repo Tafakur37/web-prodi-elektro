@@ -37,7 +37,7 @@ return [
         'akademik'   => ['mahasiswa', 'dosen', 'staff', 'sesprodi', 'kaprodi'],
         'komunikasi' => ['mahasiswa', 'dosen', 'staff', 'sesprodi', 'kaprodi'],
         'mahasiswa'  => ['staff', 'sesprodi', 'kaprodi'],
-        'manajemen'  => ['staff', 'sesprodi', 'kaprodi'],
+        'manajemen'  => ['mahasiswa', 'dosen', 'staff', 'sesprodi', 'kaprodi'],
         'pengaturan' => ['mahasiswa', 'dosen', 'staff', 'sesprodi', 'kaprodi'],
     ],
 
@@ -132,7 +132,7 @@ return [
     // MATA KULIAH (Subjects)
     // -------------------------------------------------------------------------
     'subjects' => [
-        'view_all'   => ['mahasiswa', 'dosen', 'staff', 'sesprodi', 'kaprodi'],
+        'view_all'   => ['dosen', 'staff', 'sesprodi', 'kaprodi'],
         'create'     => ['staff'],
         'edit'       => ['staff'],
         'delete'     => [],
