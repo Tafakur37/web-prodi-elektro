@@ -33,6 +33,11 @@
             <i class="bi bi-people me-3 fs-5"></i> Bimbingan / Wali
         </a>
     </li>
+    <li class="nav-item">
+        <a class="nav-link {{ request()->routeIs('dosen.berkas.*') ? 'active' : '' }}" href="{{ route('dosen.berkas.index') }}">
+            <i class="bi bi-folder2-open me-3 fs-5"></i> Berkas
+        </a>
+    </li>
 
     <li class="sidebar-heading">Pengaturan</li>
     <li class="nav-item">

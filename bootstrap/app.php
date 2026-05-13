@@ -13,7 +13,8 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
-            'role' => \App\Http\Middleware\RoleManager::class,
+            'role'       => \App\Http\Middleware\RoleManager::class,
+            'permission' => \App\Http\Middleware\CheckPermission::class,
         ]);
         
         $middleware->web(append: [

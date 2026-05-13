@@ -57,6 +57,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function showWarningModal() {
+        isModalShowing = true;
         if(sessionModal) sessionModal.show();
         
         const countdownEl = document.getElementById('sessionCountdown');
@@ -85,6 +86,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }).then(response => response.json())
           .then(data => {
               if(data.status === 'alive') {
+                  isModalShowing = false;
                   if(sessionModal) sessionModal.hide();
                   startWarningTimer();
               }
@@ -105,9 +107,11 @@ document.addEventListener("DOMContentLoaded", function() {
         // setiap kali user pindah halaman atau men-submit form.
     }
 
-    // Throttle user events to avoid performance issues
     let throttleTimer;
+    let isModalShowing = false;
+
     const throttleActivity = () => {
+        if (isModalShowing) return; // Jangan reset timer otomatis jika modal peringatan sedang muncul
         if (throttleTimer) return;
         throttleTimer = setTimeout(() => {
             resetActivity();

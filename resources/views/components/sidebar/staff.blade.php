@@ -70,7 +70,12 @@
     </li>
     <li class="nav-item">
         <a class="nav-link {{ request()->routeIs('staff.documents.*') ? 'active' : '' }}" href="{{ route('staff.documents.index') }}">
-            <i class="bi bi-file-earmark-text me-3 fs-5"></i> Dokumen
+            <i class="bi bi-envelope-paper me-3 fs-5"></i> Surat
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {{ request()->routeIs('staff.berkas.*') ? 'active' : '' }}" href="{{ route('staff.berkas.index') }}">
+            <i class="bi bi-folder2-open me-3 fs-5"></i> Berkas
         </a>
     </li>
 

@@ -86,9 +86,174 @@
             flex: 1;
             overflow-y: auto;
             overflow-x: hidden;
-            padding: 12px 0;
+            padding: 8px 0 16px;
         }
 
+        /* ======================== UNIFIED NAV LINKS ======================== */
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+        }
+
+        .sidebar-section {
+            margin: 1px 0;
+        }
+
+        /* Direct link (no children) */
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 0;
+            padding: 10px 20px;
+            color: var(--sidebar-text);
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            border-left: 3px solid transparent;
+            transition: all 0.18s ease;
+        }
+
+        .sidebar-link:hover {
+            background: var(--sidebar-hover);
+            color: var(--sidebar-text-hover);
+            border-left-color: rgba(99, 102, 241, 0.3);
+        }
+
+        .sidebar-link.active {
+            background: var(--sidebar-active-bg);
+            color: var(--sidebar-text-active);
+            border-left-color: var(--sidebar-active-border);
+            font-weight: 600;
+        }
+
+        /* Group toggle button (collapsible parent) */
+        .sidebar-group-toggle {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            padding: 10px 20px;
+            background: transparent;
+            border: none;
+            border-left: 3px solid transparent;
+            color: var(--sidebar-text);
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.18s ease;
+            position: relative;
+        }
+
+        .sidebar-group-toggle:hover {
+            background: var(--sidebar-hover);
+            color: var(--sidebar-text-hover);
+            border-left-color: rgba(99, 102, 241, 0.3);
+        }
+
+        .sidebar-group-toggle.open {
+            background: rgba(99, 102, 241, 0.08);
+            color: var(--sidebar-text-active);
+            border-left-color: var(--sidebar-active-border);
+        }
+
+        .sidebar-icon {
+            width: 24px;
+            min-width: 24px;
+            margin-right: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.05rem;
+            opacity: 0.75;
+            transition: opacity 0.18s;
+        }
+
+        .sidebar-group-toggle:hover .sidebar-icon,
+        .sidebar-group-toggle.open .sidebar-icon,
+        .sidebar-link:hover .sidebar-icon,
+        .sidebar-link.active .sidebar-icon {
+            opacity: 1;
+        }
+
+        .sidebar-group-toggle.open .sidebar-icon i {
+            color: var(--accent-light);
+        }
+
+        .sidebar-label {
+            flex: 1;
+        }
+
+        .sidebar-chevron {
+            font-size: 0.7rem;
+            transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0.5;
+        }
+
+        .sidebar-group-toggle.open .sidebar-chevron {
+            transform: rotate(90deg);
+            opacity: 0.9;
+        }
+
+        /* Submenu container */
+        .sidebar-submenu {
+            overflow: hidden;
+            max-height: 0;
+            transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                        opacity 0.25s ease;
+            opacity: 0;
+            background: rgba(0,0,0,0.12);
+        }
+
+        .sidebar-submenu.expanded {
+            max-height: 600px;
+            opacity: 1;
+        }
+
+        /* Sublinks inside submenu */
+        .sidebar-sublink {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 20px 8px 48px;
+            color: rgba(148, 163, 184, 0.85);
+            text-decoration: none;
+            font-size: 0.82rem;
+            font-weight: 400;
+            border-left: 3px solid transparent;
+            transition: all 0.15s ease;
+        }
+
+        .sidebar-sublink i {
+            font-size: 0.9rem;
+            width: 16px;
+            opacity: 0.7;
+            flex-shrink: 0;
+        }
+
+        .sidebar-sublink:hover {
+            background: var(--sidebar-hover);
+            color: var(--sidebar-text-hover);
+            border-left-color: rgba(99, 102, 241, 0.2);
+        }
+
+        .sidebar-sublink:hover i {
+            opacity: 1;
+        }
+
+        .sidebar-sublink.active {
+            color: #fff;
+            background: var(--sidebar-active-bg);
+            border-left-color: var(--sidebar-active-border);
+            font-weight: 600;
+        }
+
+        .sidebar-sublink.active i {
+            opacity: 1;
+            color: var(--accent-light);
+        }
+
+        /* Legacy support untuk komponen sidebar lama */
         .sidebar .nav-link {
             color: var(--sidebar-text);
             padding: 10px 20px;
@@ -118,9 +283,7 @@
             border-left-color: rgba(99, 102, 241, 0.3);
         }
 
-        .sidebar .nav-link:hover i {
-            opacity: 1;
-        }
+        .sidebar .nav-link:hover i { opacity: 1; }
 
         .sidebar .nav-link.active {
             background: var(--sidebar-active-bg);
@@ -312,9 +475,186 @@
                 display: block;
             }
         }
+
+        /* ======================== ADMIN LIGHT THEME OVERRIDE ========================
+           Override semua dark Bootstrap classes ke light untuk konsistensi.
+           Berlaku di semua halaman yang extend layouts/app.blade.php.
+        ============================================================================ */
+
+        /* Override: table-dark → light table */
+        .table-dark {
+            --bs-table-bg: #ffffff !important;
+            --bs-table-striped-bg: #f8fafc !important;
+            --bs-table-hover-bg: #f1f5f9 !important;
+            --bs-table-border-color: #e2e8f0 !important;
+            --bs-table-color: #1e293b !important;
+            color: #1e293b !important;
+            background-color: #ffffff !important;
+        }
+
+        .table-dark thead th,
+        .table-dark th {
+            background-color: #f8fafc !important;
+            color: #64748b !important;
+            border-color: #e2e8f0 !important;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+        }
+
+        .table-dark tbody tr {
+            background-color: #ffffff !important;
+            color: #1e293b !important;
+            border-color: #f1f5f9 !important;
+        }
+
+        .table-dark tbody tr:hover {
+            background-color: #f8fafc !important;
+        }
+
+        .table-dark td, .table-dark th {
+            border-color: #f1f5f9 !important;
+        }
+
+        /* Override: bg-dark → white card */
+        .bg-dark:not(.sidebar):not(.sidebar *):not([data-bs-theme="dark"]) {
+            background-color: #ffffff !important;
+            color: #1e293b !important;
+        }
+
+        /* Override: modal-content bg-dark */
+        .modal-content.bg-dark {
+            background-color: #ffffff !important;
+            color: #1e293b !important;
+            border: 1px solid #e2e8f0 !important;
+        }
+
+        .modal-content.bg-dark .modal-header {
+            background: #f8fafc !important;
+            border-bottom: 1px solid #e2e8f0 !important;
+        }
+
+        .modal-content.bg-dark .btn-close {
+            filter: none !important;
+        }
+
+        /* Override: form-control-dark / form-select-dark */
+        .form-control-dark,
+        .form-select-dark,
+        .form-control.bg-dark,
+        .form-select.bg-dark {
+            background-color: #f8fafc !important;
+            border: 1px solid #e2e8f0 !important;
+            color: #1e293b !important;
+        }
+
+        .form-control-dark:focus,
+        .form-select-dark:focus,
+        .form-control.bg-dark:focus,
+        .form-select.bg-dark:focus {
+            background-color: #ffffff !important;
+            border-color: #6366f1 !important;
+            color: #1e293b !important;
+            box-shadow: 0 0 0 3px rgba(99,102,241,0.15) !important;
+        }
+
+        /* Override: text-white inside content area */
+        .main-content .text-white:not(.btn):not(.badge):not(.alert *):not(.sidebar *) {
+            color: #1e293b !important;
+        }
+
+        /* Override: input-group-text bg-dark */
+        .input-group-text.bg-dark,
+        .input-group-text.bg-transparent {
+            background-color: #f1f5f9 !important;
+            border-color: #e2e8f0 !important;
+            color: #64748b !important;
+        }
+
+        /* Override: filter/search card dark bg */
+        .filter-card {
+            background: #ffffff !important;
+            border: 1px solid #e2e8f0 !important;
+            border-radius: 14px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+        }
+
+        /* Override: stat-card dark bg */
+        .stat-card {
+            background: #ffffff !important;
+        }
+
+        /* Override: container-fluid text-white */
+        .container-fluid.text-white {
+            color: #1e293b !important;
+        }
+
+        /* Override: .bg-darker */
+        .bg-darker {
+            background-color: #f8fafc !important;
+            color: #1e293b !important;
+        }
+
+        /* Override: btn-outline-info → accent color */
+        .btn-outline-info {
+            color: #6366f1 !important;
+            border-color: #6366f1 !important;
+        }
+
+        .btn-outline-info:hover {
+            background-color: #6366f1 !important;
+            color: #ffffff !important;
+        }
+
+        /* Override: rounded-pill bg-dark (IP Address etc) */
+        .font-monospace.bg-dark,
+        .badge.bg-dark {
+            background-color: #f1f5f9 !important;
+            color: #475569 !important;
+        }
+
+        /* Admin page title */
+        .main-content h1,
+        .main-content h2,
+        .main-content h3 {
+            color: #1e293b;
+        }
+
+        /* select option colors */
+        .form-control-dark option,
+        .form-select-dark option,
+        .form-select.bg-dark option {
+            background-color: #ffffff;
+            color: #1e293b;
+        }
+
+        /* Card universal light override untuk admin */
+        .card.bg-dark {
+            background-color: #ffffff !important;
+            border: 1px solid #e2e8f0 !important;
+        }
+
+        .card.bg-dark * {
+            color: #1e293b !important;
+        }
+
+        /* Cohort card select */
+        .cohort-card {
+            background: #ffffff;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 14px;
+            transition: all 0.2s;
+        }
+
+        .cohort-card:hover {
+            border-color: #6366f1;
+            box-shadow: 0 4px 12px rgba(99,102,241,0.15);
+        }
     </style>
     @stack('styles')
 </head>
+
 
 <body>
     <!-- Mobile Overlay -->
@@ -327,32 +667,10 @@
             <small>{{ strtoupper(auth()->user()->role ?? '') }} PORTAL</small>
         </div>
 
-        <!-- Dynamic Sidebar Menu -->
+        <!-- Unified Collapsible Sidebar Menu -->
         <div class="sidebar-menu">
             @if(auth()->check())
-                @php
-                    $sidebarRole = auth()->user()->role;
-                    // Map role names to sidebar partial names
-                    $sidebarMap = [
-                        'admin-super' => 'admin-super',
-                        'admin' => 'admin-super',
-                        'staff' => 'staff',
-                        'dosen' => 'dosen',
-                        'mahasiswa' => 'mahasiswa',
-                        'kaprodi' => 'kaprodi',
-                        'sesprodi' => 'sesprodi',
-                    ];
-                    $sidebarView = $sidebarMap[$sidebarRole] ?? $sidebarRole;
-                @endphp
-                @if(view()->exists('components.sidebar.' . $sidebarView))
-                    @include('components.sidebar.' . $sidebarView)
-                @else
-                    <ul class="nav nav-pills flex-column mb-auto">
-                        <li class="nav-item">
-                            <p class="text-center text-muted mt-3">Menu belum tersedia</p>
-                        </li>
-                    </ul>
-                @endif
+                @include('components.sidebar.unified')
             @endif
         </div>
 
@@ -423,11 +741,12 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- Sidebar Toggle Script -->
+    <!-- Sidebar Toggle + Collapsible Groups Script -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // ── Mobile sidebar toggle ──────────────────────────────────────────
             const sidebar = document.getElementById('mainSidebar');
-            const toggle = document.getElementById('sidebarToggle');
+            const toggle  = document.getElementById('sidebarToggle');
             const overlay = document.getElementById('sidebarOverlay');
 
             if (toggle) {
@@ -443,6 +762,58 @@
                     overlay.classList.remove('show');
                 });
             }
+
+            // ── Collapsible sidebar groups ─────────────────────────────────────
+            const SESSION_KEY = 'simelek_sidebar_open';
+
+            // Baca state yang tersimpan dari sessionStorage
+            let openGroups = JSON.parse(sessionStorage.getItem(SESSION_KEY) || '[]');
+
+            // Inisialisasi semua toggle buttons
+            document.querySelectorAll('.sidebar-group-toggle').forEach(function(btn) {
+                const targetId = btn.getAttribute('data-target');
+                const submenu  = document.getElementById(targetId);
+
+                if (!submenu) return;
+
+                // Tentukan apakah grup ini harus terbuka:
+                // - Sudah open karena active route (class 'open' dari Blade)
+                // - Atau tersimpan di sessionStorage
+                const isActiveOpen  = btn.classList.contains('open');
+                const isStoredOpen  = openGroups.includes(targetId);
+                const shouldBeOpen  = isActiveOpen || isStoredOpen;
+
+                if (shouldBeOpen) {
+                    submenu.classList.add('expanded');
+                    btn.classList.add('open');
+                    // Pastikan tersimpan
+                    if (!openGroups.includes(targetId)) {
+                        openGroups.push(targetId);
+                    }
+                }
+
+                // Click handler: toggle expand/collapse
+                btn.addEventListener('click', function() {
+                    const isOpen = submenu.classList.contains('expanded');
+
+                    if (isOpen) {
+                        // Tutup
+                        submenu.classList.remove('expanded');
+                        btn.classList.remove('open');
+                        openGroups = openGroups.filter(id => id !== targetId);
+                    } else {
+                        // Buka
+                        submenu.classList.add('expanded');
+                        btn.classList.add('open');
+                        if (!openGroups.includes(targetId)) {
+                            openGroups.push(targetId);
+                        }
+                    }
+
+                    // Simpan state ke sessionStorage
+                    sessionStorage.setItem(SESSION_KEY, JSON.stringify(openGroups));
+                });
+            });
         });
     </script>
 

@@ -52,7 +52,12 @@
     <li class="sidebar-heading">Aktivitas</li>
     <li class="nav-item">
         <a class="nav-link {{ request()->routeIs('admin.documents.*') ? 'active' : '' }}" href="{{ route('admin.documents.index') }}">
-            <i class="bi bi-envelope-paper me-3 fs-5"></i> Surat & Berkas
+            <i class="bi bi-envelope-paper me-3 fs-5"></i> Surat
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {{ request()->routeIs('admin.berkas.*') ? 'active' : '' }}" href="{{ route('admin.berkas.index') }}">
+            <i class="bi bi-folder2-open me-3 fs-5"></i> Berkas
         </a>
     </li>
     <li class="nav-item">

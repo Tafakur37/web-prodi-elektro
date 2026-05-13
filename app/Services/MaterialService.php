@@ -149,4 +149,40 @@ class MaterialService
 
         return false;
     }
+
+    /**
+     * Ambil materi untuk role tertentu (non-mahasiswa).
+     * Digunakan oleh Shared MaterialController.
+     */
+    public function getForRole(string $role)
+    {
+        $query = Material::with(['subject', 'user']);
+
+        // Dosen: lihat materi yang dia upload + materi untuk dosen
+        if ($role === 'dosen') {
+            $query->where(function ($q) {
+                $q->where('user_id', auth()->id())
+                  ->orWhere('target_role', 'dosen');
+            });
+        }
+
+        return $query->latest()->get();
+    }
+
+    /**
+     * Ambil materi untuk mahasiswa berdasarkan cohort mereka.
+     * Digunakan oleh Shared MaterialController.
+     */
+    public function getForMahasiswa(?string $cohort)
+    {
+        if (!$cohort) {
+            return collect();
+        }
+
+        return Material::with(['subject', 'user'])
+            ->where('cohort', $cohort)
+            ->where('target_role', 'mahasiswa')
+            ->latest()
+            ->get();
+    }
 }

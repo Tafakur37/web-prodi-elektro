@@ -23,7 +23,12 @@
     </li>
     <li class="nav-item">
         <a class="nav-link {{ request()->routeIs('mahasiswa.submissions.*') ? 'active' : '' }}" href="{{ route('mahasiswa.submissions.index') }}">
-            <i class="bi bi-envelope-paper me-3 fs-5"></i> Surat & Berkas
+            <i class="bi bi-envelope-paper me-3 fs-5"></i> Surat
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {{ request()->routeIs('mahasiswa.berkas.*') ? 'active' : '' }}" href="{{ route('mahasiswa.berkas.index') }}">
+            <i class="bi bi-folder2-open me-3 fs-5"></i> Berkas
         </a>
     </li>
 

@@ -271,7 +271,7 @@
                                     <p class="small text-secondary mb-2">
                                         {{ \Illuminate\Support\Str::limit($ach->description, 60) }}
                                     </p>
-                                    <div class="d-flex gap-2 align-items-center">
+                                    <div class="d-flex flex-wrap gap-2 align-items-center mt-2">
                                         @if($ach->level)
                                         <span class="badge bg-info text-dark"><i
                                                 class="bi bi-bar-chart-steps me-1"></i>{{ $ach->level }}</span>
