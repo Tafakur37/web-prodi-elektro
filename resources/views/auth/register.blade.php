@@ -10,18 +10,188 @@
     <title>Registrasi - SIM Elektro</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            min-height: 100vh;
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(2, 6, 23, 0.94),
+                    rgba(3, 20, 90, 0.88)
+                ),
+                url('/images/bg-beranda.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+/* =========================
+   CARD
+========================= */
+
+        .card {
+            background: rgba(255,255,255,0.07);
+            border: 1px solid rgba(255,255,255,0.10) !important;
+            backdrop-filter: blur(18px);
+            border-radius: 28px !important;
+            box-shadow:
+                0 10px 35px rgba(0,0,0,0.35),
+                0 0 20px rgba(0,102,255,0.08);
+        }
+
+/* =========================
+   TITLE
+========================= */
+
+        .register-title {
+            font-size: 42px;
+            font-weight: 800;
+            background: linear-gradient(
+                90deg,
+                #2d7fff,
+                #5ba8ff,
+                #b8d9ff
+            );
+
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+/* =========================
+   TEXT
+========================= */
+
+        .form-label,
+        .text-muted,
+        .form-text,
+        .small {
+            color: rgba(255,255,255,0.75) !important;
+        }
+
+/* =========================
+   INPUT
+========================= */
+
+        .form-control,
+        .form-select {
+            background: rgba(255,255,255,0.08) !important;
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 12px;
+            padding: 14px 16px;
+            color: white !important;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            background: rgba(255,255,255,0.10);
+            border-color: #4f9dff;
+            box-shadow: 0 0 0 4px rgba(79,157,255,0.15);
+            color: white;
+        }
+
+/* =========================
+   AUTOFILL FIX
+========================= */
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+select:-webkit-autofill {
+    -webkit-text-fill-color: white !important;
+    -webkit-box-shadow: 0 0 0px 1000px rgba(255,255,255,0.08) inset !important;
+    transition: background-color 5000s ease-in-out 0s;
+}
+
+        .form-control::placeholder {
+            color: rgba(255,255,255,0.45);
+        }
+
+        .form-select option {
+            background: #0b1638;
+            color: white;
+        }
+
+        .form-select {
+            appearance: none;
+            background-image:
+                linear-gradient(45deg, transparent 50%, white 50%),
+                linear-gradient(135deg, white 50%, transparent 50%);
+            background-position:
+                calc(100% - 20px) calc(1.2em),
+                calc(100% - 15px) calc(1.2em);
+            background-size: 5px 5px;
+            background-repeat: no-repeat;
+        }
+
+/* =========================
+   INPUT GROUP
+========================= */
+
+        .input-group-text {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.12);
+            color: white;
+        }
+
+/* =========================
+   BUTTON
+========================= */
+
+        .btn-primary {
+            border: none;
+            border-radius: 12px;
+            padding: 14px;
+            font-weight: 600;
+            background: linear-gradient(
+                90deg,
+                #1565ff,
+                #298cff
+            );
+
+            box-shadow:
+                0 8px 20px rgba(21,101,255,0.28);
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow:
+                0 12px 24px rgba(21,101,255,0.35);
+        }
+
+/* =========================
+   LINKS
+========================= */
+
+        a {
+            text-decoration: none;
+            transition: 0.3s ease;
+        }
+
+        a:hover {
+            opacity: 0.8;
+        }
+
+    </style>
+
 </head>
 
-<body class="bg-light">
+<body>
     <div class="container">
-        <div class="row justify-content-center mt-5">
+        <div class="row justify-content-center w-100">
             <div class="col-md-6 col-lg-5">
                 <div class="card shadow-lg border-0">
                     <div class="card-body p-4">
                         <div class="text-center mb-4">
-                            <i class="fas fa-user-plus fa-3x text-primary mb-3"></i>
-                            <h3 class="fw-bold text-dark">Daftar Akun Baru</h3>
-                            <p class="text-muted">Buat akun mahasiswa Teknik Elektro</p>
+                            <i class="fas fa-user-plus fa-3x text-primary mb-3 opacity-75"></i>
+                            <h3 class="register-title">Daftar Akun Baru</h3>
+                            <p class="text-light opacity-75">Buat akun mahasiswa Teknik Elektro</p>
                         </div>
 
                         @if (session('success'))
