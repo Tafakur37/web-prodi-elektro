@@ -10,7 +10,7 @@
     <style>
         :root {
             --sidebar-width: 260px;
-            --sidebar-bg: #1a1f2e;
+            --sidebar-bg: rgba(2, 13, 52, 0.96);
             --sidebar-hover: rgba(255, 255, 255, 0.06);
             --sidebar-active-bg: rgba(99, 132, 255, 0.15);
             --sidebar-active-border: #6366f1;
@@ -63,18 +63,53 @@
             flex-shrink: 0;
         }
 
-        .sidebar-brand h4 {
-            font-weight: 800;
-            letter-spacing: 3px;
-            font-size: 1.4rem;
-            margin-bottom: 4px;
-            background: linear-gradient(135deg, #818cf8, #6366f1);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+        .brand-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 16px;
         }
 
-        .sidebar-brand small {
+        .brand-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .brand-text {
+            line-height: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .electrical-text {
+            color: white;
+            font-size: 1rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .engineering-text {
+            font-size: 1.05rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            background: linear-gradient(90deg, #00c6ff, #0072ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .univ-text {
+            font-size: 0.47rem;
+            color: rgba(255,255,255,0.8);
+            letter-spacing: 0.75px;
+            margin-top: 4px;
+            white-space: nowrap;
+        }
+
+        .portal-text {
+            display: block;
+            margin-top: 14px;
             font-size: 0.65rem;
             letter-spacing: 2px;
             text-transform: uppercase;
@@ -663,9 +698,20 @@
     <!-- Sidebar -->
     <div class="sidebar" id="mainSidebar">
         <div class="sidebar-brand">
-            <h4 class="mb-0">ELEKTRO</h4>
-            <small>{{ strtoupper(auth()->user()->role ?? '') }} PORTAL</small>
+            <div class="brand-wrapper">
+                <img src="{{ asset('images/logo-elektro.png') }}"
+                    alt="Logo Elektro"
+                    width="60"
+                    height="60"
+                    class="rounded-circle">
+            <div class="brand-text d-flex flex-column">
+                <span class="electrical-text">ELECTRICAL</span>
+                <span class="engineering-text">ENGINEERING</span>
+                <small class="univ-text">INDONESIA DEFENSE UNIVERSITY</small>
+            </div>
         </div>
+        <small class="portal-text">{{ strtoupper(auth()->user()->role ?? '') }} PORTAL</small>
+    </div>
 
         <!-- Unified Collapsible Sidebar Menu -->
         <div class="sidebar-menu">

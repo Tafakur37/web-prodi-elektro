@@ -30,7 +30,6 @@
             width: 100%;
             z-index: 999;
             transition: all 0.4s ease;
-
             background: transparent;
             padding: 18px 0;
         }
@@ -40,7 +39,6 @@
             background: rgba(2, 13, 52, 0.96);
             backdrop-filter: blur(8px);
             box-shadow: 0 3px 10px rgba(0,0,0,0.3);
-
             padding: 10px 0;
         }
 
@@ -219,32 +217,20 @@
                     class="rounded-circle">
 
                 <div class="brand-text d-flex flex-column">
-
                     <span class="electrical-text">ELECTRICAL</span>
-
                     <span class="engineering-text">ENGINEERING</span>
-
-                    <small class="univ-text">
-                        INDONESIA DEFENSE UNIVERSITY
-                    </small>
-
+                    <small class="univ-text">INDONESIA DEFENSE UNIVERSITY</small>
                 </div>
-
             </a>
-
             <button class="navbar-toggler"
                     type="button"
                     data-bs-toggle="collapse"
                     data-bs-target="#navbarNav">
-
                 <span class="navbar-toggler-icon"></span>
-
             </button>
 
             <div class="collapse navbar-collapse" id="navbarNav">
-
                 <ul class="navbar-nav ms-auto">
-
                     @auth
 
                         <li class="nav-item">
