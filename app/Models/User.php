@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Notifications\ResetPasswordNotification;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -131,4 +132,13 @@ public function receivedChats()
 {
     return $this->hasMany(Chat::class, 'receiver_id');
 }
+
+/**
+ * Override: gunakan notifikasi reset password berbahasa Indonesia
+ */
+public function sendPasswordResetNotification($token): void
+{
+    $this->notify(new ResetPasswordNotification($token));
 }
+}
+
