@@ -60,6 +60,15 @@
                                 @if($chat->sender_id === auth()->id())
                                     <!-- Pesan Saya (Kanan) -->
                                     <div class="d-flex justify-content-end mb-3 chat-item" data-id="{{ $chat->id }}">
+                                        <div class="dropdown me-2 align-self-center">
+                                            <button class="btn btn-sm btn-link text-muted px-1" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="opacity:0.3;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.3">
+                                                <i class="bi bi-three-dots-vertical"></i>
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 small">
+                                                <li><a class="dropdown-item text-danger" href="#" onclick="deleteChat({{ $chat->id }}, 'for_me', event)"><i class="bi bi-trash me-2"></i>Hapus untuk saya</a></li>
+                                                <li><a class="dropdown-item text-danger fw-bold" href="#" onclick="deleteChat({{ $chat->id }}, 'for_everyone', event)"><i class="bi bi-trash-fill me-2"></i>Hapus untuk semua orang</a></li>
+                                            </ul>
+                                        </div>
                                         <div class="bg-primary text-white p-3 rounded-4 shadow-sm" style="max-width: 75%; border-bottom-right-radius: 4px !important;">
                                             @if($chat->file_path)
                                                 <div class="mb-2">
@@ -89,6 +98,14 @@
                                             @endif
                                             <div class="text-start small text-muted" style="font-size: 0.7rem;">{{ $chat->created_at->format('H:i') }}</div>
                                         </div>
+                                        <div class="dropdown ms-2 align-self-center">
+                                            <button class="btn btn-sm btn-link text-muted px-1" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="opacity:0.3;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.3">
+                                                <i class="bi bi-three-dots-vertical"></i>
+                                            </button>
+                                            <ul class="dropdown-menu shadow-sm border-0 small">
+                                                <li><a class="dropdown-item text-danger" href="#" onclick="deleteChat({{ $chat->id }}, 'for_me', event)"><i class="bi bi-trash me-2"></i>Hapus dari perangkat saya</a></li>
+                                            </ul>
+                                        </div>
                                     </div>
                                 @endif
                             @endforeach
@@ -104,7 +121,10 @@
                             <button type="button" class="btn btn-light border-secondary border-opacity-25 rounded-start px-3" onclick="document.getElementById('chat-file').click()" title="Lampirkan File">
                                 <i class="bi bi-paperclip"></i>
                             </button>
-                            <input type="text" name="message" id="chat-message" class="form-control border-secondary border-opacity-25 ps-3" placeholder="Ketik pesan..." autofocus>
+                            <button type="button" class="btn btn-light border-secondary border-opacity-25 border-start-0 px-3" id="emoji-btn" title="Emoji">
+                                😊
+                            </button>
+                            <input type="text" name="message" id="chat-message" class="form-control border-secondary border-opacity-25 ps-3" placeholder="Ketik pesan..." autofocus autocomplete="off">
                             <button class="btn btn-primary rounded-end px-4 fw-bold" type="submit" id="btn-send"><i class="bi bi-send-fill me-1"></i> Kirim</button>
                         </div>
                         <div id="file-name" class="small text-muted mt-1 px-2"></div>
@@ -115,134 +135,302 @@
     </div>
 </div>
 
+<!-- Toast Container -->
+<div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1060">
+    <div id="chatToast" class="toast align-items-center text-white bg-primary border-0 rounded-4 shadow" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body fw-bold" id="toastMessage">
+                Pesan baru diterima
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@joeattardi/emoji-button@4.6.4/dist/index.min.js"></script>
 <script>
-document.addEventListener("DOMContentLoaded", function() {
-    const chatBody = document.getElementById('chat-body');
-    const chatMessages = document.getElementById('chat-messages');
-    const chatForm = document.getElementById('chat-form');
-    const messageInput = document.getElementById('chat-message');
-    const fileInput = document.getElementById('chat-file');
-    const fileNameDisplay = document.getElementById('file-name');
-    const btnSend = document.getElementById('btn-send');
     const myId = {{ auth()->id() }};
-    
-    let lastChatCount = document.querySelectorAll('.chat-item').length;
+    const deleteUrlBase = "{{ url('mahasiswa/chats/message') }}";
 
-    function scrollToBottom() {
-        chatBody.scrollTop = chatBody.scrollHeight;
-    }
-    
-    scrollToBottom();
+    function deleteChat(id, type, event) {
+        event.preventDefault();
+        if(!confirm('Anda yakin ingin menghapus pesan ini?')) return;
 
-    // Format waktu
-    function formatTime(dateStr) {
-        const d = new Date(dateStr);
-        return d.getHours().toString().padStart(2, '0') + ':' + d.getMinutes().toString().padStart(2, '0');
-    }
-
-    // Render satu bubble chat
-    function renderChat(chat) {
-        const isMe = chat.sender_id === myId;
-        const time = formatTime(chat.created_at);
-        const fileUrl = chat.file_path ? `{{ asset('storage/chats') }}/${chat.file_path}` : '';
-        
-        let fileHtml = '';
-        if (chat.file_path) {
-            const colorClass = isMe ? 'text-white' : 'text-primary';
-            fileHtml = `<div class="mb-2"><a href="${fileUrl}" target="_blank" class="${colorClass} text-decoration-underline small"><i class="bi bi-paperclip"></i> Lihat Lampiran</a></div>`;
-        }
-        
-        let msgHtml = '';
-        if (chat.message) {
-            msgHtml = `<p class="mb-1 ${isMe ? '' : 'text-dark'}">${chat.message}</p>`;
-        }
-        
-        const statusHtml = isMe ? (chat.is_read ? '<i class="bi bi-check-all ms-1"></i>' : '<i class="bi bi-check ms-1"></i>') : '';
-        
-        if (isMe) {
-            return `
-            <div class="d-flex justify-content-end mb-3 chat-item" data-id="${chat.id}">
-                <div class="bg-primary text-white p-3 rounded-4 shadow-sm" style="max-width: 75%; border-bottom-right-radius: 4px !important;">
-                    ${fileHtml}
-                    ${msgHtml}
-                    <div class="text-end small opacity-75" style="font-size: 0.7rem;">${time} ${statusHtml}</div>
-                </div>
-            </div>`;
-        } else {
-            return `
-            <div class="d-flex justify-content-start mb-3 chat-item" data-id="${chat.id}">
-                <div class="bg-white p-3 rounded-4 shadow-sm border border-light" style="max-width: 75%; border-bottom-left-radius: 4px !important;">
-                    ${fileHtml}
-                    ${msgHtml}
-                    <div class="text-start small text-muted" style="font-size: 0.7rem;">${time}</div>
-                </div>
-            </div>`;
-        }
-    }
-
-    // Submit form via AJAX
-    chatForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        if (!messageInput.value.trim() && !fileInput.files.length) return;
-        
-        const formData = new FormData(this);
-        btnSend.disabled = true;
-        btnSend.innerHTML = '<span class="spinner-border spinner-border-sm"></span>';
-        
-        fetch(this.action, {
-            method: 'POST',
-            body: formData,
+        fetch(`${deleteUrlBase}/${id}?type=${type}`, {
+            method: 'DELETE',
             headers: {
-                'X-Requested-With': 'XMLHttpRequest'
-            }
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.success) {
-                const emptyMsg = document.getElementById('empty-msg');
-                if (emptyMsg) emptyMsg.remove();
-                
-                chatMessages.insertAdjacentHTML('beforeend', renderChat(data.chat));
-                scrollToBottom();
-                
-                messageInput.value = '';
-                fileInput.value = '';
-                fileNameDisplay.textContent = '';
-                lastChatCount++;
-            }
-        })
-        .finally(() => {
-            btnSend.disabled = false;
-            btnSend.innerHTML = '<i class="bi bi-send-fill me-1"></i> Kirim';
-        });
-    });
-
-    // Polling setiap 3 detik
-    setInterval(() => {
-        fetch("{{ route('mahasiswa.chats.show', $dosen->id) }}", {
-            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
                 'X-Requested-With': 'XMLHttpRequest',
                 'Accept': 'application/json'
             }
         })
         .then(res => res.json())
         .then(data => {
-            if (data.chats && data.chats.length > lastChatCount) {
+            if(data.success) {
+                const bubble = document.querySelector(`.chat-item[data-id="${id}"]`);
+                if(bubble) {
+                    if(type === 'for_me') {
+                        bubble.remove(); // Hapus elemen
+                    } else {
+                        // Kalau hapus untuk semua orang, polling akan merefresh datanya nanti. 
+                        // Tapi kita bisa langsung set text lokalnya:
+                        const p = bubble.querySelector('p.mb-1');
+                        if(p) p.innerHTML = '<i>🚫 Pesan ini telah dihapus</i>';
+                        const a = bubble.querySelector('a[target="_blank"]');
+                        if(a) a.parentElement.remove();
+                    }
+                }
+            }
+        });
+    }
+
+    function playPing() {
+        try {
+            const ctx = new (window.AudioContext || window.webkitAudioContext)();
+            const osc = ctx.createOscillator();
+            const gainNode = ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(600, ctx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(800, ctx.currentTime + 0.1);
+            gainNode.gain.setValueAtTime(0.5, ctx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.2);
+            osc.connect(gainNode);
+            gainNode.connect(ctx.destination);
+            osc.start();
+            osc.stop(ctx.currentTime + 0.2);
+        } catch(e) { }
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        const chatBody = document.getElementById('chat-body');
+        const chatMessages = document.getElementById('chat-messages');
+        const chatForm = document.getElementById('chat-form');
+        const messageInput = document.getElementById('chat-message');
+        const fileInput = document.getElementById('chat-file');
+        const fileNameDisplay = document.getElementById('file-name');
+        const btnSend = document.getElementById('btn-send');
+        
+        let lastChatCount = document.querySelectorAll('.chat-item').length;
+        let lastChatIds = Array.from(document.querySelectorAll('.chat-item')).map(el => parseInt(el.getAttribute('data-id')));
+
+        // Inisialisasi Emoji Button
+        try {
+            if (typeof EmojiButton !== 'undefined') {
+                const picker = new EmojiButton({
+                    position: 'top',
+                    theme: 'light'
+                });
+                const emojiBtn = document.getElementById('emoji-btn');
+                if (emojiBtn) {
+                    picker.on('emoji', selection => {
+                        messageInput.value += selection.emoji;
+                        messageInput.focus();
+                    });
+                    emojiBtn.addEventListener('click', () => {
+                        picker.togglePicker(emojiBtn);
+                    });
+                }
+            }
+        } catch(err) {
+            console.error("EmojiButton tidak dapat dimuat:", err);
+        }
+
+        function scrollToBottom() {
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }
+        scrollToBottom();
+
+        function formatTime(dateStr) {
+            const d = new Date(dateStr);
+            return d.getHours().toString().padStart(2, '0') + ':' + d.getMinutes().toString().padStart(2, '0');
+        }
+
+        function renderChat(chat, isSending = false) {
+            const isMe = chat.sender_id === myId;
+            const time = formatTime(chat.created_at);
+            const fileUrl = chat.file_path ? `{{ asset('storage/chats') }}/${chat.file_path}` : '';
+            
+            let fileHtml = '';
+            if (chat.file_path && !chat.is_deleted_for_everyone) {
+                const colorClass = isMe ? 'text-white' : 'text-primary';
+                fileHtml = `<div class="mb-2"><a href="${fileUrl}" target="_blank" class="${colorClass} text-decoration-underline small"><i class="bi bi-paperclip"></i> Lihat Lampiran</a></div>`;
+            }
+            
+            let msgHtml = '';
+            if (chat.message) {
+                if(chat.is_deleted_for_everyone) {
+                    msgHtml = `<p class="mb-1 ${isMe ? '' : 'text-dark'}"><i>${chat.message}</i></p>`;
+                } else {
+                    msgHtml = `<p class="mb-1 ${isMe ? '' : 'text-dark'}">${chat.message}</p>`;
+                }
+            }
+            
+            let statusHtml = '';
+            if (isMe) {
+                if(isSending) {
+                    statusHtml = `<i class="bi bi-clock ms-1"></i>`;
+                } else {
+                    statusHtml = `<i class="bi ${chat.is_read ? 'bi-check-all' : 'bi-check'} ms-1"></i>`;
+                }
+            }
+            
+            if (isMe) {
+                return `
+                <div class="d-flex justify-content-end mb-3 chat-item" data-id="${chat.id}">
+                    <div class="dropdown me-2 align-self-center">
+                        <button class="btn btn-sm btn-link text-muted px-1" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="opacity:0.3;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.3">
+                            <i class="bi bi-three-dots-vertical"></i>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 small">
+                            <li><a class="dropdown-item text-danger" href="#" onclick="deleteChat('${chat.id}', 'for_me', event)"><i class="bi bi-trash me-2"></i>Hapus untuk saya</a></li>
+                            ${!chat.is_deleted_for_everyone && !isSending ? `<li><a class="dropdown-item text-danger fw-bold" href="#" onclick="deleteChat('${chat.id}', 'for_everyone', event)"><i class="bi bi-trash-fill me-2"></i>Hapus untuk semua orang</a></li>` : ''}
+                        </ul>
+                    </div>
+                    <div class="bg-primary text-white p-3 rounded-4 shadow-sm" style="max-width: 75%; border-bottom-right-radius: 4px !important;">
+                        ${fileHtml}
+                        ${msgHtml}
+                        <div class="text-end small opacity-75" style="font-size: 0.7rem;">${time} ${statusHtml}</div>
+                    </div>
+                </div>`;
+            } else {
+                return `
+                <div class="d-flex justify-content-start mb-3 chat-item" data-id="${chat.id}">
+                    <div class="bg-white p-3 rounded-4 shadow-sm border border-light" style="max-width: 75%; border-bottom-left-radius: 4px !important;">
+                        ${fileHtml}
+                        ${msgHtml}
+                        <div class="text-start small text-muted" style="font-size: 0.7rem;">${time}</div>
+                    </div>
+                    <div class="dropdown ms-2 align-self-center">
+                        <button class="btn btn-sm btn-link text-muted px-1" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="opacity:0.3;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.3">
+                            <i class="bi bi-three-dots-vertical"></i>
+                        </button>
+                        <ul class="dropdown-menu shadow-sm border-0 small">
+                            <li><a class="dropdown-item text-danger" href="#" onclick="deleteChat('${chat.id}', 'for_me', event)"><i class="bi bi-trash me-2"></i>Hapus dari perangkat saya</a></li>
+                        </ul>
+                    </div>
+                </div>`;
+            }
+        }
+
+        if(chatForm) {
+            chatForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const msgText = messageInput.value.trim();
+                if (!msgText && !fileInput.files.length) return;
+                
+                const formData = new FormData(this);
+                btnSend.disabled = true;
+                btnSend.innerHTML = '<span class="spinner-border spinner-border-sm"></span>';
+                
+                const tempId = 'temp-' + Date.now();
+                const tempChat = {
+                    id: tempId,
+                    sender_id: myId,
+                    message: msgText,
+                    file_path: fileInput.files.length ? fileInput.files[0].name : null,
+                    created_at: new Date().toISOString(),
+                    is_read: false,
+                    is_deleted_for_everyone: false
+                };
+                
                 const emptyMsg = document.getElementById('empty-msg');
                 if (emptyMsg) emptyMsg.remove();
                 
-                // Cari pesan baru
-                const newChats = data.chats.slice(lastChatCount);
-                newChats.forEach(chat => {
-                    chatMessages.insertAdjacentHTML('beforeend', renderChat(chat));
-                });
-                
-                lastChatCount = data.chats.length;
+                chatMessages.insertAdjacentHTML('beforeend', renderChat(tempChat, true));
                 scrollToBottom();
+                
+                messageInput.value = '';
+                fileInput.value = '';
+                fileNameDisplay.textContent = '';
+                
+                fetch(this.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        const tempEl = document.querySelector(`.chat-item[data-id="${tempId}"]`);
+                        if (tempEl) {
+                            tempEl.outerHTML = renderChat(data.chat);
+                        } else {
+                            chatMessages.insertAdjacentHTML('beforeend', renderChat(data.chat));
+                        }
+                        scrollToBottom();
+                        lastChatIds.push(data.chat.id);
+                        lastChatCount++;
+                    }
+                })
+                .finally(() => {
+                    btnSend.disabled = false;
+                    btnSend.innerHTML = '<i class="bi bi-send-fill me-1"></i> Kirim';
+                });
+            });
+
+            function showToast(title) {
+                document.getElementById('toastMessage').innerText = title;
+                const toastEl = document.getElementById('chatToast');
+                const toast = new bootstrap.Toast(toastEl, { delay: 4000 });
+                toast.show();
+                playPing();
             }
-        })
-        .catch(err => console.error(err));
-    }, 3000);
-});
+
+            // Polling setiap 3 detik
+            setInterval(() => {
+                fetch("{{ route('mahasiswa.chats.show', $dosen->id) }}", {
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json'
+                    }
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.chats) {
+                        let hasNewMessage = false;
+                        let lastSenderNotMe = false;
+
+                        let newHtml = '';
+                        data.chats.forEach(chat => {
+                            newHtml += renderChat(chat);
+                            if (!lastChatIds.includes(chat.id)) {
+                                hasNewMessage = true;
+                                if (chat.sender_id !== myId) lastSenderNotMe = true;
+                                lastChatIds.push(chat.id);
+                            }
+                        });
+
+                        if (chatMessages.innerHTML.length !== newHtml.length || hasNewMessage) {
+                            const isAtBottom = (chatBody.scrollTop + chatBody.clientHeight >= chatBody.scrollHeight - 10);
+                            const currentScrollTop = chatBody.scrollTop;
+                            
+                            const emptyMsg = document.getElementById('empty-msg');
+                            if (emptyMsg) emptyMsg.remove();
+                            
+                            const tempMessages = Array.from(chatMessages.querySelectorAll('.chat-item[data-id^="temp-"]'));
+                            
+                            chatMessages.innerHTML = newHtml;
+                            
+                            tempMessages.forEach(el => chatMessages.appendChild(el));
+
+                            if (hasNewMessage || isAtBottom) {
+                                scrollToBottom();
+                            } else {
+                                chatBody.scrollTop = currentScrollTop;
+                            }
+
+                            if (hasNewMessage && lastSenderNotMe) {
+                                showToast("Pesan baru dari Dosen");
+                            }
+                        }
+                        lastChatCount = data.chats.length;
+                    }
+                })
+                .catch(err => console.error(err));
+            }, 3000);
+        }
+    });
 </script>
 @endsection

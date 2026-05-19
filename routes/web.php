@@ -198,6 +198,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('chats/get-students', [\App\Http\Controllers\Staff\ChatController::class, 'getStudents'])->name('chats.getStudents');
         Route::get('chats/{id}',         [\App\Http\Controllers\Staff\ChatController::class, 'show'])->name('chats.show');
         Route::post('chats/{id}',        [\App\Http\Controllers\Staff\ChatController::class, 'store'])->name('chats.store');
+        Route::delete('chats/message/{id}', [\App\Http\Controllers\Staff\ChatController::class, 'destroy'])->name('chats.destroy');
         Route::resource('announcements', AnnouncementController::class);
 
         // Dokumen (Shared Controller)
@@ -243,6 +244,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('chats/get-students', [\App\Http\Controllers\Dosen\ChatController::class, 'getStudents'])->name('chats.getStudents');
         Route::get('chats/{id}',         [\App\Http\Controllers\Dosen\ChatController::class, 'show'])->name('chats.show');
         Route::post('chats/{id}',        [\App\Http\Controllers\Dosen\ChatController::class, 'store'])->name('chats.store');
+        Route::delete('chats/message/{id}', [\App\Http\Controllers\Dosen\ChatController::class, 'destroy'])->name('chats.destroy');
 
         // Profil & Akun
         Route::get('profile',  [\App\Http\Controllers\Dosen\ProfileController::class, 'index'])->name('profile.index');
@@ -287,6 +289,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/chats',       [ChatController::class, 'index'])->name('chats.index');
         Route::get('/chats/{id}',  [ChatController::class, 'show'])->name('chats.show');
         Route::post('/chats/{id}', [ChatController::class, 'store'])->name('chats.store');
+        Route::delete('/chats/message/{id}', [ChatController::class, 'destroy'])->name('chats.destroy');
         Route::get('/ukms',        [UkmController::class, 'index'])->name('ukms.index');
         Route::get('/profile',     [ProfileController::class, 'index'])->name('profile.index');
         Route::post('/profile',    [ProfileController::class, 'update'])->name('profile.update');

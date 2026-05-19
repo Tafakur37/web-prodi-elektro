@@ -46,4 +46,10 @@ class ChatController extends Controller
 
         return redirect()->route($this->chatService->redirectRoute('dosen'), $id);
     }
+
+    public function destroy(Request $request, $id)
+    {
+        $success = $this->chatService->deleteMessage($id, auth()->id(), $request->type);
+        return response()->json(['success' => $success]);
+    }
 }

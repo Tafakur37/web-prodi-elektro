@@ -149,16 +149,53 @@ class ChatService
         return User::where('role', 'dosen')->get();
     }
 
-    /**
-     * Ambil riwayat percakapan antara dua user.
-     */
     public function getConversation(int $userId, int $partnerId)
     {
-        return Chat::where(function ($q) use ($userId, $partnerId) {
+        $chats = Chat::where(function ($q) use ($userId, $partnerId) {
             $q->where('sender_id', $userId)->where('receiver_id', $partnerId);
         })->orWhere(function ($q) use ($userId, $partnerId) {
             $q->where('sender_id', $partnerId)->where('receiver_id', $userId);
         })->orderBy('created_at', 'asc')->get();
+
+        return $chats->filter(function ($chat) use ($userId) {
+            if ($chat->sender_id === $userId && $chat->deleted_by_sender) {
+                return false;
+            }
+            if ($chat->receiver_id === $userId && $chat->deleted_by_receiver) {
+                return false;
+            }
+            return true;
+        })->map(function ($chat) {
+            if ($chat->is_deleted_for_everyone) {
+                $chat->message = '🚫 Pesan ini telah dihapus';
+                $chat->file_path = null;
+            }
+            return $chat;
+        })->values();
+    }
+
+    /**
+     * Hapus pesan chat.
+     */
+    public function deleteMessage(int $messageId, int $userId, string $type)
+    {
+        $chat = Chat::findOrFail($messageId);
+
+        if ($type === 'for_everyone' && $chat->sender_id === $userId) {
+            $chat->update(['is_deleted_for_everyone' => true]);
+            return true;
+        }
+
+        if ($type === 'for_me') {
+            if ($chat->sender_id === $userId) {
+                $chat->update(['deleted_by_sender' => true]);
+            } elseif ($chat->receiver_id === $userId) {
+                $chat->update(['deleted_by_receiver' => true]);
+            }
+            return true;
+        }
+
+        return false;
     }
 
     /**
