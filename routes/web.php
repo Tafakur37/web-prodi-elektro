@@ -27,6 +27,8 @@ use App\Http\Controllers\Kaprodi\KaprodiDashboardController;
 use App\Http\Controllers\Admin\ScheduleController;
 use App\Http\Controllers\Staff\StaffController;
 use App\Http\Controllers\Staff\AnnouncementController;
+use App\Http\Controllers\Staff\DosenController;
+use App\Http\Controllers\Admin\AdminDosenController;
 
 // Shared Controllers (Admin-Centric Architecture)
 use App\Http\Controllers\Shared\DocumentController as SharedDocumentController;
@@ -150,6 +152,15 @@ Route::middleware(['auth'])->group(function () {
 
         // Berkas (File Explorer — deduplicated macro)
         Route::registerBerkasRoutes();
+
+        // ── Data Dosen (Admin sebagai role inti)
+        Route::get('dosen',                      [AdminDosenController::class, 'dosenIndex'])->name('dosen.index');
+        Route::put('dosen/{dosen}',              [AdminDosenController::class, 'dosenUpdate'])->name('dosen.update');
+
+        // ── Data Mahasiswa (2-step: cohort → list)
+        Route::get('students',                             [AdminDosenController::class, 'studentsIndex'])->name('students.index');
+        Route::put('students/{student}',                   [AdminDosenController::class, 'studentsUpdate'])->name('students.update');
+        Route::put('students/{student}/reset-password',    [AdminDosenController::class, 'studentsResetPassword'])->name('students.reset_password');
     });
 
     // =========================================================================
@@ -177,6 +188,10 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('violations',    \App\Http\Controllers\Staff\ViolationController::class)->except(['show']);
         Route::resource('achievements',  \App\Http\Controllers\Staff\AchievementController::class);
         Route::resource('fitness-tests', \App\Http\Controllers\Staff\FitnessTestController::class);
+
+        // Data Dosen
+        Route::get('dosen',           [DosenController::class, 'index'])->name('dosen.index');
+        Route::put('dosen/{dosen}',   [DosenController::class, 'update'])->name('dosen.update');
 
         // Komunikasi
         Route::get('chats',              [\App\Http\Controllers\Staff\ChatController::class, 'index'])->name('chats.index');

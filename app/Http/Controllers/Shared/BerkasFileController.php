@@ -97,20 +97,58 @@ class BerkasFileController extends Controller
     {
         $file = BerkasFile::findOrFail($id);
 
-        // Check policy
+        // Check authorization
         Gate::authorize('viewFile', $file);
 
         $filePath = storage_path('app/public/' . $file->file_path);
 
-        if (file_exists($filePath)) {
-            $mime = mime_content_type($filePath);
-            return response()->file($filePath, [
-                'Content-Type' => $mime,
-                'Content-Disposition' => 'inline; filename="' . $file->name . '"'
-            ]);
+        if (!file_exists($filePath)) {
+            abort(404, 'File tidak ditemukan di server.');
         }
 
-        return abort(404, 'File tidak ditemukan di server.');
+        $ext  = strtolower($file->extension);
+        $mime = mime_content_type($filePath);
+
+        // Override MIME untuk tipe yang sering salah terdeteksi
+        $mimeOverrides = [
+            'txt'  => 'text/plain',
+            'log'  => 'text/plain',
+            'csv'  => 'text/csv',
+            'json' => 'application/json',
+            'xml'  => 'text/xml',
+            'md'   => 'text/plain',
+            'html' => 'text/html',
+            'htm'  => 'text/html',
+            'js'   => 'text/javascript',
+            'css'  => 'text/css',
+            'php'  => 'text/plain',
+            'py'   => 'text/plain',
+            'pdf'  => 'application/pdf',
+            'jpg'  => 'image/jpeg',
+            'jpeg' => 'image/jpeg',
+            'png'  => 'image/png',
+            'gif'  => 'image/gif',
+            'webp' => 'image/webp',
+            'svg'  => 'image/svg+xml',
+            'mp4'  => 'video/mp4',
+            'webm' => 'video/webm',
+            'ogg'  => 'video/ogg',
+        ];
+
+        if (isset($mimeOverrides[$ext])) {
+            $mime = $mimeOverrides[$ext];
+        }
+
+        $headers = [
+            'Content-Type'        => $mime,
+            'Content-Disposition' => 'inline; filename="' . addslashes($file->name) . '"',
+            'X-Content-Type-Options' => 'nosniff',
+            // Izinkan embed di iframe untuk PDF (Google Docs viewer)
+            'X-Frame-Options'     => 'SAMEORIGIN',
+            'Cache-Control'       => 'private, max-age=300',
+        ];
+
+        return response()->file($filePath, $headers);
     }
 
     public function destroy($id)

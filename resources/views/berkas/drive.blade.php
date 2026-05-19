@@ -146,9 +146,12 @@
         color: #94a3b8;
     }
     .icon-folder { color: #6366f1 !important; }
-    .icon-pdf { color: #ef4444 !important; }
-    .icon-image { color: #10b981 !important; }
-    .icon-word { color: #2563eb !important; }
+    .icon-pdf    { color: #ef4444 !important; }
+    .icon-image  { color: #10b981 !important; }
+    .icon-word   { color: #2563eb !important; }
+    .icon-excel  { color: #16a34a !important; }
+    .icon-video  { color: #f59e0b !important; }
+    .icon-text   { color: #64748b !important; }
 
     .drive-item-info {
         flex: 1;
@@ -369,11 +372,28 @@
                         
                         @php
                             $ext = strtolower($file->extension);
-                            $icon = 'bi-file-earmark';
-                            $iconClass = '';
-                            if(in_array($ext, ['pdf'])) { $icon = 'bi-file-earmark-pdf-fill'; $iconClass = 'icon-pdf'; }
-                            elseif(in_array($ext, ['jpg','jpeg','png','gif','webp'])) { $icon = 'bi-file-earmark-image-fill'; $iconClass = 'icon-image'; }
-                            elseif(in_array($ext, ['doc','docx'])) { $icon = 'bi-file-earmark-word-fill'; $iconClass = 'icon-word'; }
+                            if (in_array($ext, ['pdf'])) {
+                                $icon = 'bi-file-earmark-pdf-fill';
+                                $iconClass = 'icon-pdf';
+                            } elseif (in_array($ext, ['jpg','jpeg','png','gif','webp','svg'])) {
+                                $icon = 'bi-file-earmark-image-fill';
+                                $iconClass = 'icon-image';
+                            } elseif (in_array($ext, ['doc','docx'])) {
+                                $icon = 'bi-file-earmark-word-fill';
+                                $iconClass = 'icon-word';
+                            } elseif (in_array($ext, ['xls','xlsx'])) {
+                                $icon = 'bi-file-earmark-excel-fill';
+                                $iconClass = 'icon-excel';
+                            } elseif (in_array($ext, ['mp4','webm','mov','avi'])) {
+                                $icon = 'bi-camera-video-fill';
+                                $iconClass = 'icon-video';
+                            } elseif (in_array($ext, ['txt','csv','log','md'])) {
+                                $icon = 'bi-file-earmark-text-fill';
+                                $iconClass = 'icon-text';
+                            } else {
+                                $icon = 'bi-file-earmark';
+                                $iconClass = '';
+                            }
                         @endphp
                         
                         <i class="bi {{ $icon }} drive-item-icon {{ $iconClass }}"></i>
@@ -546,57 +566,121 @@
     </div>
 </div>
 
-<!-- Preview Modal -->
-<div class="modal fade" id="previewModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
-    <div class="modal-dialog modal-fullscreen m-0">
-        <div class="modal-content border-0" style="background-color: #0f172a; border-radius: 0;">
-            <!-- Header (Fixed Top) -->
-            <div class="d-flex justify-content-between align-items-center p-3" style="background-color: rgba(15, 23, 42, 0.95); border-bottom: 1px solid #1e293b; position: absolute; top: 0; left: 0; right: 0; z-index: 1060;">
-                <div class="d-flex align-items-center gap-3">
-                    <!-- Tombol Kembali -->
-                    <button type="button" class="btn btn-outline-light border-0" data-bs-dismiss="modal" @click="closePreview()" style="border-radius: 50%; width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.1);">
-                        <i class="bi bi-arrow-left" style="font-size: 1.2rem;"></i>
-                    </button>
-                    <h5 class="mb-0 fw-bold text-white text-truncate" style="max-width: 300px;" x-text="previewName"></h5>
+<!-- Preview Modal (Floating — Google Drive Style) -->
+<div class="modal fade" id="previewModal" tabindex="-1" aria-labelledby="previewModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered" style="max-width: min(95vw, 1200px); height: min(92vh, 900px); margin: auto;">
+        <div class="modal-content border-0 shadow-lg overflow-hidden" style="background:#1e293b; border-radius:16px; height: 100%;">
+
+            <!-- Header -->
+            <div class="d-flex justify-content-between align-items-center px-4 py-3 flex-shrink-0"
+                 style="background:rgba(15,23,42,0.95); border-bottom:1px solid #334155;">
+                <div class="d-flex align-items-center gap-3 overflow-hidden">
+                    <i class="bi bi-file-earmark text-info flex-shrink-0" style="font-size:1.3rem;" x-bind:class="{
+                        'bi-file-earmark-image-fill text-success': previewTypeClass === 'image',
+                        'bi-file-earmark-pdf-fill text-danger': previewTypeClass === 'pdf',
+                        'bi-camera-video-fill text-warning': previewTypeClass === 'video',
+                        'bi-file-earmark-text-fill text-info': previewTypeClass === 'text',
+                        'bi-file-earmark text-secondary': previewTypeClass === 'none'
+                    }"></i>
+                    <h6 class="mb-0 fw-semibold text-white text-truncate" x-text="previewName" id="previewModalLabel"></h6>
                 </div>
-                <div>
-                    <a :href="'{{ $urlPrefix }}/berkas/file/' + previewId + '/download'" class="btn btn-primary rounded-pill px-4 shadow-sm">
-                        <i class="bi bi-download me-2"></i> Download
+                <div class="d-flex align-items-center gap-2 flex-shrink-0">
+                    <a :href="'{{ $urlPrefix }}/berkas/file/' + previewId + '/download'"
+                       class="btn btn-sm btn-outline-light border-0 rounded-pill px-3"
+                       style="background:rgba(255,255,255,0.1);">
+                        <i class="bi bi-download me-1"></i>Download
                     </a>
+                    <button type="button"
+                            class="btn btn-sm btn-outline-light border-0 rounded-circle"
+                            style="width:36px;height:36px;background:rgba(255,255,255,0.1);"
+                            data-bs-dismiss="modal" @click="closePreview()" aria-label="Tutup">
+                        <i class="bi bi-x-lg"></i>
+                    </button>
                 </div>
             </div>
-            
+
             <!-- Body -->
-            <div class="modal-body p-0 d-flex justify-content-center align-items-center position-relative" style="height: 100vh; overflow: hidden; padding-top: 70px !important;">
-                
-                <template x-if="isPreviewLoading && canPreview">
-                    <div class="position-absolute w-100 h-100 d-flex flex-column justify-content-center align-items-center" style="z-index: 10;">
-                        <div class="spinner-border text-light mb-3" role="status" style="width: 3rem; height: 3rem;"></div>
-                        <p class="fs-5 text-white">Memuat Pratinjau...</p>
+            <div class="d-flex justify-content-center align-items-center position-relative flex-grow-1"
+                 style="overflow:hidden; background:#0f172a;">
+
+                <!-- Loading Spinner -->
+                <div x-show="isPreviewLoading"
+                     x-transition
+                     class="position-absolute d-flex flex-column justify-content-center align-items-center w-100 h-100"
+                     style="z-index:10; background:#0f172a; display:none;">
+                    <div class="spinner-border text-light mb-3" role="status" style="width:3rem;height:3rem;">
+                        <span class="visually-hidden">Loading...</span>
                     </div>
-                </template>
-                
+                    <p class="text-white-50 fs-6">Memuat pratinjau...</p>
+                </div>
+
+                <!-- Image -->
                 <template x-if="canPreview && previewTypeClass === 'image'">
-                    <img :src="previewUrl" class="img-fluid shadow-lg" style="max-height: 85vh; max-width: 90vw; object-fit: contain; z-index: 5;" x-on:load="isPreviewLoading = false" x-on:error="isPreviewLoading = false; canPreview = false">
-                </template>
-                
-                <template x-if="canPreview && previewTypeClass === 'video'">
-                    <video :src="previewUrl" controls class="shadow-lg" style="max-height: 85vh; max-width: 90vw; background: #000; z-index: 5;" x-on:loadeddata="isPreviewLoading = false"></video>
-                </template>
-                
-                <template x-if="canPreview && previewTypeClass === 'pdf'">
-                    <iframe :src="previewUrl" class="w-100 h-100 border-0" x-on:load="isPreviewLoading = false" style="background: white; z-index: 5;"></iframe>
-                </template>
-                
-                <template x-if="!canPreview">
-                    <div class="text-center text-muted d-flex flex-column justify-content-center align-items-center h-100 w-100" style="z-index: 5;">
-                        <i class="bi bi-file-earmark-x" style="font-size: 6rem; color: #475569;"></i>
-                        <h4 class="mt-4 fw-bold text-white">Pratinjau Tidak Tersedia</h4>
-                        <p style="color: #94a3b8; max-width: 400px; margin: 0 auto;">File dengan ekstensi <strong x-text="'.' + previewExt" class="text-white"></strong> tidak dapat dipratinjau secara langsung. Silakan download untuk melihat isinya.</p>
+                    <div class="w-100 h-100 d-flex justify-content-center align-items-center p-3" style="overflow:auto;">
+                        <img :src="previewUrl"
+                             :alt="previewName"
+                             class="img-fluid shadow-lg"
+                             style="max-height:100%; max-width:100%; object-fit:contain; border-radius:8px;"
+                             x-on:load="isPreviewLoading = false"
+                             x-on:error="isPreviewLoading = false; canPreview = false; previewTypeClass = 'none'">
                     </div>
                 </template>
-                
-            </div>
+
+                <!-- Video -->
+                <template x-if="canPreview && previewTypeClass === 'video'">
+                    <div class="w-100 h-100 d-flex justify-content-center align-items-center p-3">
+                        <video :src="previewUrl"
+                               controls
+                               class="shadow-lg"
+                               style="max-height:100%; max-width:100%; border-radius:8px; background:#000;"
+                               x-on:loadeddata="isPreviewLoading = false"
+                               x-on:error="isPreviewLoading = false; canPreview = false; previewTypeClass = 'none'">
+                            Browser Anda tidak mendukung pemutaran video.
+                        </video>
+                    </div>
+                </template>
+
+                <!-- PDF -->
+                <template x-if="canPreview && previewTypeClass === 'pdf'">
+                    <div class="w-100 h-100">
+                        <object :data="previewUrl"
+                                type="application/pdf"
+                                class="w-100 h-100 border-0"
+                                x-on:load="isPreviewLoading = false">
+                            <iframe :src="'https://docs.google.com/viewer?embedded=true&url=' + encodeURIComponent(window.location.origin + previewUrl)"
+                                    class="w-100 h-100 border-0"
+                                    x-on:load="isPreviewLoading = false">
+                            </iframe>
+                        </object>
+                    </div>
+                </template>
+
+                <!-- Plain Text -->
+                <template x-if="canPreview && previewTypeClass === 'text'">
+                    <div class="w-100 h-100 d-flex justify-content-center align-items-start p-4" style="overflow:auto;">
+                        <pre id="textPreviewContent"
+                             class="text-white-50 small w-100"
+                             style="white-space:pre-wrap; word-break:break-word; font-family: 'Courier New', monospace; background:transparent;"></pre>
+                    </div>
+                </template>
+
+                <!-- Tidak dapat dipratinjau -->
+                <template x-if="!canPreview && !isPreviewLoading">
+                    <div class="text-center d-flex flex-column justify-content-center align-items-center h-100 w-100 p-4">
+                        <i class="bi bi-file-earmark-x mb-4" style="font-size:5rem; color:#475569;"></i>
+                        <h5 class="fw-bold text-white mb-2">Pratinjau Tidak Tersedia</h5>
+                        <p class="text-white-50 mb-4" style="max-width:400px;">
+                            File <strong class="text-white" x-text="'.' + previewExt"></strong> tidak dapat dipratinjau secara langsung.
+                            Gunakan tombol Download untuk melihat isinya.
+                        </p>
+                        <a :href="'{{ $urlPrefix }}/berkas/file/' + previewId + '/download'"
+                           class="btn btn-primary rounded-pill px-4">
+                            <i class="bi bi-download me-2"></i>Download File
+                        </a>
+                    </div>
+                </template>
+
+            </div><!-- /body -->
         </div>
     </div>
 </div>
@@ -737,41 +821,92 @@
                 this.menuOpen = false;
                 this.previewId = id;
                 this.previewName = name;
-                this.previewExt = ext;
-                
-                const imageExts = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'];
-                const videoExts = ['mp4', 'webm', 'ogg'];
-                const pdfExts = ['pdf', 'txt'];
-                
+                this.previewExt = ext.toLowerCase();
                 this.isPreviewLoading = true;
-                this.previewUrl = '{{ $urlPrefix }}/berkas/file/' + id + '/preview';
+                this.canPreview = false;
+                this.previewUrl = '';
+                this.previewTypeClass = 'none';
 
-                if (imageExts.includes(ext)) {
+                const imageExts = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'bmp', 'ico'];
+                const videoExts = ['mp4', 'webm', 'ogg', 'mov', 'avi'];
+                const pdfExts   = ['pdf'];
+                const textExts  = ['txt', 'log', 'csv', 'json', 'xml', 'md', 'html', 'htm', 'js', 'css', 'php', 'py'];
+
+                const baseUrl = '{{ $urlPrefix }}/berkas/file/' + id + '/preview';
+
+                if (imageExts.includes(this.previewExt)) {
                     this.previewTypeClass = 'image';
+                    this.previewUrl = baseUrl;
                     this.canPreview = true;
-                } else if (videoExts.includes(ext)) {
+                } else if (videoExts.includes(this.previewExt)) {
                     this.previewTypeClass = 'video';
+                    this.previewUrl = baseUrl;
                     this.canPreview = true;
-                } else if (pdfExts.includes(ext)) {
+                } else if (pdfExts.includes(this.previewExt)) {
                     this.previewTypeClass = 'pdf';
+                    this.previewUrl = baseUrl;
                     this.canPreview = true;
+                } else if (textExts.includes(this.previewExt)) {
+                    // Fetch text content via AJAX
+                    this.previewTypeClass = 'text';
+                    this.canPreview = true;
+                    fetch(baseUrl)
+                        .then(r => {
+                            if (!r.ok) throw new Error('HTTP ' + r.status);
+                            return r.text();
+                        })
+                        .then(content => {
+                            this.$nextTick(() => {
+                                const el = document.getElementById('textPreviewContent');
+                                if (el) el.textContent = content;
+                            });
+                            this.isPreviewLoading = false;
+                        })
+                        .catch(() => {
+                            this.canPreview = false;
+                            this.previewTypeClass = 'none';
+                            this.isPreviewLoading = false;
+                        });
                 } else {
-                    this.previewUrl = '';
+                    this.previewTypeClass = 'none';
                     this.canPreview = false;
                     this.isPreviewLoading = false;
                 }
-                
+
                 const modal = new bootstrap.Modal(document.getElementById('previewModal'));
                 modal.show();
+
+                // Auto-stop loading for PDF/Object after 8s fallback
+                if (pdfExts.includes(this.previewExt)) {
+                    setTimeout(() => { this.isPreviewLoading = false; }, 8000);
+                }
             },
-            
+
             closePreview() {
-                this.previewUrl = '';
-                this.canPreview = false;
+                this.previewUrl      = '';
+                this.canPreview      = false;
                 this.isPreviewLoading = false;
-                // Force iframe unload
+                this.previewTypeClass = 'none';
+                // Blank out object/iframe to stop media
+                const obj = document.querySelector('#previewModal object');
+                if (obj) obj.data = 'about:blank';
                 const iframe = document.querySelector('#previewModal iframe');
                 if (iframe) iframe.src = 'about:blank';
+                const video = document.querySelector('#previewModal video');
+                if (video) { video.pause(); video.src = ''; }
+                const textEl = document.getElementById('textPreviewContent');
+                if (textEl) textEl.textContent = '';
+            },
+
+            // Called once when Alpine component initializes
+            init() {
+                // Listen for Bootstrap modal hidden event to auto-cleanup
+                const previewEl = document.getElementById('previewModal');
+                if (previewEl) {
+                    previewEl.addEventListener('hidden.bs.modal', () => {
+                        this.closePreview();
+                    });
+                }
             }
         }));
     });

@@ -22,14 +22,22 @@ class ChatController extends Controller
 
     public function show($id)
     {
-        return view('staff.chats.show', $this->chatService->getShowData(auth()->user(), $id, 'staff'));
+        $data = $this->chatService->getShowData(auth()->user(), $id, 'staff');
+        if (request()->ajax()) {
+            return response()->json(['chats' => $data['chats']]);
+        }
+        return view('staff.chats.show', $data);
     }
 
     public function store(Request $request, $id)
     {
         $request->validate($this->chatService->messageRules('staff'));
 
-        $this->chatService->sendMessage(auth()->user(), $id, $request->all());
+        $chat = $this->chatService->sendMessage(auth()->user(), $id, $request->all(), $request->file('file'));
+
+        if ($request->ajax()) {
+            return response()->json(['success' => true, 'chat' => $chat, 'time' => $chat->created_at->format('H:i')]);
+        }
 
         return redirect()->route($this->chatService->redirectRoute('staff'), $id);
     }

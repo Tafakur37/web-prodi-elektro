@@ -17,7 +17,11 @@ class ChatController extends Controller
 
     public function show($id)
     {
-        return view('mahasiswa.chats.show', $this->chatService->getShowData(auth()->user(), $id, 'mahasiswa'));
+        $data = $this->chatService->getShowData(auth()->user(), $id, 'mahasiswa');
+        if (request()->ajax()) {
+            return response()->json(['chats' => $data['chats']]);
+        }
+        return view('mahasiswa.chats.show', $data);
     }
 
     public function store(Request $request, $id)

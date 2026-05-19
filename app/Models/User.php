@@ -29,6 +29,20 @@ class User extends Authenticatable
         'role',
         'profile_photo',
         'theme',
+        // Dosen fields
+        'nuptk',
+        'nip',
+        'tanggal_lahir',
+        'status_pegawai',
+        'status_keaktifan',
+        'pangkat_terakhir',
+        'golongan_terakhir',
+        'tmt_pangkat',
+        'jabatan_fungsional',
+        'tmt_jabfung',
+        'sertifikasi_dosen',
+        'tahun_serdos',
+        'masa_kerja_golongan',
     ];
 
     /**
@@ -41,6 +55,15 @@ class User extends Authenticatable
             'P' => 'Perempuan',
             default => '-',
         };
+    }
+
+    /**
+     * Accessor: Hitung umur dari tanggal_lahir
+     */
+    public function getUmurAttribute(): ?int
+    {
+        if (!$this->tanggal_lahir) return null;
+        return \Carbon\Carbon::parse($this->tanggal_lahir)->age;
     }
     /**
      * The attributes that should be hidden for serialization.

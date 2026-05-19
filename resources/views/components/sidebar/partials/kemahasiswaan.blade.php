@@ -18,11 +18,31 @@
     </button>
     <div class="sidebar-submenu" id="group-kemahasiswaan">
 
+        {{-- Data Dosen --}}
+        @if(PermissionHelper::can('users', 'view_all') || $isAdmin)
+            @php
+                $dosenRoute = $isAdmin
+                    ? ($hasRoute('admin.dosen.index') ? 'admin.dosen.index' : null)
+                    : ($hasRoute('staff.dosen.index') ? 'staff.dosen.index' : null);
+            @endphp
+            @if($dosenRoute)
+                <a class="sidebar-sublink {{ request()->routeIs('*.dosen.*') ? 'active' : '' }}"
+                   href="{{ route($dosenRoute) }}">
+                    <i class="bi bi-person-badge"></i> Data Dosen
+                </a>
+            @endif
+        @endif
+
         {{-- Data Mahasiswa --}}
         @if(PermissionHelper::can('users', 'view_all') || $isAdmin)
-            @if($hasRoute('staff.students.index'))
-                <a class="sidebar-sublink {{ request()->routeIs('staff.students.*') ? 'active' : '' }}"
-                   href="{{ route('staff.students.index') }}">
+            @php
+                $mhsRoute = $isAdmin
+                    ? ($hasRoute('admin.students.index') ? 'admin.students.index' : null)
+                    : ($hasRoute('staff.students.index') ? 'staff.students.index' : null);
+            @endphp
+            @if($mhsRoute)
+                <a class="sidebar-sublink {{ request()->routeIs('*.students.*') ? 'active' : '' }}"
+                   href="{{ route($mhsRoute) }}">
                     <i class="bi bi-mortarboard"></i> Data Mahasiswa
                 </a>
             @endif
