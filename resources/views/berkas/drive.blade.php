@@ -643,15 +643,11 @@
                 <!-- PDF -->
                 <template x-if="canPreview && previewTypeClass === 'pdf'">
                     <div class="w-100 h-100">
-                        <object :data="previewUrl"
-                                type="application/pdf"
+                        <iframe :src="previewUrl"
                                 class="w-100 h-100 border-0"
-                                x-on:load="isPreviewLoading = false">
-                            <iframe :src="'https://docs.google.com/viewer?embedded=true&url=' + encodeURIComponent(window.location.origin + previewUrl)"
-                                    class="w-100 h-100 border-0"
-                                    x-on:load="isPreviewLoading = false">
-                            </iframe>
-                        </object>
+                                x-on:load="isPreviewLoading = false"
+                                x-on:error="isPreviewLoading = false">
+                        </iframe>
                     </div>
                 </template>
 
@@ -838,14 +834,31 @@
                     this.previewTypeClass = 'image';
                     this.previewUrl = baseUrl;
                     this.canPreview = true;
+                    // Preload image directly in JS to ensure loading state resolves cleanly
+                    const img = new Image();
+                    img.onload = () => { this.isPreviewLoading = false; };
+                    img.onerror = () => {
+                        this.isPreviewLoading = false;
+                        this.canPreview = false;
+                        this.previewTypeClass = 'none';
+                    };
+                    img.src = baseUrl;
                 } else if (videoExts.includes(this.previewExt)) {
                     this.previewTypeClass = 'video';
                     this.previewUrl = baseUrl;
                     this.canPreview = true;
+                    // Safely resolve loading spinner after 1.5 seconds max
+                    setTimeout(() => {
+                        if (this.previewId === id) this.isPreviewLoading = false;
+                    }, 1500);
                 } else if (pdfExts.includes(this.previewExt)) {
                     this.previewTypeClass = 'pdf';
                     this.previewUrl = baseUrl;
                     this.canPreview = true;
+                    // Safely resolve loading spinner after 1.5 seconds max
+                    setTimeout(() => {
+                        if (this.previewId === id) this.isPreviewLoading = false;
+                    }, 1500);
                 } else if (textExts.includes(this.previewExt)) {
                     // Fetch text content via AJAX
                     this.previewTypeClass = 'text';
@@ -875,11 +888,6 @@
 
                 const modal = new bootstrap.Modal(document.getElementById('previewModal'));
                 modal.show();
-
-                // Auto-stop loading for PDF/Object after 8s fallback
-                if (pdfExts.includes(this.previewExt)) {
-                    setTimeout(() => { this.isPreviewLoading = false; }, 8000);
-                }
             },
 
             closePreview() {
