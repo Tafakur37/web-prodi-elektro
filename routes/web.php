@@ -104,6 +104,8 @@ Route::middleware(['auth'])->group(function () {
 
     // Global API & Utilities
     Route::get('/api/users-suggestions',    [UserController::class, 'suggestions'])->name('global.users.suggestions');
+    Route::get('/api/chats/search-users',   [UserController::class, 'searchUsersForChat'])->name('global.chats.search-users');
+    Route::get('/api/chats/unread-count',   [UserController::class, 'unreadChatsCount'])->name('global.chats.unread-count');
     Route::get('/notifications/fetch',      [\App\Http\Controllers\NotificationController::class, 'fetch'])->name('notifications.fetch');
     Route::post('/notifications/{id}/read', [\App\Http\Controllers\NotificationController::class, 'markAsRead'])->name('notifications.read');
     Route::post('/session/keep-alive',      fn() => response()->json(['status' => 'alive']))->name('session.keep-alive');

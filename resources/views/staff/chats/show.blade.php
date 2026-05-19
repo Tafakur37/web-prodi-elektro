@@ -1,121 +1,165 @@
 @extends('layouts.app')
 
-@push('styles')
-<style>
-    .chat-container { height: calc(100vh - 250px); overflow-y: auto; padding: 20px; }
-    .chat-bubble { max-width: 75%; padding: 12px 18px; border-radius: 20px; margin-bottom: 15px; position: relative; }
-    .chat-sent { background-color: #0d6efd; color: white; margin-left: auto; border-bottom-right-radius: 5px; }
-    .chat-received { background-color: #f8f9fa; color: #333; border: 1px solid #e9ecef; margin-right: auto; border-bottom-left-radius: 5px; }
-    .chat-time { font-size: 0.7rem; margin-top: 5px; opacity: 0.8; }
-    .chat-sent .chat-time { text-align: right; }
-</style>
-@endpush
+@section('title', 'Chat dengan ' . $partner->name)
 
 @section('content')
 <div class="container-fluid px-0">
-    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
-        <!-- Chat Header -->
-        <div class="card-header bg-white border-bottom p-3 d-flex align-items-center">
-            <a href="{{ route('staff.chats.index') }}" class="btn btn-sm btn-light rounded-circle me-3">
-                <i class="bi bi-arrow-left"></i>
-            </a>
-            <div class="avatar-circle bg-primary text-white d-flex justify-content-center align-items-center rounded-circle me-3" style="width: 45px; height: 45px; font-weight: bold;">
-                {{ substr($student->name, 0, 1) }}
-            </div>
-            <div>
-                <h5 class="mb-0 fw-bold">{{ $student->name }}</h5>
-                <small class="text-muted">{{ $student->nim }} | Mahasiswa Cohort {{ $student->cohort }}</small>
+    <div class="row g-4">
+        <!-- Kolom Kiri: Daftar Chat & Pencarian -->
+        <div class="col-lg-4 d-none d-lg-block">
+            <div class="card border-0 shadow-sm rounded-4 h-100">
+                <div class="card-header bg-white border-bottom border-light pt-4 pb-3 px-4">
+                    <h6 class="fw-bold mb-3 text-dark"><i class="bi bi-chat-dots text-primary me-2"></i> Obrolan</h6>
+                    
+                    <!-- Search input -->
+                    <div class="position-relative">
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0"><i class="bi bi-search text-muted"></i></span>
+                            <input type="text" id="user-search-input" class="form-control bg-light border-start-0 ps-0" placeholder="Cari pengguna..." autocomplete="off">
+                        </div>
+                        <div id="search-results-dropdown" class="list-group position-absolute w-100 shadow-lg d-none" style="z-index: 1050; max-height: 250px; overflow-y: auto;">
+                            <!-- Search results -->
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body p-0" style="max-height: calc(100vh - 280px); overflow-y: auto;">
+                    <div class="list-group list-group-flush border-0" id="contacts-list">
+                        @forelse($recentContacts as $contact)
+                            @php
+                                $roleBadge = 'bg-secondary';
+                                if ($contact->role === 'mahasiswa') $roleBadge = 'bg-success';
+                                elseif ($contact->role === 'dosen') $roleBadge = 'bg-primary';
+                                elseif ($contact->role === 'staff') $roleBadge = 'bg-warning text-dark';
+                                elseif ($contact->role === 'admin') $roleBadge = 'bg-danger';
+                            @endphp
+                            <a href="{{ route('staff.chats.show', $contact->id) }}" class="list-group-item list-group-item-action px-4 py-3 border-light d-flex align-items-center justify-content-between {{ $contact->id == $partner->id ? 'bg-primary bg-opacity-10 border-start border-4 border-primary' : '' }}">
+                                <div class="d-flex align-items-center overflow-hidden me-2">
+                                    @if($contact->profile_photo)
+                                        <img src="{{ asset('storage/profiles/' . $contact->profile_photo) }}" class="rounded-circle me-3 border flex-shrink-0" width="45" height="45" style="object-fit: cover;">
+                                    @else
+                                        <div class="bg-primary bg-opacity-10 text-primary rounded-circle me-3 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 45px; height: 45px;">
+                                            <i class="bi bi-person-fill fs-5"></i>
+                                        </div>
+                                    @endif
+                                    <div class="text-truncate">
+                                        <div class="d-flex align-items-center mb-1">
+                                            <h6 class="mb-0 fw-bold text-dark text-truncate me-2">{{ $contact->name }}</h6>
+                                            <span class="badge {{ $roleBadge }} text-capitalize flex-shrink-0" style="font-size: 0.65rem;">{{ $contact->role }}</span>
+                                        </div>
+                                        <small class="text-muted text-truncate d-block">{{ $contact->latest_message }}</small>
+                                    </div>
+                                </div>
+                                <div class="text-end flex-shrink-0 d-flex flex-column align-items-end justify-content-center">
+                                    <small class="text-muted mb-1" style="font-size: 0.7rem;">{{ $contact->latest_message_time }}</small>
+                                    <span class="badge bg-danger rounded-pill {{ $contact->unread_count > 0 ? '' : 'd-none' }}" style="font-size: 0.7rem;">{{ $contact->unread_count }}</span>
+                                </div>
+                            </a>
+                        @empty
+                            <div class="text-center py-5 text-muted small">Belum ada percakapan. Cari pengguna untuk memulai chat.</div>
+                        @endforelse
+                    </div>
+                </div>
             </div>
         </div>
-
-        <!-- Chat Area -->
-        <div class="chat-container bg-light" id="chatContainer">
-            <div id="chat-messages" class="w-100">
-                @forelse($chats as $chat)
-                    <div class="d-flex w-100 chat-item align-items-center mb-2" data-id="{{ $chat->id }}">
-                        @if($chat->sender_id === auth()->id())
-                            <!-- Sent: Menu di kiri, Bubble di kanan -->
-                            <div class="dropdown me-2 ms-auto">
-                                <button class="btn btn-sm btn-link text-muted px-1" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="opacity:0.3;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.3">
-                                    <i class="bi bi-three-dots-vertical"></i>
-                                </button>
-                                <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 small">
-                                    <li><a class="dropdown-item text-danger" href="#" onclick="deleteChat({{ $chat->id }}, 'for_me', event)"><i class="bi bi-trash me-2"></i>Hapus untuk saya</a></li>
-                                    <li><a class="dropdown-item text-danger fw-bold" href="#" onclick="deleteChat({{ $chat->id }}, 'for_everyone', event)"><i class="bi bi-trash-fill me-2"></i>Hapus untuk semua orang</a></li>
-                                </ul>
-                            </div>
-                            <div class="chat-bubble chat-sent m-0">
-                                @if($chat->file_path)
-                                    <div class="mb-2">
-                                        <a href="{{ asset('storage/chats/' . $chat->file_path) }}" target="_blank" class="text-white text-decoration-underline small"><i class="bi bi-paperclip"></i> Lihat Lampiran</a>
-                                    </div>
-                                @endif
-                                @if($chat->message)
-                                    <div class="msg-text">{{ $chat->message }}</div>
-                                @endif
-                                <div class="chat-time">
-                                    {{ $chat->created_at->format('H:i') }}
-                                    @if($chat->sender_id === auth()->id())
-                                        <i class="bi {{ $chat->is_read ? 'bi-check2-all text-info' : 'bi-check2' }} ms-1"></i>
-                                    @endif
-                                </div>
-                            </div>
+        
+        <!-- Kolom Kanan: Ruang Chat -->
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm rounded-4 h-100 d-flex flex-column">
+                <div class="card-header bg-white border-bottom border-light p-3 d-flex align-items-center">
+                    <a href="{{ route('staff.chats.index') }}" class="btn btn-sm btn-light me-3 d-lg-none"><i class="bi bi-arrow-left"></i></a>
+                    @if($partner->profile_photo)
+                        <img src="{{ asset('storage/profiles/' . $partner->profile_photo) }}" class="rounded-circle me-3 border" width="45" height="45" style="object-fit: cover;">
+                    @else
+                        <div class="bg-primary bg-opacity-10 text-primary rounded-circle me-3 d-flex align-items-center justify-content-center" style="width: 45px; height: 45px;">
+                            <i class="bi bi-person-fill fs-5"></i>
+                        </div>
+                    @endif
+                    <div>
+                        <h6 class="mb-0 fw-bold">{{ $partner->name }}</h6>
+                        <small class="text-success text-capitalize"><i class="bi bi-circle-fill" style="font-size: 0.5rem;"></i> {{ $partner->role }} @if($partner->role === 'mahasiswa') ({{ $partner->nim ?? '-' }}) @endif</small>
+                    </div>
+                </div>
+                
+                <div class="card-body p-4 overflow-auto" id="chat-body" style="height: 50vh; background-color: #f8f9fa;">
+                    <div id="chat-messages">
+                        @if($chats->isEmpty())
+                            <div class="text-center py-5 text-muted small" id="empty-msg">Mulai percakapan dengan mengirimkan pesan.</div>
                         @else
-                            <!-- Received: Bubble di kiri, Menu di kanan -->
-                            <div class="chat-bubble chat-received m-0">
-                                @if($chat->file_path)
-                                    <div class="mb-2">
-                                        <a href="{{ asset('storage/chats/' . $chat->file_path) }}" target="_blank" class="text-primary text-decoration-underline small"><i class="bi bi-paperclip"></i> Lihat Lampiran</a>
+                            @foreach($chats as $chat)
+                                @if($chat->sender_id === auth()->id())
+                                    <!-- Pesan Saya (Kanan) -->
+                                    <div class="d-flex justify-content-end mb-3 chat-item" data-id="{{ $chat->id }}">
+                                        <div class="dropdown me-2 align-self-center">
+                                            <button class="btn btn-sm btn-link text-muted px-1" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="opacity:0.3;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.3">
+                                                <i class="bi bi-three-dots-vertical"></i>
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 small">
+                                                <li><a class="dropdown-item text-danger" href="#" onclick="deleteChat({{ $chat->id }}, 'for_me', event)"><i class="bi bi-trash me-2"></i>Hapus untuk saya</a></li>
+                                                <li><a class="dropdown-item text-danger fw-bold" href="#" onclick="deleteChat({{ $chat->id }}, 'for_everyone', event)"><i class="bi bi-trash-fill me-2"></i>Hapus untuk semua orang</a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="bg-primary text-white p-3 rounded-4 shadow-sm" style="max-width: 75%; border-bottom-right-radius: 4px !important;">
+                                            @if($chat->file_path)
+                                                <div class="mb-2">
+                                                    <a href="{{ asset('storage/chats/' . $chat->file_path) }}" target="_blank" class="text-white text-decoration-underline small"><i class="bi bi-paperclip"></i> Lihat Lampiran</a>
+                                                </div>
+                                            @endif
+                                            @if($chat->message)
+                                                <p class="mb-1">{{ $chat->message }}</p>
+                                            @endif
+                                            <div class="text-end small opacity-75" style="font-size: 0.7rem;">
+                                                {{ $chat->created_at->format('H:i') }}
+                                                @if($chat->is_read) <i class="bi bi-check-all ms-1"></i> @else <i class="bi bi-check ms-1"></i> @endif
+                                            </div>
+                                        </div>
+                                    </div>
+                                @else
+                                    <!-- Pesan Lawan Chat (Kiri) -->
+                                    <div class="d-flex justify-content-start mb-3 chat-item" data-id="{{ $chat->id }}">
+                                        <div class="bg-white p-3 rounded-4 shadow-sm border border-light" style="max-width: 75%; border-bottom-left-radius: 4px !important;">
+                                            @if($chat->file_path)
+                                                <div class="mb-2">
+                                                    <a href="{{ asset('storage/chats/' . $chat->file_path) }}" target="_blank" class="text-primary text-decoration-underline small"><i class="bi bi-paperclip"></i> Lihat Lampiran</a>
+                                                </div>
+                                            @endif
+                                            @if($chat->message)
+                                                <p class="mb-1 text-dark">{{ $chat->message }}</p>
+                                            @endif
+                                            <div class="text-start small text-muted" style="font-size: 0.7rem;">{{ $chat->created_at->format('H:i') }}</div>
+                                        </div>
+                                        <div class="dropdown ms-2 align-self-center">
+                                            <button class="btn btn-sm btn-link text-muted px-1" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="opacity:0.3;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.3">
+                                                <i class="bi bi-three-dots-vertical"></i>
+                                            </button>
+                                            <ul class="dropdown-menu shadow-sm border-0 small">
+                                                <li><a class="dropdown-item text-danger" href="#" onclick="deleteChat({{ $chat->id }}, 'for_me', event)"><i class="bi bi-trash me-2"></i>Hapus dari perangkat saya</a></li>
+                                            </ul>
+                                        </div>
                                     </div>
                                 @endif
-                                @if($chat->message)
-                                    <div class="msg-text">{{ $chat->message }}</div>
-                                @endif
-                                <div class="chat-time">
-                                    {{ $chat->created_at->format('H:i') }}
-                                    @if($chat->sender_id === auth()->id())
-                                        <i class="bi {{ $chat->is_read ? 'bi-check2-all text-info' : 'bi-check2' }} ms-1"></i>
-                                    @endif
-                                </div>
-                            </div>
-                            <div class="dropdown ms-2 me-auto">
-                                <button class="btn btn-sm btn-link text-muted px-1" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="opacity:0.3;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.3">
-                                    <i class="bi bi-three-dots-vertical"></i>
-                                </button>
-                                <ul class="dropdown-menu shadow-sm border-0 small">
-                                    <li><a class="dropdown-item text-danger" href="#" onclick="deleteChat({{ $chat->id }}, 'for_me', event)"><i class="bi bi-trash me-2"></i>Hapus dari perangkat saya</a></li>
-                                </ul>
-                            </div>
+                            @endforeach
                         @endif
                     </div>
-                @empty
-                    <div class="text-center py-5 text-muted" id="empty-msg">
-                        <i class="bi bi-chat-dots fs-1 mb-3 d-block opacity-25"></i>
-                        Belum ada pesan. Mulai percakapan sekarang!
-                    </div>
-                @endforelse
-            </div>
-        </div>
-
-        <!-- Chat Input -->
-        <div class="card-footer bg-white border-top p-3">
-            <form id="chat-form" action="{{ route('staff.chats.store', $student->id) }}" method="POST" enctype="multipart/form-data">
-                @csrf
-                <div class="input-group">
-                    <input type="file" name="file" id="chat-file" class="d-none" onchange="document.getElementById('file-name').textContent = this.files[0]?.name || ''">
-                    <button type="button" class="btn btn-light border border-end-0 px-3" onclick="document.getElementById('chat-file').click()" title="Lampirkan File">
-                        <i class="bi bi-paperclip fs-5"></i>
-                    </button>
-                    <button type="button" class="btn btn-light border border-start-0 border-end-0 px-3" id="emoji-btn" title="Emoji">
-                        <i class="bi bi-emoji-smile fs-5"></i>
-                    </button>
-                    <input type="text" name="message" id="chat-message" class="form-control form-control-lg bg-light border-start-0" placeholder="Ketik pesan..." autofocus autocomplete="off">
-                    <button class="btn btn-primary px-4 rounded-end" type="submit" id="btn-send">
-                        <i class="bi bi-send-fill"></i>
-                    </button>
                 </div>
-                <div id="file-name" class="small text-muted mt-1 px-2"></div>
-            </form>
+                
+                <div class="card-footer bg-white border-top border-light p-3">
+                    <form id="chat-form" action="{{ route('staff.chats.store', $partner->id) }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <div class="input-group">
+                            <input type="file" name="file" id="chat-file" class="d-none" onchange="document.getElementById('file-name').textContent = this.files[0]?.name || ''">
+                            <button type="button" class="btn btn-light border-secondary border-opacity-25 rounded-start px-3" onclick="document.getElementById('chat-file').click()" title="Lampirkan File">
+                                <i class="bi bi-paperclip"></i>
+                            </button>
+                            <button type="button" class="btn btn-light border-secondary border-opacity-25 border-start-0 px-3" id="emoji-btn" title="Emoji">
+                                😊
+                            </button>
+                            <input type="text" name="message" id="chat-message" class="form-control border-secondary border-opacity-25 ps-3" placeholder="Ketik pesan..." autofocus autocomplete="off">
+                            <button class="btn btn-primary rounded-end px-4 fw-bold" type="submit" id="btn-send"><i class="bi bi-send-fill me-1"></i> Kirim</button>
+                        </div>
+                        <div id="file-name" class="small text-muted mt-1 px-2"></div>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -131,9 +175,7 @@
         </div>
     </div>
 </div>
-@endsection
 
-@push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/@joeattardi/emoji-button@4.6.4/dist/index.min.js"></script>
 <script>
     const myId = {{ auth()->id() }};
@@ -159,8 +201,7 @@
                     if(type === 'for_me') {
                         bubble.remove(); // Hapus elemen
                     } else {
-                        // Kalau hapus untuk semua orang
-                        const p = bubble.querySelector('.msg-text');
+                        const p = bubble.querySelector('p.mb-1');
                         if(p) p.innerHTML = '<i>🚫 Pesan ini telah dihapus</i>';
                         const a = bubble.querySelector('a[target="_blank"]');
                         if(a) a.parentElement.remove();
@@ -188,7 +229,7 @@
     }
 
     document.addEventListener("DOMContentLoaded", function() {
-        const chatContainer = document.getElementById('chatContainer');
+        const chatBody = document.getElementById('chat-body');
         const chatMessages = document.getElementById('chat-messages');
         const chatForm = document.getElementById('chat-form');
         const messageInput = document.getElementById('chat-message');
@@ -222,7 +263,7 @@
         }
 
         function scrollToBottom() {
-            if(chatContainer) chatContainer.scrollTop = chatContainer.scrollHeight;
+            if(chatBody) chatBody.scrollTop = chatBody.scrollHeight;
         }
         scrollToBottom();
 
@@ -234,7 +275,6 @@
         function renderChat(chat, isSending = false) {
             const isMe = chat.sender_id === myId;
             const time = formatTime(chat.created_at);
-            const bubbleClass = isMe ? 'chat-sent' : 'chat-received';
             const fileUrl = chat.file_path ? `{{ asset('storage/chats') }}/${chat.file_path}` : '';
             
             let fileHtml = '';
@@ -246,9 +286,9 @@
             let msgHtml = '';
             if (chat.message) {
                 if(chat.is_deleted_for_everyone) {
-                    msgHtml = `<div class="msg-text"><i>${chat.message}</i></div>`;
+                    msgHtml = `<p class="mb-1 ${isMe ? '' : 'text-dark'}"><i>${chat.message}</i></p>`;
                 } else {
-                    msgHtml = `<div class="msg-text">${chat.message}</div>`;
+                    msgHtml = `<p class="mb-1 ${isMe ? '' : 'text-dark'}">${chat.message}</p>`;
                 }
             }
             
@@ -257,14 +297,14 @@
                 if(isSending) {
                     statusHtml = `<i class="bi bi-clock ms-1"></i>`;
                 } else {
-                    statusHtml = `<i class="bi ${chat.is_read ? 'bi-check2-all text-info' : 'bi-check2'} ms-1"></i>`;
+                    statusHtml = `<i class="bi ${chat.is_read ? 'bi-check-all' : 'bi-check'} ms-1"></i>`;
                 }
             }
-
+            
             if (isMe) {
                 return `
-                <div class="d-flex w-100 chat-item align-items-center mb-2" data-id="${chat.id}">
-                    <div class="dropdown me-2 ms-auto">
+                <div class="d-flex justify-content-end mb-3 chat-item" data-id="${chat.id}">
+                    <div class="dropdown me-2 align-self-center">
                         <button class="btn btn-sm btn-link text-muted px-1" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="opacity:0.3;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.3">
                             <i class="bi bi-three-dots-vertical"></i>
                         </button>
@@ -273,25 +313,21 @@
                             ${!chat.is_deleted_for_everyone && !isSending ? `<li><a class="dropdown-item text-danger fw-bold" href="#" onclick="deleteChat('${chat.id}', 'for_everyone', event)"><i class="bi bi-trash-fill me-2"></i>Hapus untuk semua orang</a></li>` : ''}
                         </ul>
                     </div>
-                    <div class="chat-bubble ${bubbleClass} m-0">
+                    <div class="bg-primary text-white p-3 rounded-4 shadow-sm" style="max-width: 75%; border-bottom-right-radius: 4px !important;">
                         ${fileHtml}
                         ${msgHtml}
-                        <div class="chat-time">
-                            ${time} ${statusHtml}
-                        </div>
+                        <div class="text-end small opacity-75" style="font-size: 0.7rem;">${time} ${statusHtml}</div>
                     </div>
                 </div>`;
             } else {
                 return `
-                <div class="d-flex w-100 chat-item align-items-center mb-2" data-id="${chat.id}">
-                    <div class="chat-bubble ${bubbleClass} m-0">
+                <div class="d-flex justify-content-start mb-3 chat-item" data-id="${chat.id}">
+                    <div class="bg-white p-3 rounded-4 shadow-sm border border-light" style="max-width: 75%; border-bottom-left-radius: 4px !important;">
                         ${fileHtml}
                         ${msgHtml}
-                        <div class="chat-time">
-                            ${time} ${statusHtml}
-                        </div>
+                        <div class="text-start small text-muted" style="font-size: 0.7rem;">${time}</div>
                     </div>
-                    <div class="dropdown ms-2 me-auto">
+                    <div class="dropdown ms-2 align-self-center">
                         <button class="btn btn-sm btn-link text-muted px-1" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="opacity:0.3;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.3">
                             <i class="bi bi-three-dots-vertical"></i>
                         </button>
@@ -357,7 +393,7 @@
                 })
                 .finally(() => {
                     btnSend.disabled = false;
-                    btnSend.innerHTML = '<i class="bi bi-send-fill"></i>';
+                    btnSend.innerHTML = '<i class="bi bi-send-fill me-1"></i> Kirim';
                 });
             });
 
@@ -371,7 +407,7 @@
 
             // Polling setiap 3 detik
             setInterval(() => {
-                fetch("{{ route('staff.chats.show', $student->id) }}", {
+                fetch("{{ route('staff.chats.show', $partner->id) }}", {
                     headers: {
                         'X-Requested-With': 'XMLHttpRequest',
                         'Accept': 'application/json'
@@ -394,8 +430,8 @@
                         });
 
                         if (chatMessages.innerHTML.length !== newHtml.length || hasNewMessage) {
-                            const isAtBottom = (chatContainer.scrollTop + chatContainer.clientHeight >= chatContainer.scrollHeight - 10);
-                            const currentScrollTop = chatContainer.scrollTop;
+                            const isAtBottom = (chatBody.scrollTop + chatBody.clientHeight >= chatBody.scrollHeight - 10);
+                            const currentScrollTop = chatBody.scrollTop;
                             
                             const emptyMsg = document.getElementById('empty-msg');
                             if (emptyMsg) emptyMsg.remove();
@@ -409,11 +445,11 @@
                             if (hasNewMessage || isAtBottom) {
                                 scrollToBottom();
                             } else {
-                                chatContainer.scrollTop = currentScrollTop;
+                                chatBody.scrollTop = currentScrollTop;
                             }
 
                             if (hasNewMessage && lastSenderNotMe) {
-                                showToast("Pesan baru dari Mahasiswa");
+                                showToast("Pesan baru dari " + "{{ $partner->name }}");
                             }
                         }
                         lastChatCount = data.chats.length;
@@ -422,6 +458,67 @@
                 .catch(err => console.error(err));
             }, 3000);
         }
+
+        // Search logic
+        const searchInput = document.getElementById('user-search-input');
+        const searchResults = document.getElementById('search-results-dropdown');
+
+        if (searchInput) {
+            searchInput.addEventListener('input', function() {
+                const query = this.value.trim();
+                if (query.length < 2) {
+                    searchResults.innerHTML = '';
+                    searchResults.classList.add('d-none');
+                    return;
+                }
+
+                fetch(`/api/chats/search-users?query=${encodeURIComponent(query)}`)
+                    .then(res => res.json())
+                    .then(users => {
+                        searchResults.innerHTML = '';
+                        if (users.length === 0) {
+                            searchResults.innerHTML = '<div class="list-group-item text-muted text-center py-2 small">Tidak ada pengguna ditemukan</div>';
+                        } else {
+                            users.forEach(user => {
+                                let badgeColor = 'bg-secondary';
+                                if (user.role === 'mahasiswa') badgeColor = 'bg-success';
+                                else if (user.role === 'dosen') badgeColor = 'bg-primary';
+                                else if (user.role === 'staff') badgeColor = 'bg-warning text-dark';
+                                else if (user.role === 'admin') badgeColor = 'bg-danger';
+
+                                let avatarHtml = '';
+                                if (user.profile_photo) {
+                                    avatarHtml = `<img src="/storage/profiles/${user.profile_photo}" class="rounded-circle me-2" width="30" height="30" style="object-fit: cover;">`;
+                                } else {
+                                    avatarHtml = `<div class="bg-primary bg-opacity-10 text-primary rounded-circle me-2 d-flex align-items-center justify-content-center" style="width: 30px; height: 30px; font-size: 0.8rem;"><i class="bi bi-person-fill"></i></div>`;
+                                }
+
+                                const chatUrl = `/staff/chats/${user.id}`;
+
+                                searchResults.innerHTML += `
+                                    <a href="${chatUrl}" class="list-group-item list-group-item-action d-flex align-items-center justify-content-between py-2 px-3">
+                                        <div class="d-flex align-items-center overflow-hidden">
+                                            ${avatarHtml}
+                                            <div class="text-truncate">
+                                                <div class="fw-bold small text-dark text-truncate">${user.name}</div>
+                                                <div class="text-muted text-truncate" style="font-size: 0.75rem;">${user.nim || ''}</div>
+                                            </div>
+                                        </div>
+                                        <span class="badge ${badgeColor} text-capitalize ms-2" style="font-size: 0.65rem;">${user.role}</span>
+                                    </a>
+                                `;
+                            });
+                        }
+                        searchResults.classList.remove('d-none');
+                    });
+            });
+
+            document.addEventListener('click', function(e) {
+                if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+                    searchResults.classList.add('d-none');
+                }
+            });
+        }
     });
 </script>
-@endpush
+@endsection

@@ -38,9 +38,18 @@
                 };
             @endphp
             @if($chatRoute)
+                @php
+                    $unreadChatsCount = \App\Models\Chat::where('receiver_id', auth()->id())
+                        ->where('is_read', false)
+                        ->where('deleted_by_receiver', false)
+                        ->count();
+                @endphp
                 <a class="sidebar-sublink {{ request()->routeIs('*.chats.*') ? 'active' : '' }}"
                    href="{{ route($chatRoute) }}">
                     <i class="bi bi-chat-dots"></i> Chat
+                    <span class="badge bg-danger ms-auto rounded-pill {{ $unreadChatsCount > 0 ? '' : 'd-none' }}" id="sidebar-unread-chat-count">
+                        {{ $unreadChatsCount }}
+                    </span>
                 </a>
             @endif
         @endif

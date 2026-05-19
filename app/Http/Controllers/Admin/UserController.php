@@ -139,15 +139,44 @@ class UserController extends Controller
         return response()->json($users);
     }
     public function updatePassword(Request $request, User $user)
-{
-    $request->validate([
-        'password' => 'required|min:8|confirmed',
-    ]);
+    {
+        $request->validate([
+            'password' => 'required|min:8|confirmed',
+        ]);
 
-    $user->update([
-        'password' => bcrypt($request->password)
-    ]);
+        $user->update([
+            'password' => bcrypt($request->password)
+        ]);
 
-    return redirect()->route('admin.users.index')->with('success', 'Password berhasil direset!');
-} 
+        return redirect()->route('admin.users.index')->with('success', 'Password berhasil direset!');
+    }
+
+    public function searchUsersForChat(Request $request)
+    {
+        $query = $request->get('query');
+        if (strlen($query) < 2) {
+            return response()->json([]);
+        }
+
+        $users = User::where('id', '!=', auth()->id())
+            ->where(function ($q) use ($query) {
+                $q->where('name', 'LIKE', "%{$query}%")
+                  ->orWhere('nim', 'LIKE', "%{$query}%")
+                  ->orWhere('email', 'LIKE', "%{$query}%");
+            })
+            ->limit(10)
+            ->get(['id', 'name', 'nim', 'role', 'profile_photo']);
+
+        return response()->json($users);
+    }
+
+    public function unreadChatsCount()
+    {
+        $count = \App\Models\Chat::where('receiver_id', auth()->id())
+            ->where('is_read', false)
+            ->where('deleted_by_receiver', false)
+            ->count();
+
+        return response()->json(['count' => $count]);
+    }
 }

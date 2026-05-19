@@ -888,6 +888,31 @@
             @endif
         });
     </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            function updateUnreadChatsCount() {
+                fetch("{{ route('global.chats.unread-count') }}")
+                    .then(res => res.json())
+                    .then(data => {
+                        const count = data.count;
+                        const badge = document.getElementById('sidebar-unread-chat-count');
+                        if (badge) {
+                            if (count > 0) {
+                                badge.textContent = count;
+                                badge.classList.remove('d-none');
+                            } else {
+                                badge.classList.add('d-none');
+                            }
+                        }
+                    })
+                    .catch(err => console.error(err));
+            }
+            
+            // Poll every 10 seconds
+            setInterval(updateUnreadChatsCount, 10000);
+            updateUnreadChatsCount();
+        });
+    </script>
     @endauth
 </body>
 </html>

@@ -14,22 +14,9 @@ class ChatService
      */
     public function getIndexData(User $user, string $contextRole): array
     {
-        return match ($contextRole) {
-            'mahasiswa' => [
-                'dosens' => $this->getDosens(),
-            ],
-            'dosen' => [
-                'cohorts' => $this->getCohorts(),
-                'recentContacts' => $this->getRecentContacts($user),
-            ],
-            'staff' => [
-                'cohorts' => $this->getCohorts(),
-                'recentChatUsers' => $this->getRecentContacts($user),
-            ],
-            default => [
-                'recentContacts' => $this->getRecentContacts($user),
-            ],
-        };
+        return [
+            'recentContacts' => $this->getRecentContacts($user),
+        ];
     }
 
     /**
@@ -40,26 +27,11 @@ class ChatService
         $partner = User::findOrFail($partnerId);
         $this->markAsRead($partnerId, $user->id);
 
-        $data = [
+        return [
             'chats' => $this->getConversation($user->id, $partnerId),
+            'partner' => $partner,
+            'recentContacts' => $this->getRecentContacts($user),
         ];
-
-        return match ($contextRole) {
-            'staff' => $data + [
-                'student' => $partner,
-            ],
-            'dosen' => $data + [
-                'mahasiswa' => $partner,
-                'cohorts' => $this->getCohorts(),
-            ],
-            'mahasiswa' => $data + [
-                'dosen' => $partner,
-                'dosens' => $this->getDosens(),
-            ],
-            default => $data + [
-                'partner' => $partner,
-            ],
-        };
     }
 
     /**
@@ -132,13 +104,55 @@ class ChatService
      */
     public function getRecentContacts(User $user)
     {
-        $contactIds = Chat::where('sender_id', $user->id)
-            ->pluck('receiver_id')
-            ->concat(Chat::where('receiver_id', $user->id)->pluck('sender_id'))
-            ->unique()
-            ->toArray();
+        $recentChats = Chat::where(function ($q) use ($user) {
+                $q->where('sender_id', $user->id)
+                  ->where('deleted_by_sender', false);
+            })
+            ->orWhere(function ($q) use ($user) {
+                $q->where('receiver_id', $user->id)
+                  ->where('deleted_by_receiver', false);
+            })
+            ->orderBy('created_at', 'desc')
+            ->get();
 
-        return User::whereIn('id', $contactIds)->get();
+        $contactIds = [];
+        foreach ($recentChats as $chat) {
+            $partnerId = $chat->sender_id === $user->id ? $chat->receiver_id : $chat->sender_id;
+            if (!in_array($partnerId, $contactIds)) {
+                $contactIds[] = $partnerId;
+            }
+        }
+
+        if (empty($contactIds)) {
+            return collect();
+        }
+
+        $idsString = implode(',', $contactIds);
+        $contacts = User::whereIn('id', $contactIds)
+            ->orderByRaw("FIELD(id, $idsString)")
+            ->get();
+
+        foreach ($contacts as $contact) {
+            $contact->unread_count = Chat::where('sender_id', $contact->id)
+                ->where('receiver_id', $user->id)
+                ->where('is_read', false)
+                ->where('deleted_by_receiver', false)
+                ->count();
+                
+            $latestChat = Chat::where(function($q) use ($user, $contact) {
+                    $q->where('sender_id', $user->id)->where('receiver_id', $contact->id);
+                })
+                ->orWhere(function($q) use ($user, $contact) {
+                    $q->where('sender_id', $contact->id)->where('receiver_id', $user->id);
+                })
+                ->orderBy('created_at', 'desc')
+                ->first();
+                
+            $contact->latest_message = $latestChat ? ($latestChat->is_deleted_for_everyone ? '🚫 Pesan ini telah dihapus' : $latestChat->message) : '';
+            $contact->latest_message_time = $latestChat ? $latestChat->created_at->format('H:i') : '';
+        }
+
+        return $contacts;
     }
 
     /**

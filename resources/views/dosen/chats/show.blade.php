@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Chat')
+@section('title', 'Chat dengan ' . $partner->name)
 
 @push('styles')
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -10,31 +10,59 @@
 <div class="container-fluid px-0">
     <div class="row g-4">
 
-        <!-- Kolom Kiri: Pilih Kontak -->
+        <!-- Kolom Kiri: Daftar Chat & Pencarian -->
         <div class="col-lg-4 d-none d-lg-block">
-            <div class="card border-0 shadow-sm rounded-4 h-100 mb-4">
+            <div class="card border-0 shadow-sm rounded-4 h-100">
                 <div class="card-header bg-white border-bottom border-light pt-4 pb-3 px-4">
-                    <h6 class="fw-bold mb-0 text-dark"><i class="bi bi-search text-primary me-2"></i> Cari Mahasiswa</h6>
+                    <h6 class="fw-bold mb-3 text-dark"><i class="bi bi-chat-dots text-primary me-2"></i> Obrolan</h6>
+                    
+                    <!-- Search input -->
+                    <div class="position-relative">
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0"><i class="bi bi-search text-muted"></i></span>
+                            <input type="text" id="user-search-input" class="form-control bg-light border-start-0 ps-0" placeholder="Cari pengguna..." autocomplete="off">
+                        </div>
+                        <div id="search-results-dropdown" class="list-group position-absolute w-100 shadow-lg d-none" style="z-index: 1050; max-height: 250px; overflow-y: auto;">
+                            <!-- Search results -->
+                        </div>
+                    </div>
                 </div>
-                <div class="card-body p-4">
-                    <div class="mb-3">
-                        <label class="form-label fw-bold small text-muted">Pilih Cohort</label>
-                        <select id="cohort-select" class="form-select">
-                            <option value="">-- Pilih Cohort --</option>
-                            @foreach($cohorts as $c)
-                                <option value="{{ $c }}">{{ $c }}</option>
-                            @endforeach
-                        </select>
+                <div class="card-body p-0" style="max-height: calc(100vh - 280px); overflow-y: auto;">
+                    <div class="list-group list-group-flush border-0" id="contacts-list">
+                        @forelse($recentContacts as $contact)
+                            @php
+                                $roleBadge = 'bg-secondary';
+                                if ($contact->role === 'mahasiswa') $roleBadge = 'bg-success';
+                                elseif ($contact->role === 'dosen') $roleBadge = 'bg-primary';
+                                elseif ($contact->role === 'staff') $roleBadge = 'bg-warning text-dark';
+                                elseif ($contact->role === 'admin') $roleBadge = 'bg-danger';
+                            @endphp
+                            <a href="{{ route('dosen.chats.show', $contact->id) }}" class="list-group-item list-group-item-action px-4 py-3 border-light d-flex align-items-center justify-content-between {{ $contact->id == $partner->id ? 'bg-primary bg-opacity-10 border-start border-4 border-primary' : '' }}">
+                                <div class="d-flex align-items-center overflow-hidden me-2">
+                                    @if($contact->profile_photo)
+                                        <img src="{{ asset('storage/profiles/' . $contact->profile_photo) }}" class="rounded-circle me-3 border flex-shrink-0" width="45" height="45" style="object-fit: cover;">
+                                    @else
+                                        <div class="bg-primary bg-opacity-10 text-primary rounded-circle me-3 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 45px; height: 45px;">
+                                            <i class="bi bi-person-fill fs-5"></i>
+                                        </div>
+                                    @endif
+                                    <div class="text-truncate">
+                                        <div class="d-flex align-items-center mb-1">
+                                            <h6 class="mb-0 fw-bold text-dark text-truncate me-2">{{ $contact->name }}</h6>
+                                            <span class="badge {{ $roleBadge }} text-capitalize flex-shrink-0" style="font-size: 0.65rem;">{{ $contact->role }}</span>
+                                        </div>
+                                        <small class="text-muted text-truncate d-block">{{ $contact->latest_message }}</small>
+                                    </div>
+                                </div>
+                                <div class="text-end flex-shrink-0 d-flex flex-column align-items-end justify-content-center">
+                                    <small class="text-muted mb-1" style="font-size: 0.7rem;">{{ $contact->latest_message_time }}</small>
+                                    <span class="badge bg-danger rounded-pill {{ $contact->unread_count > 0 ? '' : 'd-none' }}" style="font-size: 0.7rem;">{{ $contact->unread_count }}</span>
+                                </div>
+                            </a>
+                        @empty
+                            <div class="text-center py-5 text-muted small">Belum ada percakapan. Cari pengguna untuk memulai chat.</div>
+                        @endforelse
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label fw-bold small text-muted">Pilih Mahasiswa</label>
-                        <select id="student-select" class="form-select" disabled>
-                            <option value="">-- Pilih Mahasiswa --</option>
-                        </select>
-                    </div>
-                    <button id="start-chat-btn" class="btn btn-primary w-100 fw-bold rounded-pill shadow-sm" disabled>
-                        <i class="bi bi-chat-dots me-2"></i> Mulai Chat
-                    </button>
                 </div>
             </div>
         </div>
@@ -44,23 +72,23 @@
             <div class="card border-0 shadow-sm rounded-4 h-100 d-flex flex-column">
                 <div class="card-header bg-white border-bottom border-light p-3 d-flex align-items-center">
                     <a href="{{ route('dosen.chats.index') }}" class="btn btn-sm btn-light me-3 d-lg-none"><i class="bi bi-arrow-left"></i></a>
-                    @if($mahasiswa->profile_photo)
-                        <img src="{{ asset('storage/profiles/' . $mahasiswa->profile_photo) }}" class="rounded-circle me-3 border" width="45" height="45" style="object-fit: cover;">
+                    @if($partner->profile_photo)
+                        <img src="{{ asset('storage/profiles/' . $partner->profile_photo) }}" class="rounded-circle me-3 border" width="45" height="45" style="object-fit: cover;">
                     @else
                         <div class="bg-primary bg-opacity-10 text-primary rounded-circle me-3 d-flex align-items-center justify-content-center" style="width: 45px; height: 45px;">
                             <i class="bi bi-person-fill fs-5"></i>
                         </div>
                     @endif
                     <div>
-                        <h6 class="mb-0 fw-bold">{{ $mahasiswa->name }}</h6>
-                        <small class="text-success"><i class="bi bi-circle-fill" style="font-size: 0.5rem;"></i> Mahasiswa ({{ $mahasiswa->nim ?? '-' }})</small>
+                        <h6 class="mb-0 fw-bold">{{ $partner->name }}</h6>
+                        <small class="text-success text-capitalize"><i class="bi bi-circle-fill" style="font-size: 0.5rem;"></i> {{ $partner->role }} @if($partner->role === 'mahasiswa') ({{ $partner->nim ?? '-' }}) @endif</small>
                     </div>
                 </div>
 
                 <div class="card-body p-4 overflow-auto" id="chat-body" style="height: 50vh; background-color: #f8f9fa;">
                     <div id="chat-messages">
                         @if($chats->isEmpty())
-                            <div class="text-center py-5 text-muted small" id="empty-msg">Mulai percakapan dengan mengirimkan pesan kepada Mahasiswa.</div>
+                            <div class="text-center py-5 text-muted small" id="empty-msg">Mulai percakapan dengan mengirimkan pesan.</div>
                         @else
                             @foreach($chats as $chat)
                                 @if($chat->sender_id === auth()->id())
@@ -91,7 +119,7 @@
                                         </div>
                                     </div>
                                 @else
-                                    <!-- Pesan Mahasiswa (Kiri) -->
+                                    <!-- Pesan Lawan Chat (Kiri) -->
                                     <div class="d-flex justify-content-start mb-3 chat-item" data-id="{{ $chat->id }}">
                                         <div class="bg-white p-3 rounded-4 shadow-sm border border-light" style="max-width: 75%; border-bottom-left-radius: 4px !important;">
                                             @if($chat->file_path)
@@ -120,7 +148,7 @@
                 </div>
 
                 <div class="card-footer bg-white border-top border-light p-3">
-                    <form id="chat-form" action="{{ route('dosen.chats.store', $mahasiswa->id) }}" method="POST" enctype="multipart/form-data">
+                    <form id="chat-form" action="{{ route('dosen.chats.store', $partner->id) }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="input-group">
                             <input type="file" name="file" id="chat-file" class="d-none" onchange="document.getElementById('file-name').textContent = this.files[0]?.name || ''">
@@ -181,8 +209,6 @@
                     if(type === 'for_me') {
                         bubble.remove(); // Hapus elemen
                     } else {
-                        // Kalau hapus untuk semua orang, polling akan merefresh datanya nanti. 
-                        // Tapi kita bisa langsung set text lokalnya:
                         const p = bubble.querySelector('p.mb-1');
                         if(p) p.innerHTML = '<i>🚫 Pesan ini telah dihapus</i>';
                         const a = bubble.querySelector('a[target="_blank"]');
@@ -249,13 +275,11 @@
         }
         scrollToBottom();
 
-        // Format waktu
         function formatTime(dateStr) {
             const d = new Date(dateStr);
             return d.getHours().toString().padStart(2, '0') + ':' + d.getMinutes().toString().padStart(2, '0');
         }
 
-        // Render satu bubble chat
         function renderChat(chat, isSending = false) {
             const isMe = chat.sender_id === myId;
             const time = formatTime(chat.created_at);
@@ -391,7 +415,7 @@
 
             // Polling setiap 3 detik
             setInterval(() => {
-                fetch("{{ route('dosen.chats.show', $mahasiswa->id) }}", {
+                fetch("{{ route('dosen.chats.show', $partner->id) }}", {
                     headers: {
                         'X-Requested-With': 'XMLHttpRequest',
                         'Accept': 'application/json'
@@ -433,7 +457,7 @@
                             }
 
                             if (hasNewMessage && lastSenderNotMe) {
-                                showToast("Pesan baru dari Mahasiswa");
+                                showToast("Pesan baru dari " + "{{ $partner->name }}");
                             }
                         }
                         lastChatCount = data.chats.length;
@@ -443,40 +467,63 @@
             }, 3000);
         }
 
-        const cohortSelect = document.getElementById('cohort-select');
-        const studentSelect = document.getElementById('student-select');
-        const startChatBtn = document.getElementById('start-chat-btn');
+        // Search logic
+        const searchInput = document.getElementById('user-search-input');
+        const searchResults = document.getElementById('search-results-dropdown');
 
-        if(cohortSelect) {
-            cohortSelect.addEventListener('change', function() {
-                const cohort = this.value;
-                if (!cohort) {
-                    studentSelect.innerHTML = '<option value="">-- Pilih Mahasiswa --</option>';
-                    studentSelect.disabled = true;
-                    startChatBtn.disabled = true;
+        if (searchInput) {
+            searchInput.addEventListener('input', function() {
+                const query = this.value.trim();
+                if (query.length < 2) {
+                    searchResults.innerHTML = '';
+                    searchResults.classList.add('d-none');
                     return;
                 }
 
-                fetch(`{{ route('dosen.chats.getStudents') }}?cohort=${cohort}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        studentSelect.innerHTML = '<option value="">-- Pilih Mahasiswa --</option>';
-                        data.students.forEach(student => {
-                            studentSelect.innerHTML += `<option value="${student.id}">${student.nim} - ${student.name}</option>`;
-                        });
-                        studentSelect.disabled = false;
-                    })
-                    .catch(error => console.error('Error fetching students:', error));
+                fetch(`/api/chats/search-users?query=${encodeURIComponent(query)}`)
+                    .then(res => res.json())
+                    .then(users => {
+                        searchResults.innerHTML = '';
+                        if (users.length === 0) {
+                            searchResults.innerHTML = '<div class="list-group-item text-muted text-center py-2 small">Tidak ada pengguna ditemukan</div>';
+                        } else {
+                            users.forEach(user => {
+                                let badgeColor = 'bg-secondary';
+                                if (user.role === 'mahasiswa') badgeColor = 'bg-success';
+                                else if (user.role === 'dosen') badgeColor = 'bg-primary';
+                                else if (user.role === 'staff') badgeColor = 'bg-warning text-dark';
+                                else if (user.role === 'admin') badgeColor = 'bg-danger';
+
+                                let avatarHtml = '';
+                                if (user.profile_photo) {
+                                    avatarHtml = `<img src="/storage/profiles/${user.profile_photo}" class="rounded-circle me-2" width="30" height="30" style="object-fit: cover;">`;
+                                } else {
+                                    avatarHtml = `<div class="bg-primary bg-opacity-10 text-primary rounded-circle me-2 d-flex align-items-center justify-content-center" style="width: 30px; height: 30px; font-size: 0.8rem;"><i class="bi bi-person-fill"></i></div>`;
+                                }
+
+                                const chatUrl = `/dosen/chats/${user.id}`;
+
+                                searchResults.innerHTML += `
+                                    <a href="${chatUrl}" class="list-group-item list-group-item-action d-flex align-items-center justify-content-between py-2 px-3">
+                                        <div class="d-flex align-items-center overflow-hidden">
+                                            ${avatarHtml}
+                                            <div class="text-truncate">
+                                                <div class="fw-bold small text-dark text-truncate">${user.name}</div>
+                                                <div class="text-muted text-truncate" style="font-size: 0.75rem;">${user.nim || ''}</div>
+                                            </div>
+                                        </div>
+                                        <span class="badge ${badgeColor} text-capitalize ms-2" style="font-size: 0.65rem;">${user.role}</span>
+                                    </a>
+                                `;
+                            });
+                        }
+                        searchResults.classList.remove('d-none');
+                    });
             });
 
-            studentSelect.addEventListener('change', function() {
-                startChatBtn.disabled = !this.value;
-            });
-
-            startChatBtn.addEventListener('click', function() {
-                const studentId = studentSelect.value;
-                if (studentId) {
-                    window.location.href = `{{ url('dosen/chats') }}/${studentId}`;
+            document.addEventListener('click', function(e) {
+                if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+                    searchResults.classList.add('d-none');
                 }
             });
         }

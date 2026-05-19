@@ -26,10 +26,18 @@ class LoginController extends Controller
      */
     public function login(Request $request)
     {
-        $credentials = $request->validate([
+        $request->validate([
             'nim'      => ['required', 'string'],
             'password' => ['required'],
         ]);
+
+        // Determine if the input is an email or NIM/Username
+        $loginField = filter_var($request->nim, FILTER_VALIDATE_EMAIL) ? 'email' : 'nim';
+
+        $credentials = [
+            $loginField => $request->nim,
+            'password' => $request->password,
+        ];
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
@@ -50,7 +58,7 @@ class LoginController extends Controller
 
         // Jika login gagal
         return back()->withErrors([
-            'nim' => 'NIM atau password salah.',
+            'nim' => 'NIM/Email atau password salah.',
         ])->onlyInput('nim');
     }
 
