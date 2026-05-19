@@ -255,6 +255,44 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // --- AJAX TABLE LOADING ---
+    function handleRemedial(studentId, type, score, kkm) {
+        const remedId = `remed-${type}-${studentId}`;
+        const remedInput = document.getElementById(remedId);
+        const originalInput = document.getElementById(`${type}-${studentId}`);
+
+        if (!remedInput || !originalInput) return;
+
+        if (score !== '' && parseFloat(score) < kkm) {
+            remedInput.disabled = false;
+            remedInput.style.opacity = '1';
+            remedInput.classList.remove('bg-light');
+            remedInput.classList.add('bg-warning-subtle', 'border-warning');
+            remedInput.placeholder = 'Input Remidi';
+
+            originalInput.classList.add('bg-danger', 'text-white');
+            originalInput.classList.remove('bg-light', 'text-dark');
+        } else {
+            remedInput.disabled = true;
+            remedInput.style.opacity = '0.35';
+            remedInput.value = '';
+            remedInput.classList.remove('bg-warning-subtle', 'border-warning');
+            remedInput.classList.add('bg-light');
+            remedInput.placeholder = 'Terkunci';
+
+            originalInput.classList.remove('bg-danger', 'text-white');
+        }
+    }
+    window.handleRemedial = handleRemedial; // Expose to global scope for inline oninput
+
+    function initRemedial() {
+        document.querySelectorAll('.input-uts').forEach(input => {
+            handleRemedial(input.dataset.student, 'uts', input.value, parseFloat(input.dataset.kkm) || 0);
+        });
+        document.querySelectorAll('.input-uas').forEach(input => {
+            handleRemedial(input.dataset.student, 'uas', input.value, parseFloat(input.dataset.kkm) || 0);
+        });
+    }
+
     function loadTable() {
         const container = document.getElementById('container-mahasiswa');
         container.innerHTML = '<div class="text-center text-info py-5"><div class="spinner-border mb-3"></div><br>Memuat data mahasiswa...</div>';
@@ -266,6 +304,7 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .then(html => {
                 container.innerHTML = html;
+                initRemedial();
             })
             .catch(err => {
                 container.innerHTML = `<div class="text-center text-danger py-5"><i class="bi bi-exclamation-triangle fs-1"></i><br>Terjadi kesalahan sistem: ${err.message}</div>`;
