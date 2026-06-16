@@ -675,7 +675,10 @@ $todayData = collect($weeklySchedules)->first(fn($d) => $d['date']->isToday());
         @php
             $ipkVal = null;
             try {
-                $ipkVal = \App\Models\Nilai::where('user_id', auth()->id())->avg('nilai_angka');
+                $avg = \App\Models\Grade::where('user_id', auth()->id())
+                    ->whereNotNull('grade_point')
+                    ->avg('grade_point');
+                if ($avg !== null) $ipkVal = round($avg, 2);
             } catch(\Exception $e) { $ipkVal = null; }
         @endphp
         @if($ipkVal !== null)
