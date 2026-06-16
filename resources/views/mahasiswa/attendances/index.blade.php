@@ -1,52 +1,57 @@
-@extends('layouts.app')
+@extends('layouts.mahasiswa')
 
 @section('title', 'Riwayat Absensi')
 
 @section('content')
-<div class="container-fluid px-0">
-    <div class="card border-0 shadow-sm rounded-4">
-        <div class="card-header bg-white border-bottom border-light pt-4 pb-3 px-4 d-flex justify-content-between align-items-center">
-            <h6 class="fw-bold mb-0 text-dark"><i class="bi bi-calendar-check text-primary me-2"></i> Riwayat Absensi Perkuliahan</h6>
+<div class="mhs-card">
+    <div class="mhs-card-header">
+        <h6 class="mhs-card-title">
+            <span class="mhs-card-icon" style="background:var(--primary-light);color:var(--primary);">
+                <i class="bi bi-calendar-check"></i>
+            </span>
+            Riwayat Absensi Perkuliahan
+        </h6>
+    </div>
+    <div style="overflow-x:auto;">
+        @if($attendances->isNotEmpty())
+        <table class="mhs-table">
+            <thead>
+                <tr>
+                    <th style="padding-left:20px;">Tanggal</th>
+                    <th>Mata Kuliah</th>
+                    <th>Dosen Pengampu</th>
+                    <th style="text-align:center;">Status</th>
+                    <th>Keterangan</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($attendances as $att)
+                <tr>
+                    <td style="padding-left:20px;font-weight:600;">{{ \Carbon\Carbon::parse($att->date)->format('d M Y') }}</td>
+                    <td style="font-weight:600;">{{ $att->subject->name ?? '-' }}</td>
+                    <td style="color:var(--text-2);"><i class="bi bi-person me-1"></i>{{ $att->lecturer->name ?? '-' }}</td>
+                    <td style="text-align:center;">
+                        @if($att->status === 'hadir')
+                            <span class="mhs-badge success">Hadir</span>
+                        @elseif($att->status === 'izin')
+                            <span class="mhs-badge cyan">Izin</span>
+                        @elseif($att->status === 'sakit')
+                            <span class="mhs-badge warning">Sakit</span>
+                        @else
+                            <span class="mhs-badge danger">Alpa</span>
+                        @endif
+                    </td>
+                    <td style="font-size:0.78rem;color:var(--text-2);">{{ $att->notes ?? '-' }}</td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+        @else
+        <div class="mhs-empty" style="padding:40px 20px;">
+            <i class="bi bi-calendar-x"></i>
+            <p>Belum ada riwayat absensi tercatat.</p>
         </div>
-        <div class="card-body p-0">
-            @if($attendances->isNotEmpty())
-            <div class="table-responsive">
-                <table class="table table-hover mb-0 align-middle">
-                    <thead class="bg-light text-uppercase small fw-bold text-secondary">
-                        <tr>
-                            <th class="ps-4 py-3">Tanggal</th>
-                            <th>Mata Kuliah</th>
-                            <th>Dosen Pengampu</th>
-                            <th class="text-center">Status</th>
-                            <th>Keterangan</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($attendances as $att)
-                        <tr>
-                            <td class="ps-4 fw-bold">{{ \Carbon\Carbon::parse($att->date)->format('d M Y') }}</td>
-                            <td class="fw-bold text-dark">{{ $att->subject->name ?? '-' }}</td>
-                            <td class="text-secondary"><i class="bi bi-person"></i> {{ $att->lecturer->name ?? '-' }}</td>
-                            <td class="text-center">
-                                @if($att->status === 'hadir') <span class="badge bg-success rounded-pill px-3">Hadir</span>
-                                @elseif($att->status === 'izin') <span class="badge bg-info text-white rounded-pill px-3">Izin</span>
-                                @elseif($att->status === 'sakit') <span class="badge bg-warning text-dark rounded-pill px-3">Sakit</span>
-                                @else <span class="badge bg-danger rounded-pill px-3">Alpa</span>
-                                @endif
-                            </td>
-                            <td class="small text-muted">{{ $att->notes ?? '-' }}</td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-            @else
-            <div class="text-center py-5">
-                <i class="bi bi-calendar-x text-muted fs-1 mb-3 d-block"></i>
-                <p class="text-muted mb-0">Belum ada riwayat absensi tercatat.</p>
-            </div>
-            @endif
-        </div>
+        @endif
     </div>
 </div>
 @endsection

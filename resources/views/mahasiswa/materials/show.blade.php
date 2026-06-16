@@ -1,70 +1,82 @@
-@extends('layouts.app')
+@extends('layouts.mahasiswa')
+
+@section('title', 'Detail Materi')
 
 @section('content')
-<div class="container-fluid p-0">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <a href="{{ route('mahasiswa.materials.index') }}" class="btn btn-outline-secondary rounded-pill px-4 mb-3 d-inline-block">
-                <i class="bi bi-arrow-left me-2"></i> Kembali ke Daftar Materi
-            </a>
-            <h3 class="fw-bold mb-1 text-dark border-start border-4 border-primary ps-3">{{ $material->title }}</h3>
-            <p class="text-muted ms-3 mb-0">{{ $material->subject ? $material->subject->name : 'Materi Umum' }} &bull; Diunggah pada {{ $material->created_at->format('d M Y') }}</p>
-        </div>
-        <a href="{{ route('mahasiswa.materials.download', $material->id) }}" class="btn btn-primary rounded-pill px-4 shadow-sm">
-            <i class="bi bi-download me-2"></i> Unduh File Asli
+
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;gap:12px;flex-wrap:wrap;">
+    <div style="display:flex;align-items:center;gap:12px;">
+        <a href="{{ route('mahasiswa.materials.index') }}" class="mhs-btn mhs-btn-ghost mhs-btn-sm">
+            <i class="bi bi-arrow-left"></i> Daftar Materi
         </a>
-    </div>
-
-    <div class="row">
-        <!-- Sidebar Detail Materi -->
-        <div class="col-lg-3 mb-4 mb-lg-0">
-            <div class="card border-0 shadow-sm rounded-4 h-100">
-                <div class="card-body p-4">
-                    <h6 class="fw-bold mb-3"><i class="bi bi-info-circle text-primary me-2"></i> Detail Materi</h6>
-                    <div class="mb-3">
-                        <small class="text-muted d-block">Dosen Pengampu</small>
-                        <strong>{{ $material->user->name ?? 'Tidak diketahui' }}</strong>
-                    </div>
-                    <div class="mb-3">
-                        <small class="text-muted d-block">Tipe Dokumen</small>
-                        <span class="badge bg-secondary text-uppercase">{{ $material->file_type }}</span>
-                    </div>
-                    <div class="mb-4">
-                        <small class="text-muted d-block">Deskripsi</small>
-                        <p class="mb-0 small">{{ $material->description ?: 'Tidak ada deskripsi yang ditambahkan.' }}</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Area Preview File -->
-        <div class="col-lg-9">
-            <div class="card border-0 shadow-sm rounded-4 h-100">
-                <div class="card-body p-0 d-flex flex-column" style="min-height: 600px; background: #f8f9fa; border-radius: 1rem; overflow: hidden;">
-                    
-                    @if(in_array(strtolower($material->file_type), ['pdf']))
-                        <!-- PDF Preview -->
-                        <iframe src="{{ asset('storage/' . $material->file_path) }}" width="100%" height="100%" style="border: none; flex-grow: 1;" allowfullscreen></iframe>
-                    @elseif(in_array(strtolower($material->file_type), ['jpg', 'jpeg', 'png', 'gif', 'webp']))
-                        <!-- Image Preview -->
-                        <div class="d-flex justify-content-center align-items-center h-100 p-4" style="flex-grow: 1;">
-                            <img src="{{ asset('storage/' . $material->file_path) }}" alt="{{ $material->title }}" class="img-fluid rounded shadow-sm" style="max-height: 80vh; object-fit: contain;">
-                        </div>
-                    @else
-                        <!-- No Preview Available -->
-                        <div class="d-flex flex-column justify-content-center align-items-center h-100 p-5 text-center" style="flex-grow: 1;">
-                            <i class="bi bi-file-earmark-arrow-down text-secondary opacity-50 mb-3" style="font-size: 5rem;"></i>
-                            <h5 class="fw-bold text-dark">Pratinjau Tidak Tersedia</h5>
-                            <p class="text-muted mb-4">File dengan format <strong>.{{ strtoupper($material->file_type) }}</strong> tidak dapat dipratinjau langsung di dalam browser.</p>
-                            <a href="{{ route('mahasiswa.materials.download', $material->id) }}" class="btn btn-primary rounded-pill px-4">
-                                <i class="bi bi-download me-2"></i> Silakan Unduh untuk Melihat
-                            </a>
-                        </div>
-                    @endif
-
-                </div>
-            </div>
+        <div>
+            <h5 style="font-family:var(--font-display);font-weight:700;color:var(--text-1);margin:0 0 2px;font-size:1rem;">{{ $material->title }}</h5>
+            <p style="font-size:0.75rem;color:var(--text-3);margin:0;">{{ $material->subject ? $material->subject->name : 'Materi Umum' }} &bull; Diunggah {{ $material->created_at->format('d M Y') }}</p>
         </div>
     </div>
+    <a href="{{ route('mahasiswa.materials.download', $material->id) }}" class="mhs-btn mhs-btn-primary mhs-btn-sm">
+        <i class="bi bi-download"></i> Unduh File Asli
+    </a>
 </div>
+
+<div style="display:grid;grid-template-columns:240px 1fr;gap:20px;align-items:start;">
+
+    {{-- Detail Sidebar --}}
+    <div class="mhs-card">
+        <div class="mhs-card-header" style="padding:14px 16px;">
+            <h6 class="mhs-card-title" style="font-size:0.84rem;">
+                <span class="mhs-card-icon" style="background:var(--success-light);color:var(--success);width:26px;height:26px;">
+                    <i class="bi bi-info-circle"></i>
+                </span>
+                Detail Materi
+            </h6>
+        </div>
+        <div class="mhs-card-body">
+            <div style="margin-bottom:14px;">
+                <div class="mhs-section-label">Dosen Pengampu</div>
+                <div style="font-size:0.84rem;font-weight:600;color:var(--text-1);">{{ $material->user->name ?? 'Tidak diketahui' }}</div>
+            </div>
+            <div style="margin-bottom:14px;">
+                <div class="mhs-section-label">Tipe Dokumen</div>
+                <span class="mhs-badge muted" style="text-transform:uppercase;">{{ $material->file_type }}</span>
+            </div>
+            <div>
+                <div class="mhs-section-label">Deskripsi</div>
+                <p style="font-size:0.8rem;color:var(--text-2);margin:0;line-height:1.55;">
+                    {{ $material->description ?: 'Tidak ada deskripsi yang ditambahkan.' }}
+                </p>
+            </div>
+        </div>
+    </div>
+
+    {{-- Preview Area --}}
+    <div class="mhs-card" style="overflow:hidden;">
+        <div style="min-height:600px;display:flex;flex-direction:column;background:rgba(0,0,0,0.2);">
+            @if(in_array(strtolower($material->file_type), ['pdf']))
+                <iframe src="{{ asset('storage/' . $material->file_path) }}"
+                    style="width:100%;height:100%;min-height:600px;border:none;flex-grow:1;" allowfullscreen></iframe>
+
+            @elseif(in_array(strtolower($material->file_type), ['jpg', 'jpeg', 'png', 'gif', 'webp']))
+                <div style="display:flex;justify-content:center;align-items:center;flex-grow:1;padding:20px;">
+                    <img src="{{ asset('storage/' . $material->file_path) }}" alt="{{ $material->title }}"
+                        style="max-height:80vh;max-width:100%;object-fit:contain;border-radius:var(--radius-lg);">
+                </div>
+
+            @else
+                <div style="display:flex;flex-direction:column;justify-content:center;align-items:center;flex-grow:1;padding:60px 20px;text-align:center;">
+                    <i class="bi bi-file-earmark-arrow-down" style="font-size:4rem;color:var(--text-3);margin-bottom:16px;"></i>
+                    <h5 style="font-family:var(--font-display);font-weight:700;color:var(--text-1);margin-bottom:8px;">Pratinjau Tidak Tersedia</h5>
+                    <p style="font-size:0.84rem;color:var(--text-2);margin-bottom:20px;">
+                        File dengan format <strong>.{{ strtoupper($material->file_type) }}</strong> tidak dapat dipratinjau langsung di browser.
+                    </p>
+                    <a href="{{ route('mahasiswa.materials.download', $material->id) }}" class="mhs-btn mhs-btn-primary">
+                        <i class="bi bi-download"></i> Unduh untuk Melihat
+                    </a>
+                </div>
+            @endif
+        </div>
+    </div>
+
+</div>
+
 @endsection
