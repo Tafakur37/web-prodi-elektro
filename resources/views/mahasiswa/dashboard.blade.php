@@ -1,523 +1,537 @@
 @extends('layouts.mahasiswa')
-
 @section('title', 'Dashboard')
 
 @push('styles')
 <style>
-/* ── DASHBOARD GRID ─────────────────────────────────────────────── */
-.dash-grid {
+/* ================================================================
+   DASHBOARD LAYOUT
+================================================================ */
+.dash-layout {
     display: grid;
-    grid-template-columns: 1fr 320px;
+    grid-template-columns: 1fr 300px;
     gap: 20px;
     align-items: start;
 }
-@media(max-width:1100px){ .dash-grid { grid-template-columns: 1fr; } }
+@media (max-width: 1100px) { .dash-layout { grid-template-columns: 1fr; } }
 
-/* ── WELCOME HERO ────────────────────────────────────────────────── */
-.welcome-hero {
-    background: linear-gradient(135deg, #0a1f4e 0%, #0044cc 50%, #0066ff 100%);
-    border-radius: 20px;
+/* ── HERO STRIP ─────────────────────────────────────────────── */
+.hero-strip {
+    background: var(--primary-container);
+    border-radius: var(--radius-xl);
     padding: 24px 28px;
-    color: #fff;
+    margin-bottom: 20px;
     display: flex;
     align-items: center;
-    gap: 20px;
-    margin-bottom: 20px;
+    gap: 18px;
     position: relative;
     overflow: hidden;
-    border: 1px solid rgba(0,102,255,0.3);
-    box-shadow: 0 8px 32px rgba(0,102,255,0.25);
 }
 
-.welcome-hero::before {
+.hero-strip::after {
     content: '';
     position: absolute;
-    top: -60px; right: -60px;
-    width: 220px; height: 220px;
+    right: -40px; top: -60px;
+    width: 200px; height: 200px;
     border-radius: 50%;
-    background: rgba(255,255,255,0.05);
+    background: rgba(255,255,255,0.03);
 }
 
-.welcome-hero::after {
-    content: '';
-    position: absolute;
-    bottom: -80px; right: 60px;
-    width: 180px; height: 180px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.04);
-}
-
-.welcome-icon {
-    width: 58px; height: 58px;
-    background: rgba(255,255,255,0.15);
-    border: 1px solid rgba(255,255,255,0.25);
-    border-radius: 16px;
+.hero-avatar {
+    width: 52px; height: 52px; flex-shrink: 0;
+    border-radius: var(--radius-md);
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.15);
     display: flex; align-items: center; justify-content: center;
-    font-size: 1.6rem;
-    flex-shrink: 0;
+    font-family: var(--font-display);
+    font-size: 1.4rem; font-weight: 800; color: #fff;
+    overflow: hidden;
+}
+.hero-avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+.hero-text { flex: 1; position: relative; z-index: 1; }
+.hero-greeting {
+    font-family: var(--font-label);
+    font-size: 0.6rem; text-transform: uppercase;
+    letter-spacing: 0.14em; color: rgba(255,255,255,0.45);
+    margin-bottom: 4px;
+}
+.hero-name {
+    font-family: var(--font-display);
+    font-size: 1.1rem; font-weight: 800;
+    color: #fff; margin-bottom: 3px;
+}
+.hero-sub { font-size: 0.8rem; color: rgba(255,255,255,0.5); }
+
+.hero-meta {
     position: relative; z-index: 1;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: var(--radius-md);
+    padding: 10px 16px;
+    text-align: right; flex-shrink: 0;
+}
+.hero-meta .date-lbl {
+    font-family: var(--font-label);
+    font-size: 0.58rem; color: rgba(255,255,255,0.4);
+    text-transform: uppercase; letter-spacing: 0.1em; display: block; margin-bottom: 3px;
+}
+.hero-meta .date-val {
+    font-family: var(--font-display);
+    font-size: 0.78rem; font-weight: 700; color: rgba(255,255,255,0.85);
 }
 
-.welcome-text { position: relative; z-index: 1; flex: 1; }
-.welcome-text h5 { font-size: 1.05rem; font-weight: 800; margin: 0 0 4px; font-family: var(--font-display); }
-.welcome-text p  { font-size: 0.85rem; margin: 0; opacity: 0.85; }
-
-.welcome-date {
-    position: relative; z-index: 1;
-    margin-left: auto;
-    background: rgba(255,255,255,0.15);
-    border: 1px solid rgba(255,255,255,0.25);
-    border-radius: 50px;
-    padding: 7px 16px;
-    font-size: 0.78rem;
-    white-space: nowrap;
-    flex-shrink: 0;
-}
-
-/* ── QUICK ACTION SHORTCUTS ──────────────────────────────────────── */
-.shortcuts-grid {
+/* ── QUICK NAV ──────────────────────────────────────────────── */
+.quick-nav {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     gap: 10px;
     margin-bottom: 20px;
 }
-@media(max-width:768px){ .shortcuts-grid { grid-template-columns: repeat(3,1fr); } }
+@media (max-width: 768px) { .quick-nav { grid-template-columns: repeat(3, 1fr); } }
 
-.shortcut-btn {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    padding: 14px 10px;
+.quick-nav-item {
+    display: flex; flex-direction: column; align-items: center;
+    gap: 7px; padding: 14px 8px;
     background: var(--card-bg);
     border: 1px solid var(--card-border);
-    border-radius: var(--radius-xl);
-    text-decoration: none;
-    color: var(--text-2);
-    font-size: 0.72rem;
-    font-weight: 600;
+    border-radius: var(--radius-lg);
+    text-decoration: none; color: var(--text-2);
+    font-size: 0.72rem; font-weight: 600;
     text-align: center;
-    transition: all 0.22s ease;
+    transition: all 0.2s cubic-bezier(0.4,0,0.2,1);
 }
 
-.shortcut-btn:hover {
-    border-color: var(--primary);
-    color: var(--cyan);
-    background: var(--primary-light);
-    transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(0,102,255,0.2);
-}
-
-.shortcut-icon {
-    width: 40px; height: 40px;
-    border-radius: 12px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 1.1rem;
-}
-
-/* ── TODAY SCHEDULE CARDS ─────────────────────────────────────────── */
-.today-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 12px;
-    margin-bottom: 20px;
-}
-
-.schedule-card-new {
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-left: 3px solid var(--primary);
-    border-radius: var(--radius-lg);
-    padding: 14px 16px;
-    transition: all 0.2s ease;
-}
-
-.schedule-card-new:hover {
-    background: rgba(0,102,255,0.06);
-    border-color: rgba(0,102,255,0.25);
+.quick-nav-item:hover {
+    border-color: rgba(0,89,187,0.2);
+    color: var(--secondary);
     transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0,89,187,0.08);
+    background: rgba(255,255,255,0.9);
 }
 
-.schedule-card-new.cancelled {
-    border-left-color: var(--danger);
-    background: rgba(255,71,87,0.05);
-    border-color: rgba(255,71,87,0.15);
-}
-
-.schedule-card-new.changed {
-    border-left-color: var(--warning);
-    background: rgba(255,165,2,0.05);
-    border-color: rgba(255,165,2,0.15);
-}
-
-.scard-subject {
-    font-size: 0.88rem; font-weight: 700;
-    color: var(--text-1); margin-bottom: 4px;
-}
-
-.scard-subject.cancelled { text-decoration: line-through; color: var(--danger); }
-
-.scard-lecturer {
-    font-size: 0.75rem; color: var(--text-2); margin-bottom: 10px;
-}
-
-.scard-meta {
-    display: flex; justify-content: space-between;
-    font-size: 0.7rem; color: var(--text-3);
-    padding-top: 8px; border-top: 1px solid var(--border);
-}
-
-.scard-override {
-    display: inline-flex; align-items: center; gap: 4px;
-    font-size: 0.65rem; font-weight: 700; margin-top: 8px;
-    padding: 3px 8px; border-radius: 20px;
-}
-
-.scard-override.cancelled { background: var(--danger); color: #fff; }
-.scard-override.changed   { background: var(--warning); color: #fff; }
-
-/* ── FITNESS METRICS ─────────────────────────────────────────────── */
-.fitness-entry-new {
-    background: rgba(255,255,255,0.03);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: 14px 16px;
-    margin-bottom: 10px;
-}
-
-.fitness-entry-new:last-child { margin-bottom: 0; }
-
-.fitness-score-big {
-    font-size: 2.5rem; font-weight: 800;
-    line-height: 1; color: var(--danger);
-    font-family: var(--font-display);
-}
-
-.fitness-metrics-grid {
-    display: grid; grid-template-columns: 1fr 1fr;
-    gap: 8px; margin-top: 12px;
-}
-
-.fitness-metric-item {
-    background: rgba(255,255,255,0.04);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-    padding: 8px 10px; font-size: 0.75rem;
-}
-
-.fm-label { color: var(--text-3); display: block; margin-bottom: 2px; font-size: 0.68rem; }
-.fm-raw   { font-weight: 600; color: var(--text-1); }
-.fm-score { font-weight: 800; font-size: 0.82rem; }
-.fm-score.ok   { color: var(--success); }
-.fm-score.fail { color: var(--danger); }
-
-/* ── ACHIEVEMENT ITEM ────────────────────────────────────────────── */
-.ach-item-new {
-    display: flex; align-items: flex-start; gap: 12px;
-    padding: 12px 0; border-bottom: 1px solid var(--border);
-    cursor: pointer; text-decoration: none; color: inherit;
-    transition: all 0.15s;
-    border-radius: var(--radius-sm);
-}
-
-.ach-item-new:last-child { border-bottom: none; padding-bottom: 0; }
-.ach-item-new:hover { background: rgba(255,255,255,0.03); }
-
-.ach-icon-new {
-    width: 36px; height: 36px; flex-shrink: 0;
-    background: rgba(255,215,0,0.1);
-    border: 1px solid rgba(255,215,0,0.2);
+.quick-nav-icon {
+    width: 38px; height: 38px;
     border-radius: 10px;
     display: flex; align-items: center; justify-content: center;
-    font-size: 1.1rem;
+    font-size: 1rem;
 }
 
-.ach-item-new h6 { font-size: 0.82rem; font-weight: 700; margin: 0 0 3px; color: var(--text-1); }
-.ach-item-new p  { font-size: 0.75rem; color: var(--text-2); margin: 0 0 5px; }
-
-/* ── EXAM ITEM ───────────────────────────────────────────────────── */
-.exam-item-new {
-    display: flex; align-items: center; gap: 14px;
-    padding: 12px 0; border-bottom: 1px solid var(--border);
+/* ── SECTION HEADER (reusable) ──────────────────────────────── */
+.sec-header {
+    display: flex; align-items: center;
+    justify-content: space-between;
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--outline-variant);
+    background: var(--surface-container-low);
+}
+.sec-title {
+    display: flex; align-items: center; gap: 9px;
+    font-family: var(--font-display);
+    font-size: 0.83rem; font-weight: 700;
+    color: var(--primary-container); margin: 0;
+}
+.sec-icon {
+    width: 26px; height: 26px;
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.8rem; flex-shrink: 0;
 }
 
-.exam-item-new:last-child { border-bottom: none; }
+/* ── JADWAL HARI INI — timeline style ───────────────────────── */
+.schedule-timeline { padding: 16px 18px; }
 
-.exam-date-new {
-    width: 44px; flex-shrink: 0;
-    background: var(--info-light);
-    border: 1px solid rgba(0,198,255,0.2);
+.schedule-slot {
+    display: flex; gap: 14px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--surface-container-high);
+}
+.schedule-slot:last-child { border-bottom: none; padding-bottom: 0; }
+
+.slot-time {
+    flex-shrink: 0; width: 54px;
+    font-family: var(--font-label);
+    font-size: 0.68rem; font-weight: 600;
+    color: var(--secondary); text-align: center;
+    line-height: 1.3;
+}
+.slot-time .time-end { color: var(--outline); }
+
+.slot-dot {
+    flex-shrink: 0; width: 8px;
+    display: flex; flex-direction: column; align-items: center; gap: 0;
+    padding-top: 4px;
+}
+.slot-dot-circle {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--secondary); flex-shrink: 0;
+}
+.slot-dot-line {
+    width: 1px; flex: 1; background: var(--outline-variant);
+    margin-top: 3px;
+}
+
+.slot-body { flex: 1; min-width: 0; }
+.slot-subject {
+    font-weight: 700; font-size: 0.88rem;
+    color: var(--on-surface); margin-bottom: 2px;
+}
+.slot-subject.cancelled { text-decoration: line-through; color: var(--danger); }
+.slot-lecturer { font-size: 0.76rem; color: var(--text-2); margin-bottom: 6px; }
+.slot-meta {
+    display: flex; gap: 12px;
+    font-family: var(--font-label); font-size: 0.62rem;
+    color: var(--outline);
+}
+.slot-chip {
+    display: inline-flex; align-items: center; gap: 3px;
+    padding: 2px 8px; border-radius: 20px;
+    font-family: var(--font-label); font-size: 0.6rem;
+    font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;
+    margin-top: 5px;
+}
+.slot-chip.cancelled { background: var(--danger-light); color: var(--danger); }
+.slot-chip.changed   { background: var(--warning-light); color: var(--warning); }
+
+/* ── WEEKLY TABLE ───────────────────────────────────────────── */
+.week-today { background: rgba(0,89,187,0.04) !important; }
+
+/* ── FITNESS TABS ───────────────────────────────────────────── */
+.tab-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+.tab-pill {
+    padding: 4px 13px; border-radius: 20px;
+    border: 1px solid var(--outline-variant);
+    background: transparent; color: var(--text-2);
+    font-family: var(--font-label); font-size: 0.68rem; font-weight: 600;
+    cursor: pointer; transition: all 0.15s; letter-spacing: 0.04em;
+}
+.tab-pill.active, .tab-pill:hover {
+    background: var(--secondary); border-color: var(--secondary); color: #fff;
+}
+
+/* ── FITNESS ENTRY ──────────────────────────────────────────── */
+.fit-entry {
+    background: var(--surface-container-low);
+    border: 1px solid var(--outline-variant);
     border-radius: var(--radius-md);
-    text-align: center; padding: 6px 4px;
+    padding: 14px; margin-bottom: 10px;
 }
+.fit-entry:last-child { margin-bottom: 0; }
 
-.exam-date-new .eday   { font-size: 1.2rem; font-weight: 800; color: var(--cyan); line-height: 1; }
-.exam-date-new .emonth { font-size: 0.6rem; font-weight: 700; color: var(--cyan); opacity: .7; text-transform: uppercase; }
-.exam-info-new h6 { font-size: 0.84rem; font-weight: 700; margin: 0 0 3px; color: var(--text-1); }
-.exam-meta-new { font-size: 0.72rem; color: var(--text-3); display: flex; gap: 12px; }
+.fit-score-row {
+    display: flex; align-items: center;
+    justify-content: space-between; margin-bottom: 10px;
+}
+.fit-score-big {
+    font-family: var(--font-display);
+    font-size: 2.2rem; font-weight: 800;
+    color: var(--danger); line-height: 1;
+}
+.fit-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 6px; margin-top: 10px;
+}
+.fit-metric {
+    background: #fff; border: 1px solid var(--outline-variant);
+    border-radius: 6px; padding: 7px 9px;
+}
+.fit-metric-lbl { font-family: var(--font-label); font-size: 0.6rem; color: var(--outline); display: block; }
+.fit-metric-val { font-weight: 700; font-size: 0.82rem; color: var(--on-surface); }
+.fit-metric-score { font-weight: 800; font-size: 0.78rem; }
+.fit-metric-score.ok   { color: var(--success); }
+.fit-metric-score.fail { color: var(--danger); }
 
-/* ── ANNOUNCEMENT ─────────────────────────────────────────────────── */
-.announce-item {
+/* ── ACHIEVEMENT ITEM ───────────────────────────────────────── */
+.ach-item {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 11px 0; border-bottom: 1px solid var(--surface-container-high);
+    text-decoration: none; color: inherit;
+    transition: opacity 0.15s; cursor: pointer;
+}
+.ach-item:last-child { border-bottom: none; padding-bottom: 0; }
+.ach-item:hover { opacity: 0.75; }
+.ach-icon {
+    width: 34px; height: 34px; flex-shrink: 0;
+    background: rgba(255,200,0,0.08);
+    border: 1px solid rgba(255,200,0,0.18);
+    border-radius: 9px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem;
+}
+.ach-item h6 { font-size: 0.83rem; font-weight: 700; margin: 0 0 2px; color: var(--on-surface); }
+.ach-item p  { font-size: 0.74rem; color: var(--text-2); margin: 0 0 5px; line-height: 1.45; }
+
+/* ── EXAM ITEM ──────────────────────────────────────────────── */
+.exam-item {
+    display: flex; gap: 13px; align-items: center;
+    padding: 11px 0; border-bottom: 1px solid var(--surface-container-high);
+}
+.exam-item:last-child { border-bottom: none; }
+.exam-date-box {
+    width: 42px; flex-shrink: 0; text-align: center;
+    background: rgba(0,89,187,0.07);
+    border: 1px solid rgba(0,89,187,0.14);
+    border-radius: var(--radius-md); padding: 6px 4px;
+}
+.exam-date-box .eday { font-size: 1.15rem; font-weight: 800; color: var(--secondary); line-height: 1; }
+.exam-date-box .emon { font-size: 0.58rem; font-weight: 700; color: var(--secondary); opacity: 0.7; text-transform: uppercase; }
+.exam-body h6 { font-size: 0.84rem; font-weight: 700; margin: 0 0 3px; }
+.exam-meta { font-size: 0.72rem; color: var(--text-3); display: flex; gap: 10px; }
+
+/* ── ANNOUNCEMENT ITEM ──────────────────────────────────────── */
+.ann-item {
     display: block; text-decoration: none; color: inherit;
-    padding: 12px 0; border-bottom: 1px solid var(--border);
-    transition: opacity .15s; cursor: pointer;
+    padding: 11px 0; border-bottom: 1px solid var(--surface-container-high);
+    transition: opacity 0.15s;
 }
+.ann-item:last-child { border-bottom: none; }
+.ann-item:hover { opacity: 0.75; }
+.ann-item h6 { font-size: 0.83rem; font-weight: 700; margin: 0 0 3px; }
+.ann-item p  { font-size: 0.74rem; color: var(--text-2); margin: 0 0 4px; line-height: 1.5; }
+.ann-time { font-family: var(--font-label); font-size: 0.62rem; color: var(--outline); }
 
-.announce-item:last-child { border-bottom: none; }
-.announce-item:hover { opacity: .75; }
-.announce-item h6 { font-size: 0.82rem; font-weight: 700; margin: 0 0 3px; color: var(--text-1); }
-.announce-item p  { font-size: 0.75rem; color: var(--text-2); margin: 0 0 4px; line-height: 1.5; }
-.announce-item .time { font-size: 0.7rem; color: var(--text-3); }
-
-/* ── VIOLATION CARD ──────────────────────────────────────────────── */
-.violation-card-new {
-    background: rgba(255,71,87,0.06);
-    border: 1px solid rgba(255,71,87,0.2);
-    border-radius: var(--radius-xl);
-    overflow: hidden;
-    margin-bottom: 16px;
+/* ── VIOLATION ALERT ────────────────────────────────────────── */
+.violation-alert {
+    background: var(--danger-light);
+    border: 1px solid rgba(186,26,26,0.18);
+    border-radius: var(--radius-lg);
+    overflow: hidden; margin-bottom: 14px;
 }
-
-.violation-header-new {
-    background: rgba(255,71,87,0.1);
-    padding: 12px 18px;
-    border-bottom: 1px solid rgba(255,71,87,0.15);
-    display: flex; align-items: center; gap: 8px;
+.violation-alert-head {
+    padding: 10px 16px;
+    background: rgba(186,26,26,0.08);
+    border-bottom: 1px solid rgba(186,26,26,0.12);
+    display: flex; align-items: center; gap: 7px;
+    font-size: 0.83rem; font-weight: 700; color: var(--danger);
 }
-
-.violation-header-new span { font-size: 0.84rem; font-weight: 700; color: var(--danger); }
-.violation-body-new { padding: 14px 18px; }
-
-.violation-item-new {
-    background: rgba(255,71,87,0.06);
-    border: 1px solid rgba(255,71,87,0.15);
-    border-radius: var(--radius-md);
-    padding: 12px 14px; margin-bottom: 8px;
+.violation-body { padding: 12px 16px; }
+.violation-item {
+    padding: 10px 12px; margin-bottom: 8px;
+    background: rgba(186,26,26,0.05);
+    border: 1px solid rgba(186,26,26,0.12);
+    border-radius: var(--radius-sm);
 }
+.violation-item:last-child { margin-bottom: 0; }
+.v-title { font-size: 0.83rem; font-weight: 700; color: var(--danger); margin-bottom: 3px; }
+.v-desc  { font-size: 0.77rem; color: var(--on-surface); margin-bottom: 4px; }
+.v-meta  { font-family: var(--font-label); font-size: 0.62rem; color: var(--outline); }
 
-.violation-item-new:last-child { margin-bottom: 0; }
-.vn-title { font-size: 0.84rem; font-weight: 700; color: var(--danger); margin-bottom: 4px; }
-.vn-desc  { font-size: 0.78rem; color: var(--text-1); margin-bottom: 5px; }
-.vn-meta  { font-size: 0.7rem; color: var(--text-3); }
-
-/* ── IPK PROGRESS RING ────────────────────────────────────────────── */
-.ipk-ring-wrap {
-    display: flex; flex-direction: column; align-items: center; gap: 6px;
-}
-
+/* ── IPK RING ───────────────────────────────────────────────── */
+.ipk-wrap { text-align: center; padding: 6px 0 10px; }
 .ipk-ring-svg { transform: rotate(-90deg); }
-
-.ipk-ring-bg { fill: none; stroke: rgba(255,255,255,0.08); stroke-width: 8; }
-.ipk-ring-fg { fill: none; stroke: url(#ipkGrad); stroke-width: 8; stroke-linecap: round;
+.ipk-ring-bg { fill: none; stroke: var(--surface-container-high); stroke-width: 7; }
+.ipk-ring-fg { fill: none; stroke: var(--secondary); stroke-width: 7; stroke-linecap: round;
     transition: stroke-dashoffset 1.5s cubic-bezier(0.4,0,0.2,1); }
+.ipk-center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.ipk-val { font-family: var(--font-display); font-size: 1.35rem; font-weight: 800; color: var(--on-surface); line-height: 1; }
+.ipk-lbl { font-family: var(--font-label); font-size: 0.58rem; color: var(--outline); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 3px; }
+.ipk-verdict { font-size: 0.78rem; color: var(--text-2); margin-top: 8px; font-weight: 500; }
 
-.ipk-ring-center {
-    position: absolute; inset: 0;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-}
+/* ── BIMBINGAN TABLE ─────────────────────────────────────────── */
+.mtg-empty { padding: 20px; text-align: center; }
+.mtg-empty i { font-size: 1.5rem; display: block; margin-bottom: 8px; color: var(--outline); }
+.mtg-empty p { font-size: 0.83rem; color: var(--outline); margin: 0; }
 
-.ipk-val { font-size: 1.4rem; font-weight: 800; color: var(--text-1); font-family: var(--font-display); line-height: 1; }
-.ipk-label { font-size: 0.6rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text-3); margin-top: 3px; }
-
-/* ── WEEK TABLE ──────────────────────────────────────────────────── */
-.week-today-row { background: rgba(0,102,255,0.07) !important; }
-
-/* ── TAB PILLS ────────────────────────────────────────────────────── */
-.tab-pills-new { display: flex; gap: 6px; margin-bottom: 14px; flex-wrap: wrap; }
-.tab-pill-new {
-    padding: 4px 14px;
-    border-radius: 20px;
-    border: 1px solid var(--border);
-    background: transparent;
-    color: var(--text-2);
-    font-size: 0.75rem; font-weight: 600;
-    cursor: pointer; transition: all .15s;
-}
-
-.tab-pill-new.active, .tab-pill-new:hover {
-    background: var(--primary); border-color: var(--primary); color: #fff;
-}
+/* ── KOTAK SARAN ────────────────────────────────────────────── */
+.saran-body { padding: 18px; }
 </style>
 @endpush
 
 @section('content')
 
-{{-- ================================================================ --}}
-{{-- WELCOME HERO                                                      --}}
-{{-- ================================================================ --}}
-<div class="welcome-hero">
-    <div class="welcome-icon">🎓</div>
-    <div class="welcome-text">
-        <h5>Portal Akademik Mahasiswa</h5>
-        <p>Selamat datang, <strong>{{ auth()->user()->name }}</strong> — pantau jadwal, nilai, dan aktivitas kamu di sini.</p>
+{{-- ============================================================ --}}
+{{-- HERO                                                          --}}
+{{-- ============================================================ --}}
+<div class="hero-strip">
+    <div class="hero-avatar">
+        @if(auth()->user()->profile_photo)
+            <img src="{{ asset('storage/profiles/' . auth()->user()->profile_photo) }}" alt="Avatar">
+        @else
+            {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+        @endif
     </div>
-    <div class="welcome-date">
-        <i class="bi bi-calendar3 me-1"></i>
-        {{ \Carbon\Carbon::now()->isoFormat('dddd, D MMMM Y') }}
+    <div class="hero-text">
+        <div class="hero-greeting">Portal Akademik Mahasiswa</div>
+        <div class="hero-name">{{ auth()->user()->name }}</div>
+        <div class="hero-sub">Selamat datang — pantau jadwal, nilai, dan aktivitas akademik Anda</div>
+    </div>
+    <div class="hero-meta d-none d-md-block">
+        <span class="date-lbl">Hari ini</span>
+        <span class="date-val">{{ \Carbon\Carbon::now()->isoFormat('ddd, D MMM Y') }}</span>
     </div>
 </div>
 
-{{-- ================================================================ --}}
-{{-- QUICK ACTION SHORTCUTS                                            --}}
-{{-- ================================================================ --}}
-<div class="shortcuts-grid">
-    <a href="{{ route('mahasiswa.attendances.index') }}" class="shortcut-btn">
-        <div class="shortcut-icon" style="background:rgba(0,102,255,0.12);color:var(--primary);">
+{{-- ============================================================ --}}
+{{-- QUICK NAVIGATION                                              --}}
+{{-- ============================================================ --}}
+<div class="quick-nav">
+    <a href="{{ route('mahasiswa.attendances.index') }}" class="quick-nav-item">
+        <div class="quick-nav-icon" style="background:rgba(0,89,187,0.08);color:var(--secondary);">
             <i class="bi bi-calendar-check"></i>
         </div>
         Absensi
     </a>
-    <a href="{{ route('mahasiswa.nilai.index') }}" class="shortcut-btn">
-        <div class="shortcut-icon" style="background:rgba(0,198,255,0.12);color:var(--cyan);">
+    <a href="{{ route('mahasiswa.nilai.index') }}" class="quick-nav-item">
+        <div class="quick-nav-icon" style="background:rgba(0,104,118,0.08);color:var(--cyan);">
             <i class="bi bi-bar-chart-line"></i>
         </div>
         Nilai
     </a>
-    <a href="{{ route('mahasiswa.materials.index') }}" class="shortcut-btn">
-        <div class="shortcut-icon" style="background:rgba(0,210,100,0.12);color:var(--success);">
+    <a href="{{ route('mahasiswa.materials.index') }}" class="quick-nav-item">
+        <div class="quick-nav-icon" style="background:rgba(0,165,80,0.08);color:var(--success);">
             <i class="bi bi-journal-text"></i>
         </div>
         Bahan Ajar
     </a>
-    <a href="{{ route('mahasiswa.chats.index') }}" class="shortcut-btn">
-        <div class="shortcut-icon" style="background:rgba(123,97,255,0.12);color:var(--purple);">
+    <a href="{{ route('mahasiswa.chats.index') }}" class="quick-nav-item">
+        <div class="quick-nav-icon" style="background:rgba(103,80,164,0.08);color:var(--purple);">
             <i class="bi bi-chat-dots"></i>
         </div>
         Chat
     </a>
-    <a href="{{ route('mahasiswa.submissions.index') }}" class="shortcut-btn">
-        <div class="shortcut-icon" style="background:rgba(255,165,2,0.12);color:var(--warning);">
+    <a href="{{ route('mahasiswa.submissions.index') }}" class="quick-nav-item">
+        <div class="quick-nav-icon" style="background:rgba(138,95,0,0.08);color:var(--warning);">
             <i class="bi bi-envelope-paper"></i>
         </div>
         Surat
     </a>
 </div>
 
-{{-- ================================================================ --}}
-{{-- MAIN DASHBOARD GRID                                               --}}
-{{-- ================================================================ --}}
+{{-- ============================================================ --}}
+{{-- MAIN GRID                                                     --}}
+{{-- ============================================================ --}}
 @php
 $todayData = collect($weeklySchedules)->first(fn($d) => $d['date']->isToday());
 @endphp
 
-<div class="dash-grid">
+<div class="dash-layout">
 
     {{-- ══════════ KOLOM KIRI ══════════ --}}
     <div>
 
-        {{-- 1. JADWAL PERKULIAHAN --}}
-        <div class="mhs-card" style="margin-bottom:20px;">
-            <div class="mhs-card-header">
-                <h6 class="mhs-card-title">
-                    <span class="mhs-card-icon" style="background:var(--primary-light);color:var(--primary);">
-                        <i class="bi bi-calendar-week"></i>
+        {{-- 1. JADWAL HARI INI --}}
+        <div class="mhs-card" style="margin-bottom:18px;">
+            <div class="sec-header">
+                <h6 class="sec-title">
+                    <span class="sec-icon" style="background:rgba(0,89,187,0.08);color:var(--secondary);">
+                        <i class="bi bi-calendar3"></i>
                     </span>
-                    Jadwal Perkuliahan
+                    Jadwal Hari Ini
+                    <span class="mhs-badge primary" style="font-size:0.58rem;">{{ \Carbon\Carbon::now()->format('d M') }}</span>
                 </h6>
-                <span class="mhs-badge cyan">Minggu Ini</span>
             </div>
-            <div class="mhs-card-body">
 
-                {{-- Jadwal Hari Ini --}}
-                <div class="mhs-section-label">Hari Ini — {{ \Carbon\Carbon::now()->format('d M Y') }}</div>
-
-                @if($todayData && $todayData['schedules']->isNotEmpty())
-                <div class="today-grid">
-                    @foreach($todayData['schedules'] as $schedule)
-                    @php
+            @if($todayData && $todayData['schedules']->isNotEmpty())
+            <div class="schedule-timeline">
+                @foreach($todayData['schedules'] as $schedule)
+                @php
                     $cancelled = $schedule->is_overridden && $schedule->override_status === 'cancelled';
                     $changed   = $schedule->is_overridden && $schedule->override_status !== 'cancelled';
-                    $cardClass = $cancelled ? 'cancelled' : ($changed ? 'changed' : '');
-                    @endphp
-                    <div class="schedule-card-new {{ $cardClass }}">
-                        <div class="scard-subject {{ $cancelled ? 'cancelled' : '' }}">{{ $schedule->subject->name }}</div>
-                        <div class="scard-lecturer">
-                            <i class="bi bi-person-circle me-1"></i>{{ $schedule->dosen->name }}
-                        </div>
-                        <div class="scard-meta">
-                            <span><i class="bi bi-clock me-1"></i>{{ \Carbon\Carbon::parse($schedule->start_time)->format('H:i') }}–{{ \Carbon\Carbon::parse($schedule->end_time)->format('H:i') }}</span>
+                @endphp
+                <div class="schedule-slot">
+                    <div class="slot-time">
+                        {{ \Carbon\Carbon::parse($schedule->start_time)->format('H:i') }}
+                        <div class="time-end">{{ \Carbon\Carbon::parse($schedule->end_time)->format('H:i') }}</div>
+                    </div>
+                    <div class="slot-dot">
+                        <div class="slot-dot-circle" style="{{ $cancelled ? 'background:var(--danger)' : ($changed ? 'background:var(--warning)' : '') }}"></div>
+                        @if(!$loop->last)<div class="slot-dot-line"></div>@endif
+                    </div>
+                    <div class="slot-body">
+                        <div class="slot-subject {{ $cancelled ? 'cancelled' : '' }}">{{ $schedule->subject->name }}</div>
+                        <div class="slot-lecturer"><i class="bi bi-person me-1"></i>{{ $schedule->dosen->name }}</div>
+                        <div class="slot-meta">
                             <span><i class="bi bi-geo-alt me-1"></i>{{ $schedule->room }}</span>
                         </div>
                         @if($schedule->is_overridden)
-                        <span class="scard-override {{ $cancelled ? 'cancelled' : 'changed' }}">
+                        <span class="slot-chip {{ $cancelled ? 'cancelled' : 'changed' }}">
                             <i class="bi bi-{{ $cancelled ? 'x-circle' : 'exclamation-triangle' }}-fill"></i>
-                            {{ $cancelled ? 'DIBATALKAN' : 'JADWAL BERUBAH' }}
+                            {{ $cancelled ? 'Dibatalkan' : 'Jadwal Berubah' }}
                         </span>
                         @if($schedule->override_note)
                         <div style="font-size:0.72rem;color:var(--text-2);font-style:italic;margin-top:4px;">"{{ $schedule->override_note }}"</div>
                         @endif
                         @endif
                     </div>
-                    @endforeach
                 </div>
-                @else
-                <div style="background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px;text-align:center;margin-bottom:20px;">
-                    <i class="bi bi-emoji-smile" style="font-size:1.4rem;color:var(--text-3);display:block;margin-bottom:6px;"></i>
-                    <p style="font-size:0.82rem;color:var(--text-3);margin:0;">Tidak ada kelas hari ini. Selamat istirahat! 😎</p>
-                </div>
-                @endif
+                @endforeach
+            </div>
+            @else
+            <div class="mhs-empty" style="padding:24px 0;">
+                <i class="bi bi-calendar-x"></i>
+                <p>Tidak ada kelas hari ini.</p>
+            </div>
+            @endif
+        </div>
 
-                {{-- Jadwal Mingguan --}}
-                <div class="mhs-section-label" style="margin-top:20px;">Jadwal Mingguan Lengkap</div>
-                <div style="overflow-x:auto;border-radius:var(--radius-lg);border:1px solid var(--border);">
-                    <table class="mhs-table">
-                        <thead>
-                            <tr>
-                                <th style="width:13%">Hari</th>
-                                <th>Mata Kuliah</th>
-                                <th style="width:15%">Waktu</th>
-                                <th style="width:12%">Ruang</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @php $hasClasses = false; @endphp
-                            @foreach($weeklySchedules as $dayData)
-                            @if($dayData['schedules']->isNotEmpty())
-                            @php $hasClasses = true; $isToday = $dayData['date']->isToday(); @endphp
-                            @foreach($dayData['schedules'] as $index => $schedule)
-                            @php
+        {{-- 2. JADWAL MINGGUAN --}}
+        <div class="mhs-card" style="margin-bottom:18px;">
+            <div class="sec-header">
+                <h6 class="sec-title">
+                    <span class="sec-icon" style="background:rgba(0,89,187,0.08);color:var(--secondary);">
+                        <i class="bi bi-calendar-week"></i>
+                    </span>
+                    Jadwal Mingguan
+                </h6>
+                <span class="mhs-badge muted">Minggu Ini</span>
+            </div>
+            <div style="overflow-x:auto;">
+                <table class="mhs-table">
+                    <thead>
+                        <tr>
+                            <th>Hari</th>
+                            <th>Mata Kuliah</th>
+                            <th>Waktu</th>
+                            <th>Ruang</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @php $hasClasses = false; @endphp
+                        @foreach($weeklySchedules as $dayData)
+                        @if($dayData['schedules']->isNotEmpty())
+                        @php $hasClasses = true; $isToday = $dayData['date']->isToday(); @endphp
+                        @foreach($dayData['schedules'] as $idx => $schedule)
+                        @php
                             $sc = $schedule->is_overridden && $schedule->override_status === 'cancelled';
                             $sw = $schedule->is_overridden && $schedule->override_status !== 'cancelled';
-                            @endphp
-                            <tr class="{{ $isToday ? 'week-today-row' : '' }}">
-                                @if($index === 0)
-                                <td rowspan="{{ count($dayData['schedules']) }}" style="vertical-align:top;padding-top:14px;">
-                                    <span style="font-weight:700;font-size:0.78rem;color:{{ $isToday ? 'var(--cyan)' : 'var(--text-2)' }};">{{ $dayData['day_name'] }}</span>
-                                    @if($isToday)<br><span class="mhs-badge cyan" style="margin-top:4px;font-size:0.55rem;">Hari ini</span>@endif
-                                </td>
+                        @endphp
+                        <tr class="{{ $isToday ? 'week-today' : '' }}">
+                            @if($idx === 0)
+                            <td rowspan="{{ count($dayData['schedules']) }}" style="vertical-align:top;padding-top:14px;">
+                                <span style="font-weight:700;font-size:0.78rem;color:{{ $isToday ? 'var(--secondary)' : 'var(--text-2)' }};">{{ $dayData['day_name'] }}</span>
+                                @if($isToday)<br><span class="mhs-badge primary" style="margin-top:4px;font-size:0.52rem;">Hari ini</span>@endif
+                            </td>
+                            @endif
+                            <td>
+                                <span style="font-weight:600;font-size:0.84rem;display:block;margin-bottom:2px;{{ $sc ? 'text-decoration:line-through;color:var(--danger);' : '' }}">{{ $schedule->subject->name }}</span>
+                                <span style="font-size:0.72rem;color:var(--text-3);"><i class="bi bi-person me-1"></i>{{ $schedule->dosen->name }}</span>
+                                @if($sc)<span class="mhs-badge danger" style="margin-top:4px;">Batal</span>
+                                @elseif($sw)<span class="mhs-badge warning" style="margin-top:4px;">Berubah</span>
                                 @endif
-                                <td>
-                                    <span style="font-weight:600;font-size:0.84rem;display:block;margin-bottom:2px;{{ $sc ? 'text-decoration:line-through;color:var(--danger);' : '' }}">{{ $schedule->subject->name }}</span>
-                                    <span style="font-size:0.72rem;color:var(--text-3);"><i class="bi bi-person me-1"></i>{{ $schedule->dosen->name }}</span>
-                                    @if($sc) <span class="mhs-badge danger" style="margin-top:4px;">Batal</span>
-                                    @elseif($sw) <span class="mhs-badge warning" style="margin-top:4px;">Berubah</span>
-                                    @endif
-                                </td>
-                                <td style="font-size:0.78rem;color:var(--text-2);{{ $sc ? 'text-decoration:line-through;color:var(--danger);' : '' }}">
-                                    {{ \Carbon\Carbon::parse($schedule->start_time)->format('H:i') }}–{{ \Carbon\Carbon::parse($schedule->end_time)->format('H:i') }}
-                                </td>
-                                <td style="font-size:0.78rem;color:var(--text-2);">{{ $schedule->room }}</td>
-                            </tr>
-                            @endforeach
-                            @endif
-                            @endforeach
-                            @if(!$hasClasses)
-                            <tr><td colspan="4" class="mhs-empty">Belum ada jadwal minggu ini.</td></tr>
-                            @endif
-                        </tbody>
-                    </table>
-                </div>
+                            </td>
+                            <td style="font-size:0.78rem;color:var(--text-2);white-space:nowrap;{{ $sc ? 'text-decoration:line-through;color:var(--danger);' : '' }}">
+                                {{ \Carbon\Carbon::parse($schedule->start_time)->format('H:i') }}–{{ \Carbon\Carbon::parse($schedule->end_time)->format('H:i') }}
+                            </td>
+                            <td style="font-size:0.78rem;color:var(--text-2);">{{ $schedule->room }}</td>
+                        </tr>
+                        @endforeach
+                        @endif
+                        @endforeach
+                        @if(!$hasClasses)
+                        <tr><td colspan="4" class="mhs-empty" style="padding:20px;">Belum ada jadwal minggu ini.</td></tr>
+                        @endif
+                    </tbody>
+                </table>
             </div>
         </div>
 
-        {{-- 2 & 3: KESEMAPTAAN + PRESTASI side by side --}}
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px;">
+        {{-- 3. KESEMAPTAAN + PRESTASI (side by side) --}}
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px;">
 
-            {{-- 2. KESEMAPTAAN JASMANI --}}
+            {{-- Kesemaptaan --}}
             <div class="mhs-card">
-                <div class="mhs-card-header">
-                    <h6 class="mhs-card-title">
-                        <span class="mhs-card-icon" style="background:var(--danger-light);color:var(--danger);">
+                <div class="sec-header">
+                    <h6 class="sec-title">
+                        <span class="sec-icon" style="background:var(--danger-light);color:var(--danger);">
                             <i class="bi bi-heart-pulse"></i>
                         </span>
                         Kesemaptaan
@@ -525,34 +539,47 @@ $todayData = collect($weeklySchedules)->first(fn($d) => $d['date']->isToday());
                 </div>
                 <div class="mhs-card-body">
                     @if($fitnessTests->isNotEmpty())
-                    @php $groupedFt = $fitnessTests->groupBy('semester'); @endphp
-                    <div class="tab-pills-new" id="ft-tabs">
-                        @foreach($groupedFt as $sem => $tests)
-                        <button class="tab-pill-new {{ $loop->first ? 'active' : '' }}"
-                            onclick="switchTab('ft','{{ $sem ?? 'lama' }}', this)" type="button">
+                    @php $grouped = $fitnessTests->groupBy('semester'); @endphp
+                    <div class="tab-row" id="ft-tabs">
+                        @foreach($grouped as $sem => $tests)
+                        <button class="tab-pill {{ $loop->first ? 'active' : '' }}"
+                            onclick="switchTab('ft','{{ $sem ?? 'lama' }}',this)" type="button">
                             {{ $sem ? 'Smt '.$sem : 'Lama' }}
                         </button>
                         @endforeach
                     </div>
-                    @foreach($groupedFt as $sem => $tests)
+                    @foreach($grouped as $sem => $tests)
                     <div id="ft-pane-{{ $sem ?? 'lama' }}" class="ft-pane" style="{{ $loop->first ? '' : 'display:none;' }}">
                         @foreach($tests as $ft)
-                        <div class="fitness-entry-new">
-                            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-                                <span style="font-size:0.72rem;color:var(--text-3);"><i class="bi bi-calendar3 me-1"></i>{{ \Carbon\Carbon::parse($ft->test_date)->format('d M Y') }}</span>
-                                <span class="mhs-badge {{ str_contains($ft->status,'lulus') || $ft->status === 'passed' ? 'success' : 'danger' }}">{{ strtoupper(str_replace('_',' ',$ft->status)) }}</span>
-                            </div>
-                            <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:10px;">
-                                <span class="fitness-score-big">{{ $ft->total_score ?? $ft->score }}</span>
-                                <span style="font-size:0.75rem;color:var(--text-3);">Total Nilai</span>
+                        <div class="fit-entry">
+                            <div class="fit-score-row">
+                                <div>
+                                    <div class="fit-score-big">{{ $ft->total_score ?? $ft->score }}</div>
+                                    <div style="font-size:0.7rem;color:var(--outline);">Total Nilai</div>
+                                </div>
+                                <div style="text-align:right;">
+                                    <span class="mhs-badge {{ str_contains($ft->status,'lulus') || $ft->status === 'passed' ? 'success' : 'danger' }}">
+                                        {{ strtoupper(str_replace('_',' ',$ft->status)) }}
+                                    </span>
+                                    <div style="font-size:0.65rem;color:var(--outline);margin-top:4px;">
+                                        <i class="bi bi-calendar3 me-1"></i>{{ \Carbon\Carbon::parse($ft->test_date)->format('d M Y') }}
+                                    </div>
+                                </div>
                             </div>
                             @if($ft->total_score !== null)
-                            <div class="fitness-metrics-grid">
-                                @foreach([['Lari',$ft->raw_lari.'m',$ft->nilai_lari],[''.($ft->nilai_pull_up!==null?'Pull Up':'Chinning'),$ft->raw_pull_up??$ft->raw_chinning??'-',$ft->nilai_pull_up??$ft->nilai_chinning??0],['Sit Up',$ft->raw_sit_up??'-',$ft->nilai_sit_up??0],['Push Up',$ft->raw_push_up??'-',$ft->nilai_push_up??0],['Shuttle',$ft->raw_shuttle_run??'-'.'s',$ft->nilai_shuttle_run??0],['Renang',$ft->raw_renang??'-'.'s',$ft->nilai_renang??0]] as [$lbl,$raw,$score])
-                                <div class="fitness-metric-item">
-                                    <span class="fm-label">{{ $lbl }}</span>
-                                    <span class="fm-raw">{{ $raw }}</span>
-                                    <span class="fm-score {{ $score >= 60 ? 'ok' : 'fail' }}"> → {{ $score }}</span>
+                            <div class="fit-grid">
+                                @foreach([
+                                    ['Lari',     $ft->raw_lari.'m',                                $ft->nilai_lari],
+                                    [($ft->nilai_pull_up!==null?'Pull Up':'Chinning'), $ft->raw_pull_up??$ft->raw_chinning??'-', $ft->nilai_pull_up??$ft->nilai_chinning??0],
+                                    ['Sit Up',   $ft->raw_sit_up??'-',                             $ft->nilai_sit_up??0],
+                                    ['Push Up',  $ft->raw_push_up??'-',                            $ft->nilai_push_up??0],
+                                    ['Shuttle',  ($ft->raw_shuttle_run??'-').'s',                  $ft->nilai_shuttle_run??0],
+                                    ['Renang',   ($ft->raw_renang??'-').'s',                       $ft->nilai_renang??0],
+                                ] as [$lbl,$raw,$score])
+                                <div class="fit-metric">
+                                    <span class="fit-metric-lbl">{{ $lbl }}</span>
+                                    <span class="fit-metric-val">{{ $raw }}</span>
+                                    <span class="fit-metric-score {{ $score >= 60 ? 'ok' : 'fail' }}"> → {{ $score }}</span>
                                 </div>
                                 @endforeach
                             </div>
@@ -568,7 +595,7 @@ $todayData = collect($weeklySchedules)->first(fn($d) => $d['date']->isToday());
                     </div>
                     @endforeach
                     @else
-                    <div class="mhs-empty">
+                    <div class="mhs-empty" style="padding:20px 0;">
                         <i class="bi bi-clipboard2-x"></i>
                         <p>Belum ada data uji fisik.</p>
                     </div>
@@ -576,11 +603,11 @@ $todayData = collect($weeklySchedules)->first(fn($d) => $d['date']->isToday());
                 </div>
             </div>
 
-            {{-- 3. PRESTASI --}}
+            {{-- Prestasi --}}
             <div class="mhs-card">
-                <div class="mhs-card-header">
-                    <h6 class="mhs-card-title">
-                        <span class="mhs-card-icon" style="background:rgba(255,215,0,0.1);color:#ffd700;">
+                <div class="sec-header">
+                    <h6 class="sec-title">
+                        <span class="sec-icon" style="background:rgba(255,200,0,0.1);color:#b8860b;">
                             <i class="bi bi-trophy"></i>
                         </span>
                         Prestasi
@@ -589,22 +616,22 @@ $todayData = collect($weeklySchedules)->first(fn($d) => $d['date']->isToday());
                 <div class="mhs-card-body">
                     @if($achievements->isNotEmpty())
                     @foreach($achievements as $ach)
-                    <a href="javascript:void(0)" class="ach-item-new" onclick="showAchievement({{ $ach->id }})">
-                        <div class="ach-icon-new">🏅</div>
+                    <a href="javascript:void(0)" class="ach-item" onclick="showAchievement({{ $ach->id }})">
+                        <div class="ach-icon">🏅</div>
                         <div style="flex:1;min-width:0;">
                             <h6>{{ $ach->title }}</h6>
                             <p>{{ \Illuminate\Support\Str::limit($ach->description, 55) }}</p>
-                            <div style="display:flex;flex-wrap:wrap;gap:5px;">
+                            <div style="display:flex;flex-wrap:wrap;gap:4px;">
                                 @if($ach->level)<span class="mhs-badge purple"><i class="bi bi-bar-chart-steps me-1"></i>{{ $ach->level }}</span>@endif
                                 <span class="mhs-badge muted"><i class="bi bi-calendar3 me-1"></i>{{ \Carbon\Carbon::parse($ach->date)->format('d M Y') }}</span>
                                 @if($ach->attachment)<span class="mhs-badge success"><i class="bi bi-paperclip me-1"></i>Lampiran</span>@endif
                             </div>
                         </div>
-                        <i class="bi bi-chevron-right" style="color:var(--text-3);font-size:0.75rem;flex-shrink:0;"></i>
+                        <i class="bi bi-chevron-right" style="color:var(--outline);font-size:0.7rem;flex-shrink:0;"></i>
                     </a>
                     @endforeach
                     @else
-                    <div class="mhs-empty">
+                    <div class="mhs-empty" style="padding:20px 0;">
                         <i class="bi bi-award"></i>
                         <p>Belum ada catatan prestasi.</p>
                     </div>
@@ -615,24 +642,24 @@ $todayData = collect($weeklySchedules)->first(fn($d) => $d['date']->isToday());
 
         {{-- 4. BIMBINGAN / WALI DOSEN --}}
         <div class="mhs-card">
-            <div class="mhs-card-header">
-                <h6 class="mhs-card-title">
-                    <span class="mhs-card-icon" style="background:var(--success-light);color:var(--success);">
+            <div class="sec-header">
+                <h6 class="sec-title">
+                    <span class="sec-icon" style="background:var(--success-light);color:var(--success);">
                         <i class="bi bi-people"></i>
                     </span>
                     Bimbingan / Wali Dosen
                 </h6>
                 <button class="mhs-btn mhs-btn-success mhs-btn-sm"
-                        data-bs-toggle="modal" data-bs-target="#modalRequestMeeting">
-                    <i class="bi bi-plus-lg"></i> Request
+                    data-bs-toggle="modal" data-bs-target="#modalRequestMeeting">
+                    <i class="bi bi-plus-lg"></i> Ajukan
                 </button>
             </div>
+            @if($meetings->isNotEmpty())
             <div style="overflow-x:auto;">
-                @if($meetings->isNotEmpty())
                 <table class="mhs-table">
                     <thead>
                         <tr>
-                            <th style="padding-left:20px;">Tanggal</th>
+                            <th style="padding-left:18px;">Tanggal</th>
                             <th>Dosen</th>
                             <th>Topik</th>
                             <th style="text-align:center;">Status</th>
@@ -641,29 +668,29 @@ $todayData = collect($weeklySchedules)->first(fn($d) => $d['date']->isToday());
                     <tbody>
                         @foreach($meetings as $mtg)
                         <tr>
-                            <td style="padding-left:20px;font-size:0.78rem;">{{ \Carbon\Carbon::parse($mtg->requested_date)->format('d M Y') }}</td>
+                            <td style="padding-left:18px;font-size:0.78rem;">{{ \Carbon\Carbon::parse($mtg->requested_date)->format('d M Y') }}</td>
                             <td style="font-size:0.84rem;font-weight:600;">{{ $mtg->dosen->name }}</td>
                             <td style="font-size:0.78rem;color:var(--text-2);">{{ $mtg->topic }}</td>
                             <td style="text-align:center;">
                                 @if($mtg->status === 'approved')
-                                <span class="mhs-badge success">Disetujui</span>
+                                    <span class="mhs-badge success">Disetujui</span>
                                 @elseif($mtg->status === 'rejected')
-                                <span class="mhs-badge danger">Ditolak</span>
+                                    <span class="mhs-badge danger">Ditolak</span>
                                 @else
-                                <span class="mhs-badge muted">Menunggu</span>
+                                    <span class="mhs-badge muted">Menunggu</span>
                                 @endif
                             </td>
                         </tr>
                         @endforeach
                     </tbody>
                 </table>
-                @else
-                <div class="mhs-empty" style="padding:24px;">
-                    <i class="bi bi-calendar-plus"></i>
-                    <p>Belum ada pengajuan bimbingan.</p>
-                </div>
-                @endif
             </div>
+            @else
+            <div class="mtg-empty">
+                <i class="bi bi-calendar-plus"></i>
+                <p>Belum ada pengajuan bimbingan.</p>
+            </div>
+            @endif
         </div>
 
     </div>{{-- END KOLOM KIRI --}}
@@ -671,100 +698,94 @@ $todayData = collect($weeklySchedules)->first(fn($d) => $d['date']->isToday());
     {{-- ══════════ KOLOM KANAN ══════════ --}}
     <div>
 
-        {{-- IPK RING (if nilai data available) --}}
+        {{-- IPK RING --}}
         @php
             $ipkVal = null;
             try {
                 $avg = \App\Models\Grade::where('user_id', auth()->id())
-                    ->whereNotNull('grade_point')
-                    ->avg('grade_point');
+                    ->whereNotNull('grade_point')->avg('grade_point');
                 if ($avg !== null) $ipkVal = round($avg, 2);
             } catch(\Exception $e) { $ipkVal = null; }
         @endphp
+
         @if($ipkVal !== null)
         <div class="mhs-card" style="margin-bottom:16px;">
-            <div class="mhs-card-header">
-                <h6 class="mhs-card-title">
-                    <span class="mhs-card-icon" style="background:var(--cyan-light);color:var(--cyan);">
+            <div class="sec-header">
+                <h6 class="sec-title">
+                    <span class="sec-icon" style="background:rgba(0,89,187,0.08);color:var(--secondary);">
                         <i class="bi bi-mortarboard"></i>
                     </span>
                     Indeks Prestasi
                 </h6>
             </div>
-            <div class="mhs-card-body" style="text-align:center;">
-                <div style="position:relative;width:120px;height:120px;margin:0 auto 12px;">
-                    <svg class="ipk-ring-svg" width="120" height="120" viewBox="0 0 120 120">
-                        <defs>
-                            <linearGradient id="ipkGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                                <stop offset="0%" style="stop-color:var(--cyan)"/>
-                                <stop offset="100%" style="stop-color:var(--primary)"/>
-                            </linearGradient>
-                        </defs>
-                        <circle class="ipk-ring-bg" cx="60" cy="60" r="50"/>
-                        <circle class="ipk-ring-fg" id="ipkRingFg" cx="60" cy="60" r="50"
-                            stroke-dasharray="{{ 2 * 3.14159 * 50 }}"
-                            stroke-dashoffset="{{ 2 * 3.14159 * 50 * (1 - min($ipkVal/4, 1)) }}"/>
+            <div class="mhs-card-body ipk-wrap">
+                <div style="position:relative;width:110px;height:110px;margin:0 auto 8px;">
+                    <svg class="ipk-ring-svg" width="110" height="110" viewBox="0 0 110 110">
+                        <circle class="ipk-ring-bg" cx="55" cy="55" r="46"/>
+                        <circle class="ipk-ring-fg" cx="55" cy="55" r="46"
+                            stroke-dasharray="{{ 2 * 3.14159 * 46 }}"
+                            stroke-dashoffset="{{ 2 * 3.14159 * 46 * (1 - min($ipkVal/4, 1)) }}"/>
                     </svg>
-                    <div class="ipk-ring-center">
+                    <div class="ipk-center">
                         <span class="ipk-val">{{ number_format($ipkVal, 2) }}</span>
-                        <span class="ipk-label">IPK</span>
+                        <span class="ipk-lbl">IPK</span>
                     </div>
                 </div>
-                <div style="font-size:0.75rem;color:var(--text-2);">
-                    @if($ipkVal >= 3.5) 🏆 Dengan Pujian
-                    @elseif($ipkVal >= 3.0) ⭐ Sangat Memuaskan
-                    @elseif($ipkVal >= 2.75) 👍 Memuaskan
-                    @else 📚 Perlu Ditingkatkan
+                <div class="ipk-verdict">
+                    @if($ipkVal >= 3.5) Dengan Pujian
+                    @elseif($ipkVal >= 3.0) Sangat Memuaskan
+                    @elseif($ipkVal >= 2.75) Memuaskan
+                    @else Perlu Ditingkatkan
                     @endif
                 </div>
             </div>
         </div>
         @endif
 
-        {{-- 5. PELANGGARAN --}}
+        {{-- PELANGGARAN --}}
         @if($violations->isNotEmpty())
-        <div class="violation-card-new">
-            <div class="violation-header-new">
-                <i class="bi bi-exclamation-octagon-fill" style="color:var(--danger);font-size:1rem;"></i>
-                <span>Peringatan Pelanggaran</span>
+        <div class="violation-alert">
+            <div class="violation-alert-head">
+                <i class="bi bi-exclamation-octagon-fill"></i>
+                Peringatan Pelanggaran
             </div>
-            <div class="violation-body-new">
+            <div class="violation-body">
                 @foreach($violations as $v)
-                <div class="violation-item-new">
-                    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px;">
-                        <span class="vn-title">{{ $v->title }}</span>
-                        <span style="font-weight:800;font-size:0.9rem;color:var(--danger);">{{ $v->point }} Poin</span>
+                <div class="violation-item">
+                    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:3px;">
+                        <div class="v-title">{{ $v->title }}</div>
+                        <span style="font-weight:800;font-size:0.88rem;color:var(--danger);">{{ $v->point }} Poin</span>
                     </div>
-                    <div class="vn-desc">{{ $v->description }}</div>
-                    <div class="vn-meta"><i class="bi bi-calendar3 me-1"></i>{{ \Carbon\Carbon::parse($v->date)->format('d M Y') }}</div>
+                    <div class="v-desc">{{ $v->description }}</div>
+                    <div class="v-meta"><i class="bi bi-calendar3 me-1"></i>{{ \Carbon\Carbon::parse($v->date)->format('d M Y') }}</div>
                 </div>
                 @endforeach
             </div>
         </div>
         @endif
 
-        {{-- 6. UJIAN MENDATANG --}}
+        {{-- UJIAN MENDATANG --}}
         <div class="mhs-card" style="margin-bottom:16px;">
-            <div class="mhs-card-header">
-                <h6 class="mhs-card-title">
-                    <span class="mhs-card-icon" style="background:var(--info-light);color:var(--info);">
+            <div class="sec-header">
+                <h6 class="sec-title">
+                    <span class="sec-icon" style="background:rgba(0,89,187,0.08);color:var(--secondary);">
                         <i class="bi bi-journal-check"></i>
                     </span>
                     Ujian Mendatang
                 </h6>
             </div>
-            <div class="mhs-card-body">
+            <div class="mhs-card-body" style="padding:12px 18px;">
                 @if($exams->isNotEmpty())
                 @foreach($exams as $exam)
-                <div class="exam-item-new">
-                    <div class="exam-date-new">
+                <div class="exam-item">
+                    <div class="exam-date-box">
                         <div class="eday">{{ \Carbon\Carbon::parse($exam->date)->format('d') }}</div>
-                        <div class="emonth">{{ \Carbon\Carbon::parse($exam->date)->format('M') }}</div>
+                        <div class="emon">{{ \Carbon\Carbon::parse($exam->date)->format('M') }}</div>
                     </div>
-                    <div class="exam-info-new">
-                        <span class="mhs-badge cyan" style="margin-bottom:4px;">{{ strtoupper($exam->type) }}</span>
+                    <div class="exam-body">
+                        <span class="mhs-badge cyan" style="margin-bottom:3px;">{{ strtoupper($exam->type) }}</span>
                         <h6>{{ $exam->subject->name }}</h6>
-                        <div class="exam-meta-new">
+                        <div class="exam-meta">
                             <span><i class="bi bi-clock me-1"></i>{{ \Carbon\Carbon::parse($exam->start_time)->format('H:i') }}</span>
                             <span><i class="bi bi-geo-alt me-1"></i>{{ $exam->room }}</span>
                         </div>
@@ -772,61 +793,58 @@ $todayData = collect($weeklySchedules)->first(fn($d) => $d['date']->isToday());
                 </div>
                 @endforeach
                 @else
-                <div class="mhs-empty" style="padding:16px 0;">
+                <div class="mhs-empty" style="padding:14px 0;">
                     <i class="bi bi-calendar-x"></i>
-                    <p>Belum ada jadwal ujian dalam waktu dekat.</p>
+                    <p>Belum ada jadwal ujian.</p>
                 </div>
                 @endif
             </div>
         </div>
 
-        {{-- 7. PENGUMUMAN PRODI --}}
+        {{-- PENGUMUMAN --}}
         <div class="mhs-card" style="margin-bottom:16px;">
-            <div class="mhs-card-header">
-                <h6 class="mhs-card-title">
-                    <span class="mhs-card-icon" style="background:var(--success-light);color:var(--success);">
+            <div class="sec-header">
+                <h6 class="sec-title">
+                    <span class="sec-icon" style="background:var(--success-light);color:var(--success);">
                         <i class="bi bi-megaphone"></i>
                     </span>
                     Pengumuman Prodi
                 </h6>
             </div>
-            <div class="mhs-card-body">
+            <div class="mhs-card-body" style="padding:12px 18px;">
                 @if(isset($announcements) && $announcements->isNotEmpty())
-                @foreach($announcements as $announcement)
-                <a href="javascript:void(0)" class="announce-item"
-                   onclick="showAnnouncement('{{ addslashes($announcement->title) }}', '{{ addslashes($announcement->message) }}', '{{ $announcement->created_at->format('d M Y, H:i') }}')">
-                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
-                        <i class="bi bi-megaphone-fill" style="font-size:0.72rem;color:var(--success);"></i>
-                        <h6>{{ $announcement->title }}</h6>
-                    </div>
-                    <p>{{ \Illuminate\Support\Str::limit($announcement->message, 75) }}</p>
-                    <span class="time"><i class="bi bi-clock me-1"></i>{{ $announcement->created_at->diffForHumans() }}</span>
+                @foreach($announcements as $ann)
+                <a href="javascript:void(0)" class="ann-item"
+                   onclick="showAnnouncement('{{ addslashes($ann->title) }}','{{ addslashes($ann->message) }}','{{ $ann->created_at->format('d M Y, H:i') }}')">
+                    <h6>{{ $ann->title }}</h6>
+                    <p>{{ \Illuminate\Support\Str::limit($ann->message, 70) }}</p>
+                    <span class="ann-time"><i class="bi bi-clock me-1"></i>{{ $ann->created_at->diffForHumans() }}</span>
                 </a>
                 @endforeach
                 @else
-                <div class="mhs-empty" style="padding:16px 0;">
+                <div class="mhs-empty" style="padding:14px 0;">
                     <i class="bi bi-bell-slash"></i>
-                    <p>Belum ada pengumuman terbaru.</p>
+                    <p>Belum ada pengumuman.</p>
                 </div>
                 @endif
             </div>
         </div>
 
-        {{-- 8. KOTAK SARAN --}}
+        {{-- KOTAK SARAN --}}
         <div class="mhs-card">
-            <div class="mhs-card-header">
-                <h6 class="mhs-card-title">
-                    <span class="mhs-card-icon" style="background:var(--primary-light);color:var(--primary);">
-                        <i class="bi bi-envelope-paper"></i>
+            <div class="sec-header">
+                <h6 class="sec-title">
+                    <span class="sec-icon" style="background:rgba(0,89,187,0.08);color:var(--secondary);">
+                        <i class="bi bi-chat-square-text"></i>
                     </span>
                     Kotak Saran Akademik
                 </h6>
             </div>
-            <div class="mhs-card-body">
+            <div class="saran-body">
                 <form action="{{ route('mahasiswa.dashboard.suggestion.store') }}" method="POST">
                     @csrf
                     <div class="mhs-form-group">
-                        <label class="mhs-label">Kategori Saran <span style="color:var(--danger);">*</span></label>
+                        <label class="mhs-label">Kategori <span style="color:var(--danger);">*</span></label>
                         <select name="category" class="mhs-input" required>
                             <option value="">Pilih kategori...</option>
                             <option value="fasilitas">Fasilitas Kampus</option>
@@ -838,7 +856,7 @@ $todayData = collect($weeklySchedules)->first(fn($d) => $d['date']->isToday());
                     <div class="mhs-form-group">
                         <label class="mhs-label">Isi Saran <span style="color:var(--danger);">*</span></label>
                         <textarea name="content" class="mhs-input" rows="3"
-                            placeholder="Tulis kritik & saran membangun Anda di sini..." required></textarea>
+                            placeholder="Tulis kritik & saran membangun di sini..." required></textarea>
                     </div>
                     <button type="submit" class="mhs-btn mhs-btn-primary mhs-btn-full">
                         <i class="bi bi-send"></i> Kirim Saran
@@ -850,11 +868,11 @@ $todayData = collect($weeklySchedules)->first(fn($d) => $d['date']->isToday());
     </div>{{-- END KOLOM KANAN --}}
 </div>
 
-{{-- ================================================================ --}}
-{{-- MODALS                                                             --}}
-{{-- ================================================================ --}}
+{{-- ============================================================ --}}
+{{-- MODALS                                                        --}}
+{{-- ============================================================ --}}
 
-{{-- MODAL REQUEST BIMBINGAN --}}
+{{-- Modal Bimbingan --}}
 <div class="modal fade mhs-modal" id="modalRequestMeeting" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -897,7 +915,7 @@ $todayData = collect($weeklySchedules)->first(fn($d) => $d['date']->isToday());
     </div>
 </div>
 
-{{-- MODAL PENGUMUMAN --}}
+{{-- Modal Pengumuman --}}
 <div class="modal fade mhs-modal" id="announcementModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
@@ -907,7 +925,7 @@ $todayData = collect($weeklySchedules)->first(fn($d) => $d['date']->isToday());
             </div>
             <div class="modal-body">
                 <p class="mhs-hint" style="margin-bottom:12px;" id="announcementModalDate"></p>
-                <div style="background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px;white-space:pre-wrap;line-height:1.7;font-size:0.88rem;" id="announcementModalBody"></div>
+                <div style="background:var(--surface-container-low);border:1px solid var(--outline-variant);border-radius:var(--radius-md);padding:16px;white-space:pre-wrap;line-height:1.7;font-size:0.88rem;" id="announcementModalBody"></div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="mhs-btn mhs-btn-ghost" data-bs-dismiss="modal">Tutup</button>
@@ -916,7 +934,7 @@ $todayData = collect($weeklySchedules)->first(fn($d) => $d['date']->isToday());
     </div>
 </div>
 
-{{-- MODAL DETAIL PRESTASI --}}
+{{-- Modal Prestasi --}}
 <div class="modal fade mhs-modal" id="achievementModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
@@ -929,7 +947,7 @@ $todayData = collect($weeklySchedules)->first(fn($d) => $d['date']->isToday());
                     <span class="mhs-badge purple"><i class="bi bi-bar-chart-steps me-1"></i><span id="achModalLevel"></span></span>
                     <span class="mhs-badge muted"><i class="bi bi-calendar3 me-1"></i><span id="achModalDate"></span></span>
                 </div>
-                <div style="background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px;margin-bottom:14px;white-space:pre-wrap;line-height:1.7;font-size:0.88rem;" id="achModalDesc"></div>
+                <div style="background:var(--surface-container-low);border:1px solid var(--outline-variant);border-radius:var(--radius-md);padding:16px;margin-bottom:14px;white-space:pre-wrap;line-height:1.7;font-size:0.88rem;" id="achModalDesc"></div>
                 <div id="achModalAttachment"></div>
             </div>
             <div class="modal-footer">
@@ -943,8 +961,8 @@ $todayData = collect($weeklySchedules)->first(fn($d) => $d['date']->isToday());
 <script>
 function showAnnouncement(title, message, date) {
     document.getElementById('announcementModalTitle').textContent = title;
-    document.getElementById('announcementModalBody').textContent = message;
-    document.getElementById('announcementModalDate').innerHTML = '<i class="bi bi-calendar3 me-1"></i>' + date;
+    document.getElementById('announcementModalBody').textContent  = message;
+    document.getElementById('announcementModalDate').innerHTML    = '<i class="bi bi-calendar3 me-1"></i>' + date;
     new bootstrap.Modal(document.getElementById('announcementModal')).show();
 }
 
@@ -964,22 +982,20 @@ var achievementsData = @json($achievementsJson);
 function showAchievement(id) {
     var ach = achievementsData.find(a => a.id === id);
     if (!ach) return;
-    document.getElementById('achModalTitle').textContent   = ach.title;
-    document.getElementById('achModalLevel').textContent   = ach.level || '-';
-    document.getElementById('achModalDate').textContent    = ach.date;
-    document.getElementById('achModalDesc').textContent    = ach.description || 'Tidak ada deskripsi.';
-    var attachEl = document.getElementById('achModalAttachment');
-    if (ach.attachment) {
-        attachEl.innerHTML = '<a href="' + ach.attachment + '" target="_blank" download class="mhs-btn mhs-btn-success"><i class="bi bi-download"></i>Download Lampiran (' + ach.attachment_name + ')</a>';
-    } else {
-        attachEl.innerHTML = '<span style="font-size:0.8rem;color:var(--text-3);"><i class="bi bi-x-circle me-1"></i>Tidak ada lampiran.</span>';
-    }
+    document.getElementById('achModalTitle').textContent = ach.title;
+    document.getElementById('achModalLevel').textContent = ach.level || '-';
+    document.getElementById('achModalDate').textContent  = ach.date;
+    document.getElementById('achModalDesc').textContent  = ach.description || 'Tidak ada deskripsi.';
+    var att = document.getElementById('achModalAttachment');
+    att.innerHTML = ach.attachment
+        ? '<a href="'+ach.attachment+'" target="_blank" download class="mhs-btn mhs-btn-success"><i class="bi bi-download"></i> Download Lampiran ('+ach.attachment_name+')</a>'
+        : '<span style="font-size:0.8rem;color:var(--outline);"><i class="bi bi-x-circle me-1"></i>Tidak ada lampiran.</span>';
     new bootstrap.Modal(document.getElementById('achievementModal')).show();
 }
 
 function switchTab(prefix, id, btn) {
     document.querySelectorAll('.ft-pane').forEach(el => el.style.display = 'none');
-    document.querySelectorAll('#ft-tabs .tab-pill-new').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('#ft-tabs .tab-pill').forEach(b => b.classList.remove('active'));
     var pane = document.getElementById(prefix + '-pane-' + id);
     if (pane) pane.style.display = '';
     btn.classList.add('active');

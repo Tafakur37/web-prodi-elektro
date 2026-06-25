@@ -7,35 +7,61 @@
     <title>@yield('title', 'Dashboard') - SIMelek</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <!-- Sentinels of Silicon Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
     <style>
+        /* Sentinels of Silicon — Design Tokens */
         :root {
+            /* Stitch Palette */
+            --stitch-primary:           #000613;
+            --stitch-primary-container: #001f3f;
+            --stitch-secondary:         #0059bb;
+            --stitch-secondary-container: #0070ea;
+            --stitch-background:        #f8f9fa;
+            --stitch-surface:           #f8f9fa;
+            --stitch-surface-low:       #f3f4f5;
+            --stitch-surface-container: #edeeef;
+            --stitch-outline:           #74777f;
+            --stitch-outline-variant:   #c4c6cf;
+            --stitch-on-surface:        #191c1d;
+            --stitch-on-surface-variant: #43474e;
+
+            /* Sidebar */
             --sidebar-width: 260px;
-            --sidebar-bg: rgba(2, 13, 52, 0.96);
-            --sidebar-hover: rgba(255, 255, 255, 0.06);
-            --sidebar-active-bg: rgba(99, 132, 255, 0.15);
-            --sidebar-active-border: #6366f1;
-            --sidebar-text: #94a3b8;
-            --sidebar-text-hover: #e2e8f0;
+            --sidebar-bg: var(--stitch-primary-container);
+            --sidebar-hover: rgba(255, 255, 255, 0.07);
+            --sidebar-active-bg: rgba(0, 112, 234, 0.25);
+            --sidebar-active-border: #0070ea;
+            --sidebar-text: rgba(255,255,255,0.55);
+            --sidebar-text-hover: rgba(255,255,255,0.85);
             --sidebar-text-active: #ffffff;
-            --sidebar-heading: #475569;
-            --body-bg: #f1f5f9;
-            --card-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.06);
-            --card-shadow-hover: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px rgba(0,0,0,0.04);
-            --accent-color: #6366f1;
-            --accent-light: #818cf8;
+            --sidebar-heading: rgba(175,200,240,0.6);
+
+            /* Content */
+            --body-bg: var(--stitch-background);
+            --card-shadow: 0 1px 4px rgba(0,31,63,0.06), 0 2px 8px rgba(0,31,63,0.04);
+            --card-shadow-hover: 0 8px 24px rgba(0,31,63,0.1);
+            --accent-color: var(--stitch-secondary);
+            --accent-light: var(--stitch-secondary-container);
         }
 
         * {
             scrollbar-width: thin;
-            scrollbar-color: rgba(255,255,255,0.1) transparent;
+            scrollbar-color: rgba(0,89,187,0.2) transparent;
         }
         *::-webkit-scrollbar { width: 5px; }
-        *::-webkit-scrollbar-track { background: transparent; }
-        *::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
+        *::-webkit-scrollbar-track { background: var(--stitch-surface-low); }
+        *::-webkit-scrollbar-thumb { background: rgba(0,89,187,0.2); border-radius: 10px; }
+        *::-webkit-scrollbar-thumb:hover { background: var(--stitch-secondary); }
 
         body {
             background-color: var(--body-bg);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg stroke='%230059bb' stroke-width='0.5' stroke-opacity='0.03'%3E%3Cpath d='M40 40c0-8.8 7.2-16 16-16s16 7.2 16 16-7.2 16-16 16-16-7.2-16-16zM0 0h80v80H0V0zm1 1v78h78V1H1zm39 39c0-5.5 4.5-10 10-10s10 4.5 10 10-4.5 10-10 10-10-4.5-10-10z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            font-family: 'Inter', 'Montserrat', 'Segoe UI', system-ui, sans-serif;
+            color: var(--stitch-on-surface);
             overflow-x: hidden;
             min-height: 100vh;
         }
@@ -53,8 +79,19 @@
             display: flex;
             flex-direction: column;
             transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            border-right: 1px solid rgba(255,255,255,0.04);
+            border-right: 1px solid rgba(255,255,255,0.05);
         }
+
+        .sidebar::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg stroke='%23afc8f0' stroke-width='0.5' stroke-opacity='0.05'%3E%3Cpath d='M40 40c0-8.8 7.2-16 16-16s16 7.2 16 16-7.2 16-16 16-16-7.2-16-16zM0 0h80v80H0V0zm1 1v78h78V1H1zm39 39c0-5.5 4.5-10 10-10s10 4.5 10 10-4.5 10-10 10-10-4.5-10-10z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            pointer-events: none;
+        }
+
+        .sidebar > * { position: relative; z-index: 1; }
+
 
         .sidebar-brand {
             padding: 24px 20px 20px;

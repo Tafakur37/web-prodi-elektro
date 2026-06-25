@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html class="scroll-smooth" lang="id">
 
 <head>
     <meta charset="UTF-8">
@@ -10,7 +10,10 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <!-- Material Symbols -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
 
     <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -20,56 +23,79 @@
 
     <style>
         /* ============================================================
-           CSS VARIABLES & RESET
+           SENTINELS OF SILICON — Design System Variables
         ============================================================ */
         :root {
-            --primary:       #0a1628;
-            --primary-mid:   #0d1f3c;
-            --accent-blue:   #0066ff;
-            --accent-cyan:   #00c6ff;
-            --accent-glow:   rgba(0, 102, 255, 0.4);
-            --glass-bg:      rgba(255, 255, 255, 0.04);
-            --glass-border:  rgba(255, 255, 255, 0.10);
-            --text-light:    rgba(255, 255, 255, 0.75);
-            --font-main:     'Inter', sans-serif;
-            --font-display:  'Space Grotesk', sans-serif;
-            --transition:    0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            /* Stitch Color Palette */
+            --primary:           #000613;
+            --primary-container: #001f3f;
+            --on-primary:        #ffffff;
+            --secondary:         #0059bb;
+            --secondary-container: #0070ea;
+            --tertiary:          #00070a;
+            --tertiary-container: #002328;
+            --background:        #f8f9fa;
+            --surface:           #f8f9fa;
+            --surface-container-low: #f3f4f5;
+            --surface-container: #edeeef;
+            --surface-container-high: #e7e8e9;
+            --on-surface:        #191c1d;
+            --on-surface-variant: #43474e;
+            --outline:           #74777f;
+            --outline-variant:   #c4c6cf;
+
+            /* Fonts */
+            --font-display:  'Montserrat', sans-serif;
+            --font-body:     'Inter', sans-serif;
+            --font-label:    'JetBrains Mono', monospace;
+
+            /* Transitions */
+            --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-slow: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
         html { scroll-behavior: smooth; }
 
         body {
-            font-family: var(--font-main);
-            background: var(--primary);
-            color: #fff;
+            font-family: var(--font-body);
+            background-color: var(--background);
+            color: var(--on-surface);
             overflow-x: hidden;
         }
 
-        /* ============================================================
-           SCROLLBAR
-        ============================================================ */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: var(--primary); }
-        ::-webkit-scrollbar-thumb {
-            background: linear-gradient(180deg, var(--accent-blue), var(--accent-cyan));
-            border-radius: 3px;
+        /* Circuit pattern background */
+        body {
+            background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg stroke='%230059bb' stroke-width='0.5' stroke-opacity='0.04'%3E%3Cpath d='M40 40c0-8.8 7.2-16 16-16s16 7.2 16 16-7.2 16-16 16-16-7.2-16-16zM0 0h80v80H0V0zm1 1v78h78V1H1zm39 39c0-5.5 4.5-10 10-10s10 4.5 10 10-4.5 10-10 10-10-4.5-10-10z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
         }
 
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: var(--surface-container-low); }
+        ::-webkit-scrollbar-thumb { background: var(--secondary); border-radius: 10px; }
+
         /* ============================================================
-           CURSOR GLOW (optional enhancement)
+           GLASSMORPHISM UTILITY
         ============================================================ */
-        #cursor-glow {
-            position: fixed;
-            width: 300px;
-            height: 300px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(0,102,255,0.08) 0%, transparent 70%);
-            pointer-events: none;
-            transform: translate(-50%, -50%);
-            z-index: 0;
-            transition: opacity 0.3s;
+        .glass-card {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 20px 40px rgba(0, 31, 63, 0.08);
+        }
+
+        .glass-card-dark {
+            background: rgba(0, 6, 19, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Material Symbols */
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
         }
 
         /* ============================================================
@@ -80,148 +106,173 @@
             top: 0; left: 0;
             width: 100%;
             z-index: 9999;
-            padding: 20px 0;
-            transition: all 0.5s ease;
-            background: linear-gradient(180deg, rgba(5, 13, 31, 0.85) 0%, transparent 100%);
+            background: transparent;
+            backdrop-filter: blur(0px);
+            -webkit-backdrop-filter: blur(0px);
+            border-bottom: 1px solid transparent;
+            box-shadow: none;
+            transition: background 0.45s cubic-bezier(0.4,0,0.2,1),
+                        backdrop-filter 0.45s cubic-bezier(0.4,0,0.2,1),
+                        -webkit-backdrop-filter 0.45s cubic-bezier(0.4,0,0.2,1),
+                        border-color 0.45s cubic-bezier(0.4,0,0.2,1),
+                        box-shadow 0.45s cubic-bezier(0.4,0,0.2,1);
         }
 
         .custom-navbar.scrolled {
-            background: rgba(10, 22, 40, 0.92);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            box-shadow: 0 1px 0 rgba(255,255,255,0.08), 0 8px 32px rgba(0,0,0,0.4);
-            padding: 12px 0;
+            background: rgba(255, 255, 255, 0.72);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.45);
+            box-shadow: 0 4px 32px rgba(0, 31, 63, 0.10), 0 1.5px 0 rgba(255,255,255,0.6) inset;
         }
 
-        .navbar-brand { text-decoration: none; }
+        .navbar-inner {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 64px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 32px;
+        }
 
         .brand-logo {
-            width: 52px; height: 52px;
+            width: 44px; height: 44px;
             border-radius: 50%;
-            border: 2px solid rgba(0,198,255,0.4);
-            box-shadow: 0 0 16px rgba(0,198,255,0.3);
+            border: 2px solid rgba(0, 89, 187, 0.2);
+            box-shadow: 0 4px 12px rgba(0, 31, 63, 0.1);
             object-fit: cover;
             transition: var(--transition);
         }
 
         .brand-logo:hover {
-            box-shadow: 0 0 28px rgba(0,198,255,0.6);
-            transform: rotate(5deg) scale(1.05);
+            border-color: var(--secondary);
+            transform: scale(1.05);
         }
 
-        .brand-text { line-height: 1.15; }
-
-        .brand-main {
+        .brand-name {
             font-family: var(--font-display);
             font-size: 1rem;
             font-weight: 700;
-            color: #fff;
-            letter-spacing: 1px;
+            color: var(--primary-container);
+            letter-spacing: -0.01em;
         }
 
         .brand-sub {
+            font-family: var(--font-label);
             font-size: 0.65rem;
-            font-weight: 400;
-            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-blue));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            letter-spacing: 1.5px;
+            font-weight: 500;
+            color: var(--secondary);
+            letter-spacing: 0.1em;
             text-transform: uppercase;
         }
 
-        .brand-univ {
-            font-size: 0.52rem;
-            color: rgba(255,255,255,0.5);
-            letter-spacing: 0.8px;
+        .nav-links { display: flex; align-items: center; gap: 32px; }
+
+        .nav-link-custom {
+            font-family: var(--font-body);
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--on-surface-variant);
+            text-decoration: none;
+            transition: color var(--transition), text-shadow var(--transition);
         }
 
-        /* Nav links */
-        .nav-item { margin-left: 6px; }
+        /* When navbar is transparent (top of page), darken text slightly */
+        .custom-navbar:not(.scrolled) .nav-link-custom {
+            color: var(--primary-container);
+        }
+
+        .custom-navbar:not(.scrolled) .brand-name {
+            color: var(--primary-container);
+        }
+
+        .nav-link-custom:hover { color: var(--secondary); }
 
         .btn-nav-login {
-            padding: 8px 22px;
-            border: 1.5px solid rgba(255,255,255,0.3);
-            border-radius: 50px;
-            color: #fff;
-            font-size: 0.85rem;
-            font-weight: 500;
+            padding: 8px 20px;
+            border: 1.5px solid rgba(0, 31, 63, 0.2);
+            border-radius: 4px;
+            color: var(--primary-container);
+            font-family: var(--font-body);
+            font-size: 0.875rem;
+            font-weight: 600;
             text-decoration: none;
-            transition: var(--transition);
             background: transparent;
+            transition: var(--transition);
         }
 
         .btn-nav-login:hover {
-            border-color: var(--accent-cyan);
-            color: var(--accent-cyan);
-            background: rgba(0,198,255,0.08);
-            box-shadow: 0 0 16px rgba(0,198,255,0.2);
+            background: rgba(0, 31, 63, 0.06);
+            border-color: var(--primary-container);
+            color: var(--primary-container);
         }
 
         .btn-nav-register {
-            padding: 8px 22px;
-            border-radius: 50px;
-            color: #fff;
-            font-size: 0.85rem;
-            font-weight: 600;
+            padding: 8px 20px;
+            border-radius: 4px;
+            color: var(--on-primary);
+            font-family: var(--font-body);
+            font-size: 0.875rem;
+            font-weight: 700;
             text-decoration: none;
-            background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
+            background: var(--primary-container);
             border: none;
             transition: var(--transition);
-            position: relative;
-            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 31, 63, 0.2);
         }
-
-        .btn-nav-register::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-
-        .btn-nav-register:hover::before { opacity: 1; }
-        .btn-nav-register span { position: relative; z-index: 1; }
 
         .btn-nav-register:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(0,102,255,0.5);
-            color: #fff;
+            background: var(--primary);
+            transform: translateY(-1px);
+            box-shadow: 0 8px 20px rgba(0, 31, 63, 0.25);
+            color: var(--on-primary);
         }
 
-        .user-badge {
+        .user-badge-nav {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            padding: 6px 16px;
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            border-radius: 50px;
-            font-size: 0.85rem;
-            color: rgba(255,255,255,0.85);
+            padding: 6px 14px;
+            background: rgba(0, 89, 187, 0.08);
+            border: 1px solid rgba(0, 89, 187, 0.2);
+            border-radius: 4px;
+            font-family: var(--font-label);
+            font-size: 0.8rem;
+            color: var(--secondary);
         }
 
-        .user-badge i { color: var(--accent-cyan); }
-
-        .btn-logout {
-            padding: 7px 18px;
-            border-radius: 50px;
+        .btn-logout-nav {
+            padding: 6px 16px;
+            border-radius: 4px;
+            font-family: var(--font-body);
             font-size: 0.8rem;
             font-weight: 600;
-            background: rgba(220,53,69,0.15);
-            border: 1.5px solid rgba(220,53,69,0.4);
-            color: #ff6b7a;
+            background: rgba(186, 26, 26, 0.08);
+            border: 1.5px solid rgba(186, 26, 26, 0.25);
+            color: #ba1a1a;
             transition: var(--transition);
+            cursor: pointer;
         }
 
-        .btn-logout:hover {
-            background: rgba(220,53,69,0.3);
-            border-color: #ff6b7a;
-            transform: translateY(-2px);
+        .btn-logout-nav:hover {
+            background: rgba(186, 26, 26, 0.15);
+            border-color: #ba1a1a;
+        }
+
+        /* Mobile toggle */
+        .navbar-toggler-custom {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            color: var(--on-surface);
         }
 
         /* ============================================================
-           HERO SECTION — Pure CSS Modern Background
+           HERO SECTION
         ============================================================ */
         .hero-section {
             position: relative;
@@ -229,74 +280,62 @@
             display: flex;
             align-items: center;
             overflow: hidden;
-            /* Multi-layer modern dark gradient */
-            background:
-                radial-gradient(ellipse 80% 60% at 70% 50%, rgba(0, 80, 200, 0.18) 0%, transparent 70%),
-                radial-gradient(ellipse 50% 40% at 20% 80%, rgba(0, 180, 255, 0.10) 0%, transparent 65%),
-                radial-gradient(ellipse 60% 50% at 85% 15%, rgba(90, 60, 220, 0.12) 0%, transparent 60%),
-                linear-gradient(160deg, #050d1f 0%, #071428 40%, #070f22 100%);
+            padding-top: 80px;
         }
 
-        /* Decorative grid overlay */
-        .hero-section::before {
-            content: '';
+        .hero-section .hero-bg-orb {
             position: absolute;
-            inset: 0;
-            background-image:
-                linear-gradient(rgba(0, 102, 255, 0.04) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 102, 255, 0.04) 1px, transparent 1px);
-            background-size: 48px 48px;
-            mask-image: radial-gradient(ellipse 90% 70% at 60% 50%, black 30%, transparent 80%);
-            z-index: 0;
-        }
-
-        /* Glowing orbs */
-        .hero-section::after {
-            content: '';
-            position: absolute;
-            top: -120px; right: -80px;
-            width: 520px; height: 520px;
             border-radius: 50%;
-            background: radial-gradient(circle, rgba(0, 100, 255, 0.14) 0%, transparent 70%);
-            filter: blur(40px);
-            z-index: 0;
-            animation: orb-pulse 6s ease-in-out infinite;
+            pointer-events: none;
         }
 
-        @keyframes orb-pulse {
-            0%, 100% { opacity: 0.7; transform: scale(1); }
-            50%       { opacity: 1;   transform: scale(1.12); }
+        .hero-section .orb-1 {
+            width: 600px; height: 600px;
+            top: -100px; right: -100px;
+            background: radial-gradient(circle, rgba(0, 89, 187, 0.07) 0%, transparent 70%);
+            filter: blur(60px);
         }
 
+        .hero-section .orb-2 {
+            width: 400px; height: 400px;
+            bottom: 0; left: -80px;
+            background: radial-gradient(circle, rgba(0, 35, 40, 0.08) 0%, transparent 70%);
+            filter: blur(50px);
+        }
 
-        .hero-content-wrap {
+        .hero-inner {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 80px 64px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 64px;
+            align-items: center;
             position: relative;
             z-index: 2;
-            padding-top: 100px;
         }
 
-        /* Badge pill */
+        /* Hero badge */
         .hero-badge {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            padding: 8px 20px;
-            background: rgba(0,102,255,0.15);
-            border: 1px solid rgba(0,102,255,0.4);
-            border-radius: 50px;
-            font-size: 0.8rem;
+            padding: 6px 16px;
+            background: rgba(0, 89, 187, 0.08);
+            border: 1px solid rgba(0, 89, 187, 0.2);
+            border-radius: 100px;
+            font-family: var(--font-label);
+            font-size: 0.75rem;
             font-weight: 500;
-            color: var(--accent-cyan);
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            margin-bottom: 28px;
-            animation: fadeInDown 0.8s ease forwards;
+            color: var(--secondary);
+            letter-spacing: 0.05em;
+            margin-bottom: 24px;
         }
 
-        .hero-badge .dot {
+        .hero-badge .badge-dot {
             width: 6px; height: 6px;
             border-radius: 50%;
-            background: var(--accent-cyan);
+            background: var(--secondary);
             animation: pulse-dot 2s infinite;
         }
 
@@ -307,222 +346,167 @@
 
         .hero-title {
             font-family: var(--font-display);
-            font-size: clamp(2.8rem, 6vw, 5.5rem);
+            font-size: clamp(2.8rem, 5vw, 3.5rem);
             font-weight: 700;
             line-height: 1.1;
-            color: #fff;
-            margin-bottom: 8px;
-            animation: fadeInUp 0.9s 0.2s ease both;
+            letter-spacing: -0.02em;
+            color: var(--primary-container);
+            margin-bottom: 24px;
         }
 
-        .hero-title-accent {
-            background: linear-gradient(90deg, var(--accent-cyan) 0%, var(--accent-blue) 50%, #7b61ff 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            display: inline-block;
+        .hero-title .accent {
+            color: var(--secondary);
         }
 
         .hero-subtitle {
-            font-size: clamp(1rem, 2vw, 1.25rem);
-            color: var(--text-light);
-            font-weight: 400;
+            font-family: var(--font-body);
+            font-size: 1.125rem;
+            line-height: 1.75;
+            color: var(--on-surface-variant);
             margin-bottom: 40px;
-            max-width: 520px;
-            line-height: 1.7;
-            animation: fadeInUp 0.9s 0.4s ease both;
+            max-width: 480px;
         }
 
-        .hero-cta-group {
-            display: flex;
-            gap: 16px;
-            flex-wrap: wrap;
-            animation: fadeInUp 0.9s 0.6s ease both;
-        }
+        .hero-cta-group { display: flex; gap: 16px; flex-wrap: wrap; }
 
         .btn-hero-primary {
             display: inline-flex;
             align-items: center;
-            gap: 10px;
-            padding: 14px 32px;
-            background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
-            color: #fff;
-            font-weight: 600;
-            font-size: 0.95rem;
-            border-radius: 50px;
+            gap: 8px;
+            padding: 14px 28px;
+            background: var(--primary-container);
+            color: var(--on-primary);
+            font-family: var(--font-body);
+            font-weight: 700;
+            font-size: 0.9rem;
+            border-radius: 4px;
             text-decoration: none;
             border: none;
             cursor: pointer;
             transition: var(--transition);
-            position: relative;
-            overflow: hidden;
+            box-shadow: 0 4px 16px rgba(0, 31, 63, 0.2);
         }
-
-        .btn-hero-primary::after {
-            content: '';
-            position: absolute;
-            top: 50%; left: 50%;
-            width: 0; height: 0;
-            background: rgba(255,255,255,0.2);
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            transition: width 0.6s, height 0.6s;
-        }
-
-        .btn-hero-primary:hover::after { width: 300px; height: 300px; }
 
         .btn-hero-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 36px rgba(0,102,255,0.55);
-            color: #fff;
+            background: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(0, 31, 63, 0.25);
+            color: var(--on-primary);
+        }
+
+        .btn-hero-primary .btn-icon {
+            transition: transform 0.2s;
+        }
+
+        .btn-hero-primary:hover .btn-icon {
+            transform: translateX(4px);
         }
 
         .btn-hero-secondary {
             display: inline-flex;
             align-items: center;
-            gap: 10px;
-            padding: 14px 32px;
-            background: var(--glass-bg);
-            color: #fff;
-            font-weight: 500;
-            font-size: 0.95rem;
-            border-radius: 50px;
+            gap: 8px;
+            padding: 14px 28px;
+            background: transparent;
+            color: var(--primary-container);
+            font-family: var(--font-body);
+            font-weight: 700;
+            font-size: 0.9rem;
+            border-radius: 4px;
             text-decoration: none;
-            border: 1.5px solid var(--glass-border);
+            border: 2px solid var(--primary-container);
             cursor: pointer;
             transition: var(--transition);
-            backdrop-filter: blur(8px);
         }
 
         .btn-hero-secondary:hover {
-            border-color: rgba(0,198,255,0.5);
-            background: rgba(0,198,255,0.08);
-            color: var(--accent-cyan);
-            transform: translateY(-3px);
+            background: rgba(0, 31, 63, 0.06);
+            color: var(--primary-container);
+            transform: translateY(-2px);
         }
 
-        /* Hero visual card */
+        /* Hero visual */
         .hero-visual {
-            animation: fadeInRight 1s 0.3s ease both;
-        }
-
-        .hero-visual-card {
-            background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(255,255,255,0.10);
-            border-radius: 24px;
-            padding: 32px;
-            backdrop-filter: blur(12px);
             position: relative;
-            overflow: hidden;
         }
 
-        .hero-visual-card::before {
+        .hero-visual-orb {
+            width: 100%;
+            aspect-ratio: 1;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .hero-visual-orb::before {
             content: '';
             position: absolute;
-            top: -50%; left: -50%;
-            width: 200%; height: 200%;
-            background: conic-gradient(from 0deg, transparent 0%, rgba(0,102,255,0.12) 25%, transparent 50%);
-            animation: rotate-glow 6s linear infinite;
-        }
-
-        @keyframes rotate-glow {
-            from { transform: rotate(0deg); }
-            to   { transform: rotate(360deg); }
-        }
-
-        .hero-visual-inner {
-            position: relative;
-            z-index: 1;
-        }
-
-        .stat-row {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            padding: 16px;
-            background: rgba(255,255,255,0.05);
-            border-radius: 14px;
-            margin-bottom: 12px;
-            border: 1px solid rgba(255,255,255,0.07);
-            transition: var(--transition);
-        }
-
-        .stat-row:hover {
-            background: rgba(0,102,255,0.12);
-            border-color: rgba(0,102,255,0.3);
-            transform: translateX(6px);
-        }
-
-        .stat-row:last-child { margin-bottom: 0; }
-
-        .stat-icon-box {
-            width: 44px; height: 44px;
-            border-radius: 12px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1.1rem;
-            flex-shrink: 0;
-        }
-
-        .stat-icon-box.blue   { background: rgba(0,102,255,0.2); color: var(--accent-blue); }
-        .stat-icon-box.cyan   { background: rgba(0,198,255,0.2); color: var(--accent-cyan); }
-        .stat-icon-box.purple { background: rgba(123,97,255,0.2); color: #9b7fff; }
-        .stat-icon-box.green  { background: rgba(0,210,100,0.2); color: #00d264; }
-
-        .stat-label {
-            font-size: 0.75rem;
-            color: rgba(255,255,255,0.5);
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
-        }
-
-        .stat-val {
-            font-family: var(--font-display);
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: #fff;
-        }
-
-        /* Scroll indicator */
-        .scroll-indicator {
-            position: absolute;
-            bottom: 36px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 3;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-            animation: bounce-subtle 2.5s infinite;
-        }
-
-        .scroll-indicator span {
-            font-size: 0.7rem;
-            color: rgba(255,255,255,0.4);
-            letter-spacing: 2px;
-            text-transform: uppercase;
-        }
-
-        .scroll-arrow {
-            width: 32px; height: 32px;
-            border: 1.5px solid rgba(255,255,255,0.2);
+            inset: 20px;
+            border: 1px solid rgba(0, 89, 187, 0.15);
             border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            color: rgba(255,255,255,0.5);
-            font-size: 0.8rem;
         }
 
-        @keyframes bounce-subtle {
-            0%, 100% { transform: translateX(-50%) translateY(0); }
-            50%       { transform: translateX(-50%) translateY(8px); }
+        .hero-visual-orb::after {
+            content: '';
+            position: absolute;
+            inset: 48px;
+            border: 1px solid rgba(0, 89, 187, 0.08);
+            border-radius: 50%;
+        }
+
+        .hero-icon-main {
+            font-size: 5rem;
+            color: rgba(0, 89, 187, 0.2);
+        }
+
+        .hero-float-card {
+            position: absolute;
+            padding: 14px 18px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-radius: 8px;
+            min-width: 180px;
+            animation: float-card 4s ease-in-out infinite;
+        }
+
+        .hero-float-card:nth-child(2) { animation-delay: -2s; }
+
+        @keyframes float-card {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-6px); }
+        }
+
+        .hero-float-card .fc-icon {
+            width: 40px; height: 40px;
+            border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+            font-size: 1.1rem;
+        }
+
+        .hero-float-card .fc-label {
+            font-family: var(--font-label);
+            font-size: 0.7rem;
+            color: var(--on-surface-variant);
+            margin-bottom: 2px;
+        }
+
+        .hero-float-card .fc-val {
+            font-family: var(--font-display);
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--primary-container);
         }
 
         /* ============================================================
-           STATS COUNTER SECTION
+           STATS SECTION
         ============================================================ */
         .stats-section {
-            padding: 80px 0;
-            background: linear-gradient(135deg, #060d1e 0%, #0a1a3a 50%, #060d1e 100%);
+            background: var(--primary-container);
+            padding: 72px 0;
             position: relative;
             overflow: hidden;
         }
@@ -530,217 +514,183 @@
         .stats-section::before {
             content: '';
             position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(0,198,255,0.5), transparent);
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg stroke='%23afc8f0' stroke-width='0.5' stroke-opacity='0.06'%3E%3Cpath d='M40 40c0-8.8 7.2-16 16-16s16 7.2 16 16-7.2 16-16 16-16-7.2-16-16zM0 0h80v80H0V0zm1 1v78h78V1H1zm39 39c0-5.5 4.5-10 10-10s10 4.5 10 10-4.5 10-10 10-10-4.5-10-10z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
         }
 
-        .stats-section::after {
-            content: '';
-            position: absolute;
-            bottom: 0; left: 0; right: 0;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(0,102,255,0.5), transparent);
-        }
-
-        .stat-card {
-            text-align: center;
-            padding: 40px 24px;
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            transition: var(--transition);
+        .stats-inner {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 64px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 32px;
             position: relative;
-            overflow: hidden;
+            z-index: 1;
         }
 
-        .stat-card::before {
-            content: '';
-            position: absolute;
-            bottom: 0; left: 0; right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, var(--accent-blue), var(--accent-cyan));
-            transform: scaleX(0);
-            transition: transform 0.4s ease;
+        .stat-card-new {
+            text-align: center;
+            padding: 32px 20px;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.08);
+            background: rgba(255,255,255,0.04);
+            transition: var(--transition);
         }
 
-        .stat-card:hover::before { transform: scaleX(1); }
-
-        .stat-card:hover {
-            transform: translateY(-8px);
-            background: rgba(0,102,255,0.08);
-            border-color: rgba(0,102,255,0.3);
-            box-shadow: 0 20px 50px rgba(0,0,0,0.3), 0 0 30px rgba(0,102,255,0.15);
+        .stat-card-new:hover {
+            background: rgba(255,255,255,0.08);
+            border-color: rgba(0, 218, 243, 0.2);
+            transform: translateY(-4px);
         }
 
-        .stat-number {
+        .stat-card-new .stat-icon {
+            font-size: 1.5rem;
+            color: rgba(0, 218, 243, 0.7);
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .stat-card-new .stat-number {
             font-family: var(--font-display);
-            font-size: 3rem;
+            font-size: 2.5rem;
             font-weight: 700;
-            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-blue));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: var(--secondary-container);
             line-height: 1;
             margin-bottom: 8px;
         }
 
-        .stat-unit {
-            font-size: 1.5rem;
-            margin-left: 2px;
-        }
-
-        .stat-desc {
-            font-size: 0.85rem;
-            color: rgba(255,255,255,0.55);
-            font-weight: 400;
+        .stat-card-new .stat-desc {
+            font-family: var(--font-label);
+            font-size: 0.7rem;
+            font-weight: 500;
+            letter-spacing: 0.1em;
             text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .stat-icon-top {
-            font-size: 1.8rem;
-            margin-bottom: 16px;
-            display: block;
+            color: rgba(255,255,255,0.55);
         }
 
         /* ============================================================
-           SECTION HEADER
+           SECTION COMMON
         ============================================================ */
         .section-eyebrow {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.75rem;
-            font-weight: 600;
+            font-family: var(--font-label);
+            font-size: 0.7rem;
+            font-weight: 500;
+            letter-spacing: 0.15em;
             text-transform: uppercase;
-            letter-spacing: 2px;
-            color: var(--accent-cyan);
+            color: var(--secondary);
+            display: flex;
+            align-items: center;
+            gap: 12px;
             margin-bottom: 16px;
         }
 
         .section-eyebrow::before, .section-eyebrow::after {
             content: '';
             display: block;
-            width: 24px; height: 1.5px;
-            background: var(--accent-cyan);
-            opacity: 0.6;
+            width: 24px; height: 1px;
+            background: var(--secondary);
+            opacity: 0.5;
         }
 
         .section-heading {
             font-family: var(--font-display);
-            font-size: clamp(2rem, 4vw, 3rem);
+            font-size: clamp(1.75rem, 3.5vw, 2.25rem);
             font-weight: 700;
-            color: #fff;
+            letter-spacing: -0.02em;
+            color: var(--primary-container);
             line-height: 1.2;
             margin-bottom: 16px;
         }
 
         .section-heading .highlight {
-            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-blue));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: var(--secondary);
         }
 
         .section-desc {
-            color: rgba(255,255,255,0.55);
+            font-family: var(--font-body);
             font-size: 1rem;
             line-height: 1.8;
-            max-width: 560px;
+            color: var(--on-surface-variant);
         }
 
         /* ============================================================
-           ABOUT SECTION (UNHAN & ELEKTRO)
+           ABOUT SECTION (Accordion)
         ============================================================ */
         .about-section {
-            padding: 120px 0;
-            background: var(--primary);
-            position: relative;
+            padding: 100px 0;
+            background: var(--background);
         }
 
-        .about-section .bg-glow {
-            position: absolute;
-            width: 500px; height: 500px;
-            border-radius: 50%;
-            filter: blur(120px);
-            opacity: 0.08;
-            pointer-events: none;
+        .about-inner {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 64px;
         }
 
-        .about-section .glow-1 {
-            background: var(--accent-blue);
-            top: -100px; right: -100px;
-        }
-
-        .about-section .glow-2 {
-            background: var(--accent-cyan);
-            bottom: -100px; left: -100px;
-        }
-
-        /* New modern accordion */
-        .accord-wrap {
-            margin-top: 64px;
-        }
+        .accord-wrap { margin-top: 56px; }
 
         .accord-item {
-            margin-bottom: 12px;
-            border-radius: 18px;
+            margin-bottom: 8px;
+            border-radius: 8px;
             overflow: hidden;
-            border: 1px solid rgba(255,255,255,0.07);
-            background: rgba(255,255,255,0.025);
-            transition: var(--transition);
+            border: 1px solid var(--outline-variant);
+            background: var(--surface);
+            transition: var(--transition-slow);
         }
 
         .accord-item:hover {
-            border-color: rgba(0,102,255,0.2);
+            border-color: rgba(0, 89, 187, 0.3);
+            box-shadow: 0 4px 16px rgba(0, 31, 63, 0.06);
         }
 
         .accord-item.open {
-            border-color: rgba(0,102,255,0.35);
-            background: rgba(0,102,255,0.06);
-            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+            border-color: rgba(0, 89, 187, 0.4);
+            background: rgba(0, 89, 187, 0.02);
+            box-shadow: 0 8px 32px rgba(0, 31, 63, 0.08);
         }
 
         .accord-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 24px 32px;
+            padding: 22px 28px;
             cursor: pointer;
             user-select: none;
             gap: 16px;
         }
 
         .accord-num {
-            font-family: var(--font-display);
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: var(--accent-cyan);
-            letter-spacing: 2px;
-            min-width: 32px;
+            font-family: var(--font-label);
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: var(--secondary);
+            letter-spacing: 0.1em;
+            min-width: 28px;
         }
 
         .accord-title {
             font-family: var(--font-display);
-            font-size: clamp(1.1rem, 2.5vw, 1.6rem);
+            font-size: 1.1rem;
             font-weight: 600;
-            color: #fff;
+            color: var(--primary-container);
             flex: 1;
         }
 
         .accord-icon {
-            width: 36px; height: 36px;
+            width: 32px; height: 32px;
             border-radius: 50%;
-            border: 1.5px solid rgba(255,255,255,0.15);
+            border: 1.5px solid var(--outline-variant);
             display: flex; align-items: center; justify-content: center;
-            color: rgba(255,255,255,0.5);
-            font-size: 0.8rem;
+            color: var(--on-surface-variant);
+            font-size: 0.75rem;
             transition: var(--transition);
             flex-shrink: 0;
         }
 
         .accord-item.open .accord-icon {
-            background: var(--accent-blue);
-            border-color: var(--accent-blue);
+            background: var(--secondary);
+            border-color: var(--secondary);
             color: #fff;
             transform: rotate(45deg);
         }
@@ -748,61 +698,69 @@
         .accord-body {
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .accord-body-inner {
-            padding: 0 32px 28px 80px;
+            padding: 0 28px 24px 72px;
         }
 
         .accord-item.open .accord-body {
             max-height: 1200px;
         }
 
-        .accord-body-inner .about-logo {
-            width: 90px; height: 90px;
+        .about-logo {
+            width: 80px; height: 80px;
             object-fit: contain;
-            border-radius: 16px;
+            border-radius: 8px;
             padding: 8px;
-            background: rgba(255,255,255,0.06);
-            border: 1px solid rgba(255,255,255,0.1);
+            background: var(--surface-container-low);
+            border: 1px solid var(--outline-variant);
             float: left;
-            margin: 0 28px 16px 0;
+            margin: 0 24px 12px 0;
         }
 
         .accord-text {
-            font-size: 1rem;
+            font-family: var(--font-body);
+            font-size: 0.95rem;
             line-height: 1.85;
-            color: rgba(255,255,255,0.65);
-            max-width: 820px;
+            color: var(--on-surface-variant);
         }
 
-        /* Visi & Misi special */
-        .vm-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 8px; }
+        /* Vision-Mission grid */
+        .vm-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-top: 8px;
+        }
 
         .vm-card {
-            background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 14px;
-            padding: 20px 24px;
+            background: var(--surface-container-low);
+            border: 1px solid var(--outline-variant);
+            border-radius: 8px;
+            padding: 20px;
         }
 
         .vm-card h5 {
-            font-size: 0.75rem;
-            font-weight: 700;
+            font-family: var(--font-label);
+            font-size: 0.7rem;
+            font-weight: 500;
             text-transform: uppercase;
-            letter-spacing: 2px;
-            color: var(--accent-cyan);
+            letter-spacing: 0.1em;
+            color: var(--secondary);
             margin-bottom: 12px;
         }
 
         .vm-card p, .vm-card li {
-            font-size: 0.9rem;
+            font-family: var(--font-body);
+            font-size: 0.875rem;
             line-height: 1.8;
-            color: rgba(255,255,255,0.6);
+            color: var(--on-surface-variant);
         }
 
         .vm-card ul { list-style: none; padding: 0; }
+
         .vm-card ul li {
             display: flex;
             gap: 10px;
@@ -811,20 +769,15 @@
 
         .vm-card ul li::before {
             content: '▸';
-            color: var(--accent-cyan);
+            color: var(--secondary);
             flex-shrink: 0;
-            margin-top: 2px;
-        }
-
-        @media (max-width: 768px) {
-            .vm-grid { grid-template-columns: 1fr; }
         }
 
         /* Career tags */
         .career-tags {
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: 8px;
             margin-top: 16px;
         }
 
@@ -832,199 +785,310 @@
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            padding: 6px 14px;
-            background: rgba(0,102,255,0.1);
-            border: 1px solid rgba(0,102,255,0.25);
-            border-radius: 50px;
-            font-size: 0.8rem;
-            color: var(--accent-cyan);
+            padding: 5px 12px;
+            background: rgba(0, 89, 187, 0.06);
+            border: 1px solid rgba(0, 89, 187, 0.15);
+            border-radius: 4px;
+            font-family: var(--font-label);
+            font-size: 0.75rem;
+            color: var(--secondary);
             transition: var(--transition);
         }
 
         .career-tag:hover {
-            background: rgba(0,102,255,0.2);
-            border-color: var(--accent-cyan);
-            transform: translateY(-2px);
+            background: rgba(0, 89, 187, 0.12);
+            border-color: var(--secondary);
         }
 
-        /* Akreditasi badge */
+        /* Accreditation badge */
         .accred-badge {
             display: inline-flex;
             align-items: center;
             gap: 12px;
-            padding: 16px 28px;
-            background: linear-gradient(135deg, rgba(0,210,100,0.1), rgba(0,102,255,0.1));
-            border: 1px solid rgba(0,210,100,0.3);
-            border-radius: 16px;
+            padding: 14px 24px;
+            background: rgba(0, 89, 187, 0.05);
+            border: 1px solid rgba(0, 89, 187, 0.2);
+            border-left: 4px solid var(--secondary);
+            border-radius: 8px;
             margin-top: 16px;
         }
 
         .accred-badge .accred-star {
-            font-size: 2rem;
-            color: #ffd700;
-            text-shadow: 0 0 12px rgba(255,215,0,0.5);
+            font-size: 1.8rem;
         }
 
         .accred-badge .accred-info strong {
             display: block;
-            font-size: 1rem;
+            font-family: var(--font-display);
+            font-size: 0.9rem;
             font-weight: 700;
-            color: #00d264;
+            color: var(--secondary);
         }
 
         .accred-badge .accred-info small {
-            font-size: 0.8rem;
-            color: rgba(255,255,255,0.5);
+            font-family: var(--font-label);
+            font-size: 0.7rem;
+            color: var(--on-surface-variant);
         }
 
         /* ============================================================
-           FEATURE / KEUNGGULAN SECTION
+           FEATURES SECTION
         ============================================================ */
         .features-section {
-            padding: 120px 0;
-            background: linear-gradient(180deg, #060d1e 0%, #0a1628 100%);
+            padding: 100px 0;
+            background: var(--surface-container-low);
             position: relative;
             overflow: hidden;
         }
 
-        .features-section .grid-bg {
-            position: absolute;
-            inset: 0;
-            background-image:
-                linear-gradient(rgba(0,102,255,0.05) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0,102,255,0.05) 1px, transparent 1px);
-            background-size: 60px 60px;
-            mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+        .features-inner {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 64px;
         }
 
-        .feat-card {
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.07);
-            border-radius: 24px;
-            padding: 36px 28px;
-            height: 100%;
-            transition: var(--transition);
+        .feat-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-top: 56px;
+        }
+
+        .feat-card-new {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 8px;
+            padding: 32px 28px;
+            transition: var(--transition-slow);
             position: relative;
             overflow: hidden;
-            cursor: default;
+            box-shadow: 0 4px 16px rgba(0, 31, 63, 0.04);
         }
 
-        .feat-card::before {
+        .feat-card-new::before {
             content: '';
             position: absolute;
             top: 0; left: 0; right: 0;
             height: 2px;
-            background: var(--card-accent, linear-gradient(90deg, var(--accent-blue), var(--accent-cyan)));
+            background: var(--card-accent, linear-gradient(90deg, var(--secondary), #0070ea));
             transform: scaleX(0);
             transform-origin: left;
-            transition: transform 0.4s ease;
+            transition: transform 0.3s ease;
         }
 
-        .feat-card:hover::before { transform: scaleX(1); }
+        .feat-card-new:hover::before { transform: scaleX(1); }
 
-        .feat-card:hover {
-            transform: translateY(-10px);
-            border-color: rgba(0,102,255,0.25);
-            background: rgba(0,102,255,0.06);
-            box-shadow: 0 24px 60px rgba(0,0,0,0.35), 0 0 40px rgba(0,102,255,0.1);
+        .feat-card-new:hover {
+            transform: translateY(-6px);
+            border-color: rgba(0, 89, 187, 0.2);
+            box-shadow: 0 20px 40px rgba(0, 31, 63, 0.1);
         }
 
-        .feat-card .feat-icon {
-            width: 56px; height: 56px;
-            border-radius: 16px;
+        .feat-icon-new {
+            width: 52px; height: 52px;
+            border-radius: 8px;
             display: flex; align-items: center; justify-content: center;
-            font-size: 1.4rem;
+            font-size: 1.3rem;
             margin-bottom: 20px;
         }
 
-        .feat-card h4 {
+        .feat-card-new h4 {
             font-family: var(--font-display);
-            font-size: 1.15rem;
+            font-size: 1rem;
             font-weight: 700;
-            color: #fff;
-            margin-bottom: 12px;
+            color: var(--primary-container);
+            margin-bottom: 10px;
         }
 
-        .feat-card p {
-            font-size: 0.9rem;
-            line-height: 1.8;
+        .feat-card-new p {
+            font-family: var(--font-body);
+            font-size: 0.875rem;
+            line-height: 1.75;
+            color: var(--on-surface-variant);
+        }
+
+        /* ============================================================
+           RESEARCH/ACHIEVEMENTS SECTION
+        ============================================================ */
+        .research-section {
+            padding: 100px 0;
+            background: var(--primary-container);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .research-section::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg stroke='%23afc8f0' stroke-width='0.5' stroke-opacity='0.05'%3E%3Cpath d='M40 40c0-8.8 7.2-16 16-16s16 7.2 16 16-7.2 16-16 16-16-7.2-16-16zM0 0h80v80H0V0zm1 1v78h78V1H1zm39 39c0-5.5 4.5-10 10-10s10 4.5 10 10-4.5 10-10 10-10-4.5-10-10z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.4;
+        }
+
+        .research-inner {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 64px;
+            position: relative;
+            z-index: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 64px;
+            align-items: center;
+        }
+
+        .research-stat-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-top: 32px;
+        }
+
+        .research-stat-item {
+            padding: 20px;
+            border-radius: 8px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .research-stat-num {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--secondary-container);
+            line-height: 1;
+            margin-bottom: 6px;
+        }
+
+        .research-stat-label {
+            font-family: var(--font-label);
+            font-size: 0.7rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
             color: rgba(255,255,255,0.5);
+        }
+
+        .research-achieve-item {
+            padding: 20px 24px;
+            border-radius: 8px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.08);
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            margin-bottom: 16px;
+            transition: var(--transition);
+        }
+
+        .research-achieve-item:last-child { margin-bottom: 0; }
+
+        .research-achieve-item:hover {
+            background: rgba(255,255,255,0.08);
+            border-color: rgba(0, 218, 243, 0.2);
+        }
+
+        .research-achieve-icon {
+            width: 40px; height: 40px;
+            border-radius: 8px;
+            background: var(--secondary);
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .research-achieve-icon span { font-size: 1rem; color: #fff; }
+
+        .research-achieve-item h5 {
+            font-family: var(--font-display);
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: rgba(255,255,255,0.9);
+            margin-bottom: 4px;
+        }
+
+        .research-achieve-item p {
+            font-family: var(--font-body);
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.55);
         }
 
         /* ============================================================
            FOOTER
         ============================================================ */
         .site-footer {
-            background: #050c1a;
+            background: var(--primary);
+            color: rgba(255,255,255,0.7);
+            padding: 64px 0 0;
             border-top: 1px solid rgba(255,255,255,0.06);
-            padding: 60px 0 0;
-            position: relative;
-            overflow: hidden;
         }
 
-        .site-footer::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 50%;
-            transform: translateX(-50%);
-            width: 600px; height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(0,198,255,0.5), transparent);
+        .footer-inner {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 64px;
+            display: grid;
+            grid-template-columns: 1.5fr 1fr 1fr 1.5fr;
+            gap: 40px;
         }
 
-        .footer-brand img {
-            width: 48px; height: 48px;
+        .footer-brand-img {
+            width: 40px; height: 40px;
             border-radius: 50%;
-            border: 2px solid rgba(0,198,255,0.3);
-            margin-right: 14px;
+            border: 2px solid rgba(0, 89, 187, 0.3);
+            margin-right: 12px;
         }
 
         .footer-brand-name {
             font-family: var(--font-display);
-            font-size: 1rem;
+            font-size: 0.9rem;
             font-weight: 700;
             color: #fff;
         }
 
         .footer-brand-sub {
-            font-size: 0.7rem;
+            font-family: var(--font-label);
+            font-size: 0.6rem;
             color: rgba(255,255,255,0.4);
         }
 
         .footer-tagline {
-            font-size: 0.9rem;
+            font-family: var(--font-body);
+            font-size: 0.875rem;
+            line-height: 1.75;
             color: rgba(255,255,255,0.4);
-            line-height: 1.7;
             margin-top: 16px;
-            max-width: 280px;
         }
 
         .footer-heading {
-            font-size: 0.7rem;
-            font-weight: 700;
+            font-family: var(--font-label);
+            font-size: 0.65rem;
+            font-weight: 500;
+            letter-spacing: 0.15em;
             text-transform: uppercase;
-            letter-spacing: 2px;
-            color: var(--accent-cyan);
+            color: var(--secondary-container);
             margin-bottom: 20px;
         }
 
         .footer-link {
             display: block;
+            font-family: var(--font-body);
             font-size: 0.875rem;
             color: rgba(255,255,255,0.45);
             text-decoration: none;
-            margin-bottom: 12px;
-            transition: color 0.3s, transform 0.3s;
+            margin-bottom: 10px;
+            transition: var(--transition);
         }
 
         .footer-link:hover {
-            color: #fff;
-            transform: translateX(4px);
+            color: rgba(255,255,255,0.9);
+            transform: translateX(3px);
         }
 
         .footer-divider {
-            margin-top: 48px;
+            max-width: 1280px;
+            margin: 48px auto 0;
+            padding: 20px 64px;
             border-top: 1px solid rgba(255,255,255,0.06);
-            padding: 20px 0;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -1033,20 +1097,18 @@
         }
 
         .footer-copy {
-            font-size: 0.8rem;
+            font-family: var(--font-label);
+            font-size: 0.75rem;
             color: rgba(255,255,255,0.3);
         }
 
-        .footer-copy span { color: var(--accent-cyan); }
+        .footer-copy span { color: var(--secondary-container); }
 
-        .footer-social {
-            display: flex;
-            gap: 12px;
-        }
+        .footer-social { display: flex; gap: 10px; }
 
         .social-btn {
-            width: 36px; height: 36px;
-            border-radius: 50%;
+            width: 34px; height: 34px;
+            border-radius: 4px;
             border: 1px solid rgba(255,255,255,0.1);
             display: flex; align-items: center; justify-content: center;
             color: rgba(255,255,255,0.4);
@@ -1056,152 +1118,154 @@
         }
 
         .social-btn:hover {
-            border-color: var(--accent-cyan);
-            color: var(--accent-cyan);
-            background: rgba(0,198,255,0.1);
-            transform: translateY(-3px);
+            border-color: var(--secondary);
+            color: var(--secondary-container);
+            background: rgba(0, 89, 187, 0.1);
         }
 
         /* ============================================================
-           ANIMATIONS
+           ANIMATIONS & REVEAL  — Premium scroll transitions
         ============================================================ */
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
 
-        @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-20px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes fadeInRight {
-            from { opacity: 0; transform: translateX(40px); }
-            to   { opacity: 1; transform: translateX(0); }
-        }
-
-        @keyframes fadeInLeft {
-            from { opacity: 0; transform: translateX(-40px); }
-            to   { opacity: 1; transform: translateX(0); }
-        }
-
-        /* Reveal on scroll */
+        /* Base reveal — fade up with slight scale */
         .reveal {
             opacity: 0;
-            transform: translateY(40px);
-            transition: opacity 0.7s ease, transform 0.7s ease;
+            transform: translateY(40px) scale(0.98);
+            transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+                        transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
         }
-
         .reveal.visible {
             opacity: 1;
-            transform: translateY(0);
+            transform: translateY(0) scale(1);
         }
 
+        /* Reveal from left */
         .reveal-left {
             opacity: 0;
-            transform: translateX(-40px);
-            transition: opacity 0.7s ease, transform 0.7s ease;
+            transform: translateX(-48px) scale(0.97);
+            transition: opacity 0.75s cubic-bezier(0.22, 1, 0.36, 1),
+                        transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
         }
+        .reveal-left.visible  { opacity: 1; transform: translateX(0) scale(1); }
 
-        .reveal-left.visible {
-            opacity: 1;
-            transform: translateX(0);
-        }
-
+        /* Reveal from right */
         .reveal-right {
             opacity: 0;
-            transform: translateX(40px);
-            transition: opacity 0.7s ease, transform 0.7s ease;
+            transform: translateX(48px) scale(0.97);
+            transition: opacity 0.75s cubic-bezier(0.22, 1, 0.36, 1),
+                        transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .reveal-right.visible { opacity: 1; transform: translateX(0) scale(1); }
+
+        /* Reveal zoom — for cards */
+        .reveal-zoom {
+            opacity: 0;
+            transform: scale(0.92) translateY(24px);
+            transition: opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+                        transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .reveal-zoom.visible { opacity: 1; transform: scale(1) translateY(0); }
+
+        .delay-1 { transition-delay: 0.08s  !important; }
+        .delay-2 { transition-delay: 0.18s  !important; }
+        .delay-3 { transition-delay: 0.28s  !important; }
+        .delay-4 { transition-delay: 0.38s  !important; }
+        .delay-5 { transition-delay: 0.48s  !important; }
+        .delay-6 { transition-delay: 0.58s  !important; }
+
+
+
+        /* ============================================================
+           SCROLL INDICATOR
+        ============================================================ */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 32px; left: 50%;
+            transform: translateX(-50%);
+            z-index: 3;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            animation: bounce-indicator 2.5s infinite;
         }
 
-        .reveal-right.visible {
-            opacity: 1;
-            transform: translateX(0);
+        .scroll-indicator span {
+            font-family: var(--font-label);
+            font-size: 0.6rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--on-surface-variant);
         }
 
-        /* Delay helpers */
-        .delay-1 { transition-delay: 0.1s !important; }
-        .delay-2 { transition-delay: 0.2s !important; }
-        .delay-3 { transition-delay: 0.3s !important; }
-        .delay-4 { transition-delay: 0.4s !important; }
-        .delay-5 { transition-delay: 0.5s !important; }
+        .scroll-arrow {
+            width: 30px; height: 30px;
+            border: 1.5px solid var(--outline-variant);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            color: var(--on-surface-variant);
+            font-size: 0.75rem;
+        }
+
+        @keyframes bounce-indicator {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(8px); }
+        }
 
         /* ============================================================
            RESPONSIVE
         ============================================================ */
-        @media (max-width: 991.98px) {
-            .hero-visual { margin-top: 48px; }
-            .accord-body-inner { padding-left: 32px; }
+        @media (max-width: 1100px) {
+            .hero-inner, .research-inner { grid-template-columns: 1fr; gap: 40px; }
+            .stats-inner { grid-template-columns: repeat(2, 1fr); }
+            .feat-grid { grid-template-columns: repeat(2, 1fr); }
+            .footer-inner { grid-template-columns: 1fr 1fr; }
+            .navbar-inner { padding: 0 32px; }
+            .about-inner, .features-inner, .footer-divider { padding: 0 32px; }
         }
 
-        @media (max-width: 767.98px) {
-            .accord-header { padding: 18px 20px; }
-            .accord-body-inner { padding: 0 20px 20px; }
-            .accord-body-inner .about-logo { float: none; margin: 0 0 16px 0; }
-            .hero-cta-group { flex-direction: column; align-items: flex-start; }
+        @media (max-width: 768px) {
+            .hero-inner { padding: 60px 24px; }
+            .stats-inner { grid-template-columns: 1fr 1fr; padding: 0 24px; }
+            .feat-grid { grid-template-columns: 1fr; }
+            .vm-grid { grid-template-columns: 1fr; }
+            .footer-inner { grid-template-columns: 1fr; padding: 0 24px; }
+            .footer-divider { padding: 20px 24px; }
+            .about-inner, .features-inner { padding: 0 24px; }
+            .navbar-inner { padding: 0 20px; }
+            .nav-links { display: none; }
+            .navbar-toggler-custom { display: block; }
+        }
+
+        @media (max-width: 576px) {
+            .stats-inner { grid-template-columns: 1fr 1fr; }
+            .hero-cta-group { flex-direction: column; }
         }
     </style>
 </head>
 
 <body>
 
-    <!-- Cursor glow -->
-    <div id="cursor-glow"></div>
-
     <!-- ================================================================
          NAVBAR
     ================================================================ -->
-    <nav class="navbar navbar-expand-lg navbar-dark custom-navbar" id="mainNavbar">
-        <div class="container-fluid px-4 px-lg-5">
+    <nav class="custom-navbar" id="mainNavbar">
+        <div class="navbar-inner">
 
-            <a class="navbar-brand fw-bold d-flex align-items-center gap-3" href="#">
+            <a href="#" class="d-flex align-items-center gap-3 text-decoration-none">
                 <img src="/images/logo-elektro.png" alt="Logo Elektro" class="brand-logo">
-                <div class="brand-text d-flex flex-column">
-                    <span class="brand-main">ELECTRICAL <span style="color:rgba(255,255,255,0.4);">·</span> ENGINEERING</span>
-                    <span class="brand-sub">Teknik Elektro</span>
-                    <span class="brand-univ">Indonesia Defense University</span>
+                <div class="d-flex flex-column">
+                    <span class="brand-name">ELECTRICAL ENGINEERING</span>
+                    <span class="brand-sub">Teknik Elektro · UNHAN RI</span>
                 </div>
             </a>
 
-            <button class="navbar-toggler border-0" type="button"
-                    data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                    style="box-shadow:none;">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto align-items-center gap-1">
-
-                    @auth
-                        <li class="nav-item">
-                            <span class="user-badge">
-                                <i class="fa-solid fa-circle-user"></i>
-                                {{ Auth::user()->name }}
-                            </span>
-                        </li>
-                        <li class="nav-item">
-                            <form action="{{ route('logout') }}" method="POST" class="d-inline">
-                                @csrf
-                                <button type="submit" class="btn btn-logout btn-sm">
-                                    <i class="fa-solid fa-right-from-bracket me-1"></i>Logout
-                                </button>
-                            </form>
-                        </li>
-                    @else
-                        <li class="nav-item">
-                            <a href="{{ route('login') }}" class="btn-nav-login">
-                                <i class="fa-solid fa-right-to-bracket me-1"></i>Login
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('register') }}" class="btn-nav-register">
-                                <span><i class="fa-solid fa-user-plus me-1"></i>Register</span>
-                            </a>
-                        </li>
-                    @endauth
-
-                </ul>
+            <div class="nav-links">
+                <a href="#about" class="nav-link-custom">Tentang</a>
+                <a href="#features" class="nav-link-custom">Keunggulan</a>
+                <a href="#research" class="nav-link-custom">Prestasi</a>
             </div>
+
 
         </div>
     </nav>
@@ -1209,170 +1273,114 @@
     <!-- ================================================================
          HERO SECTION
     ================================================================ -->
-    <header class="hero-section" id="home">
+    <section class="hero-section" id="home">
+        <div class="hero-bg-orb orb-1"></div>
+        <div class="hero-bg-orb orb-2"></div>
 
-        <div class="container hero-content-wrap">
-            <div class="row align-items-center g-5">
-
-                <!-- Left: Text -->
-                <div class="col-lg-7">
-                    <div class="hero-badge">
-                        <span class="dot"></span>
-                        Program Studi Teknik Elektro
-                    </div>
-
-                    <h1 class="hero-title">
-                        Welcome to<br>
-                        <span class="hero-title-accent">Electrical Engineering</span>
-                    </h1>
-
-                    <p class="hero-subtitle">
-                        Mencetak lulusan unggul, inovatif, dan berkarakter bela negara melalui
-                        pendidikan teknik elektro berbasis riset dan teknologi pertahanan modern.
-                    </p>
-
-                    <div class="hero-cta-group">
-                        <a href="#about" class="btn-hero-primary">
-                            <i class="fa-solid fa-rocket"></i>
-                            Jelajahi Program
-                        </a>
-                        <a href="{{ route('login') }}" class="btn-hero-secondary">
-                            <i class="fa-solid fa-arrow-right-to-bracket"></i>
-                            Masuk SIMelek
-                        </a>
-                    </div>
+        <div class="hero-inner">
+            <!-- Left: Text -->
+            <div>
+                <div class="hero-badge">
+                    <span class="badge-dot"></span>
+                    Program Studi Teknik Elektro
                 </div>
 
-                <!-- Right: Visual card -->
-                <div class="col-lg-5 hero-visual">
-                    <div class="hero-visual-card">
-                        <div class="hero-visual-inner">
-                            <p style="font-size:0.7rem;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:2px;margin-bottom:16px;">
-                                Quick Overview
-                            </p>
+                <h1 class="hero-title">
+                    Teknik Elektro<br>
+                    <span class="accent">UNHAN RI</span>
+                </h1>
 
-                            <div class="stat-row">
-                                <div class="stat-icon-box blue"><i class="fa-solid fa-graduation-cap"></i></div>
-                                <div>
-                                    <div class="stat-label">Program Studi</div>
-                                    <div class="stat-val">Teknik Elektro S1</div>
-                                </div>
+                <p class="hero-subtitle">
+                    Membentuk kader intelektual pertahanan yang menguasai teknologi energi,
+                    sistem kontrol, dan telekomunikasi demi kedaulatan digital bangsa.
+                </p>
+
+                <div class="hero-cta-group">
+                    <a href="{{ route('login') }}" class="btn-hero-primary">
+                        <span class="material-symbols-outlined" style="font-size:1.1rem;">login</span>
+                        Login Portal
+                    </a>
+                    <a href="{{ route('register') }}" class="btn-hero-secondary">
+                        <span class="material-symbols-outlined" style="font-size:1.1rem;">person_add</span>
+                        Daftar / Registrasi
+                    </a>
+                </div>
+            </div>
+
+            <!-- Right: Visual -->
+            <div class="hero-visual">
+                <div class="glass-card" style="border-radius:16px;padding:32px;position:relative;overflow:hidden;">
+                    <div style="position:absolute;top:-60px;right:-60px;width:220px;height:220px;border-radius:50%;background:rgba(0,89,187,0.05);pointer-events:none;"></div>
+
+                    <p style="font-family:var(--font-label);font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--on-surface-variant);margin-bottom:20px;">Quick Overview</p>
+
+                    <div style="display:flex;flex-direction:column;gap:12px;">
+                        <div style="display:flex;align-items:center;gap:14px;padding:14px;border-radius:8px;background:var(--surface-container-low);border:1px solid var(--outline-variant);transition:var(--transition);" onmouseover="this.style.borderColor='rgba(0,89,187,0.3)'" onmouseout="this.style.borderColor='var(--outline-variant)'">
+                            <div style="width:40px;height:40px;border-radius:8px;background:rgba(0,89,187,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                                <span class="material-symbols-outlined" style="color:var(--secondary);font-size:1.2rem;">school</span>
                             </div>
-
-                            <div class="stat-row">
-                                <div class="stat-icon-box cyan"><i class="fa-solid fa-certificate"></i></div>
-                                <div>
-                                    <div class="stat-label">Akreditasi</div>
-                                    <div class="stat-val">Terakreditasi Baik</div>
-                                </div>
+                            <div>
+                                <div style="font-family:var(--font-label);font-size:0.65rem;color:var(--on-surface-variant);text-transform:uppercase;letter-spacing:0.08em;">Program Studi</div>
+                                <div style="font-family:var(--font-display);font-size:0.9rem;font-weight:700;color:var(--primary-container);">Teknik Elektro S1</div>
                             </div>
+                        </div>
 
-                            <div class="stat-row">
-                                <div class="stat-icon-box purple"><i class="fa-solid fa-shield-halved"></i></div>
-                                <div>
-                                    <div class="stat-label">Fokus Utama</div>
-                                    <div class="stat-val">Teknologi Pertahanan</div>
-                                </div>
+                        <div style="display:flex;align-items:center;gap:14px;padding:14px;border-radius:8px;background:var(--surface-container-low);border:1px solid var(--outline-variant);transition:var(--transition);" onmouseover="this.style.borderColor='rgba(0,89,187,0.3)'" onmouseout="this.style.borderColor='var(--outline-variant)'">
+                            <div style="width:40px;height:40px;border-radius:8px;background:rgba(0,89,187,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                                <span class="material-symbols-outlined" style="color:var(--secondary);font-size:1.2rem;">verified_user</span>
                             </div>
+                            <div>
+                                <div style="font-family:var(--font-label);font-size:0.65rem;color:var(--on-surface-variant);text-transform:uppercase;letter-spacing:0.08em;">Akreditasi</div>
+                                <div style="font-family:var(--font-display);font-size:0.9rem;font-weight:700;color:var(--primary-container);">Terakreditasi Baik</div>
+                            </div>
+                        </div>
 
-                            <div class="stat-row">
-                                <div class="stat-icon-box green"><i class="fa-solid fa-building-columns"></i></div>
-                                <div>
-                                    <div class="stat-label">Universitas</div>
-                                    <div class="stat-val">Unhan RI</div>
-                                </div>
+                        <div style="display:flex;align-items:center;gap:14px;padding:14px;border-radius:8px;background:var(--surface-container-low);border:1px solid var(--outline-variant);transition:var(--transition);" onmouseover="this.style.borderColor='rgba(0,89,187,0.3)'" onmouseout="this.style.borderColor='var(--outline-variant)'">
+                            <div style="width:40px;height:40px;border-radius:8px;background:rgba(0,35,40,0.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                                <span class="material-symbols-outlined" style="color:var(--tertiary-container);font-size:1.2rem;">shield</span>
+                            </div>
+                            <div>
+                                <div style="font-family:var(--font-label);font-size:0.65rem;color:var(--on-surface-variant);text-transform:uppercase;letter-spacing:0.08em;">Fokus Utama</div>
+                                <div style="font-family:var(--font-display);font-size:0.9rem;font-weight:700;color:var(--primary-container);">Teknologi Pertahanan</div>
+                            </div>
+                        </div>
+
+                        <div style="display:flex;align-items:center;gap:14px;padding:14px;border-radius:8px;background:var(--surface-container-low);border:1px solid var(--outline-variant);transition:var(--transition);" onmouseover="this.style.borderColor='rgba(0,89,187,0.3)'" onmouseout="this.style.borderColor='var(--outline-variant)'">
+                            <div style="width:40px;height:40px;border-radius:8px;background:rgba(0,89,187,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                                <span class="material-symbols-outlined" style="color:var(--secondary);font-size:1.2rem;">account_balance</span>
+                            </div>
+                            <div>
+                                <div style="font-family:var(--font-label);font-size:0.65rem;color:var(--on-surface-variant);text-transform:uppercase;letter-spacing:0.08em;">Universitas</div>
+                                <div style="font-family:var(--font-display);font-size:0.9rem;font-weight:700;color:var(--primary-container);">Unhan RI</div>
                             </div>
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
 
-        <!-- Scroll hint -->
-        <div class="scroll-indicator">
-            <span>Scroll</span>
-            <div class="scroll-arrow"><i class="fa-solid fa-chevron-down"></i></div>
-        </div>
 
-    </header>
-
-    <!-- ================================================================
-         STATS COUNTER SECTION
-    ================================================================ -->
-    <section class="stats-section">
-        <div class="container">
-            <div class="row g-4 justify-content-center">
-
-                <div class="col-6 col-md-3 reveal delay-1">
-                    <div class="stat-card">
-                        <span class="stat-icon-top" style="color:#00c6ff;">⚡</span>
-                        <div class="stat-number">
-                            <span class="counter" data-target="100">0</span><span class="stat-unit">%</span>
-                        </div>
-                        <div class="stat-desc">Akreditasi Baik</div>
-                    </div>
-                </div>
-
-                <div class="col-6 col-md-3 reveal delay-2">
-                    <div class="stat-card">
-                        <span class="stat-icon-top" style="color:#7b61ff;">🎓</span>
-                        <div class="stat-number">
-                            <span class="counter" data-target="4">0</span><span class="stat-unit"> Thn</span>
-                        </div>
-                        <div class="stat-desc">Masa Studi</div>
-                    </div>
-                </div>
-
-                <div class="col-6 col-md-3 reveal delay-3">
-                    <div class="stat-card">
-                        <span class="stat-icon-top" style="color:#00d264;">🛡️</span>
-                        <div class="stat-number">
-                            <span class="counter" data-target="6">0</span><span class="stat-unit">+</span>
-                        </div>
-                        <div class="stat-desc">Bidang Keahlian</div>
-                    </div>
-                </div>
-
-                <div class="col-6 col-md-3 reveal delay-4">
-                    <div class="stat-card">
-                        <span class="stat-icon-top" style="color:#ffd700;">⭐</span>
-                        <div class="stat-number">
-                            <span class="counter" data-target="1">0</span><span class="stat-unit">st</span>
-                        </div>
-                        <div class="stat-desc">Defense University</div>
-                    </div>
-                </div>
-
-            </div>
-        </div>
     </section>
 
+
     <!-- ================================================================
-         ABOUT / ACCORDION SECTION
+         ABOUT SECTION
     ================================================================ -->
     <section class="about-section" id="about">
-        <div class="bg-glow glow-1"></div>
-        <div class="bg-glow glow-2"></div>
-
-        <div class="container position-relative">
-
-            <!-- Section header -->
-            <div class="row justify-content-center text-center mb-2 reveal">
-                <div class="col-lg-7">
-                    <div class="section-eyebrow">Tentang Kami</div>
-                    <h2 class="section-heading">
-                        Mengenal Lebih Dekat<br>
-                        <span class="highlight">Teknik Elektro Unhan</span>
-                    </h2>
-                    <p class="section-desc mx-auto">
-                        Temukan visi, misi, dan keunggulan Program Studi Teknik Elektro
-                        Universitas Pertahanan Republik Indonesia.
-                    </p>
-                </div>
+        <div class="about-inner">
+            <div class="text-center reveal" style="max-width:600px;margin:0 auto;">
+                <div class="section-eyebrow" style="justify-content:center;">Tentang Kami</div>
+                <h2 class="section-heading">
+                    Mengenal Lebih Dekat<br>
+                    <span class="highlight">Teknik Elektro Unhan</span>
+                </h2>
+                <p class="section-desc">
+                    Temukan visi, misi, dan keunggulan Program Studi Teknik Elektro
+                    Universitas Pertahanan Republik Indonesia.
+                </p>
             </div>
 
-            <!-- Modern Accordion -->
+            <!-- Accordion -->
             <div class="accord-wrap reveal">
 
                 <!-- 01: Unhan RI -->
@@ -1380,7 +1388,7 @@
                     <div class="accord-header" data-accord-trigger>
                         <span class="accord-num">01</span>
                         <span class="accord-title">Universitas Pertahanan RI</span>
-                        <span class="accord-icon"><i class="fa-solid fa-plus"></i></span>
+                        <span class="accord-icon"><i class="fa-solid fa-plus" style="font-size:0.75rem;"></i></span>
                     </div>
                     <div class="accord-body">
                         <div class="accord-body-inner">
@@ -1401,7 +1409,7 @@
                     <div class="accord-header" data-accord-trigger>
                         <span class="accord-num">02</span>
                         <span class="accord-title">Program Studi Teknik Elektro</span>
-                        <span class="accord-icon"><i class="fa-solid fa-plus"></i></span>
+                        <span class="accord-icon"><i class="fa-solid fa-plus" style="font-size:0.75rem;"></i></span>
                     </div>
                     <div class="accord-body">
                         <div class="accord-body-inner">
@@ -1423,7 +1431,7 @@
                     <div class="accord-header" data-accord-trigger>
                         <span class="accord-num">03</span>
                         <span class="accord-title">Visi &amp; Misi</span>
-                        <span class="accord-icon"><i class="fa-solid fa-plus"></i></span>
+                        <span class="accord-icon"><i class="fa-solid fa-plus" style="font-size:0.75rem;"></i></span>
                     </div>
                     <div class="accord-body">
                         <div class="accord-body-inner">
@@ -1458,7 +1466,7 @@
                     <div class="accord-header" data-accord-trigger>
                         <span class="accord-num">04</span>
                         <span class="accord-title">Karir Lulusan</span>
-                        <span class="accord-icon"><i class="fa-solid fa-plus"></i></span>
+                        <span class="accord-icon"><i class="fa-solid fa-plus" style="font-size:0.75rem;"></i></span>
                     </div>
                     <div class="accord-body">
                         <div class="accord-body-inner">
@@ -1472,7 +1480,7 @@
                                 <span class="career-tag"><i class="fa-solid fa-satellite-dish"></i> Sistem Komunikasi Pertahanan</span>
                                 <span class="career-tag"><i class="fa-solid fa-microchip"></i> Elektronika Militer</span>
                                 <span class="career-tag"><i class="fa-solid fa-radar"></i> Teknologi Radar</span>
-                                <span class="career-tag"><i class="fa-solid fa-robot"></i> Otomasi & Kontrol</span>
+                                <span class="career-tag"><i class="fa-solid fa-robot"></i> Otomasi &amp; Kontrol</span>
                                 <span class="career-tag"><i class="fa-solid fa-bolt"></i> Sistem Kelistrikan</span>
                                 <span class="career-tag"><i class="fa-solid fa-shield-halved"></i> Perwira TNI</span>
                             </div>
@@ -1485,13 +1493,13 @@
                     <div class="accord-header" data-accord-trigger>
                         <span class="accord-num">05</span>
                         <span class="accord-title">Akreditasi</span>
-                        <span class="accord-icon"><i class="fa-solid fa-plus"></i></span>
+                        <span class="accord-icon"><i class="fa-solid fa-plus" style="font-size:0.75rem;"></i></span>
                     </div>
                     <div class="accord-body">
                         <div class="accord-body-inner">
                             <p class="accord-text">
                                 Program Studi Teknik Elektro Universitas Pertahanan RI telah terakreditasi
-                                <strong style="color:#fff;">"Baik"</strong> sebagai bentuk pengakuan terhadap mutu
+                                <strong style="color:var(--secondary);">"Baik"</strong> sebagai bentuk pengakuan terhadap mutu
                                 pendidikan, kualitas pembelajaran, serta pengembangan kompetensi mahasiswa di bidang
                                 teknik elektro dan teknologi pertahanan.
                             </p>
@@ -1507,156 +1515,140 @@
                 </div>
 
             </div><!-- /accord-wrap -->
-
         </div>
     </section>
+
 
     <!-- ================================================================
          FEATURES / KEUNGGULAN SECTION
     ================================================================ -->
-    <section class="features-section">
-        <div class="grid-bg"></div>
-        <div class="container position-relative">
-
-            <div class="row justify-content-center text-center mb-5 reveal">
-                <div class="col-lg-7">
-                    <div class="section-eyebrow">Keunggulan</div>
-                    <h2 class="section-heading">
-                        Mengapa Memilih<br>
-                        <span class="highlight">Teknik Elektro Unhan?</span>
-                    </h2>
-                </div>
+    <section class="features-section" id="features">
+        <div class="features-inner">
+            <div class="text-center reveal" style="max-width:600px;margin:0 auto;">
+                <div class="section-eyebrow" style="justify-content:center;">Keunggulan</div>
+                <h2 class="section-heading">
+                    Mengapa Memilih<br>
+                    <span class="highlight">Teknik Elektro Unhan?</span>
+                </h2>
             </div>
 
-            <div class="row g-4">
+            <div class="feat-grid">
 
-                <div class="col-sm-6 col-lg-4 reveal delay-1">
-                    <div class="feat-card" style="--card-accent: linear-gradient(90deg, #0066ff, #00c6ff);">
-                        <div class="feat-icon" style="background:rgba(0,102,255,0.15); color:#0066ff;">
-                            <i class="fa-solid fa-flask"></i>
-                        </div>
-                        <h4>Berbasis Riset & Teknologi</h4>
-                        <p>Pembelajaran didukung riset aktif dan teknologi terkini untuk mendukung pengembangan sistem pertahanan nasional.</p>
+                <div class="feat-card-new reveal delay-1" style="--card-accent:linear-gradient(90deg,#0059bb,#0070ea);">
+                    <div class="feat-icon-new" style="background:rgba(0,89,187,0.1);">
+                        <span class="material-symbols-outlined" style="color:var(--secondary);font-size:1.3rem;">science</span>
                     </div>
+                    <h4>Berbasis Riset &amp; Teknologi</h4>
+                    <p>Pembelajaran didukung riset aktif dan teknologi terkini untuk mendukung pengembangan sistem pertahanan nasional.</p>
                 </div>
 
-                <div class="col-sm-6 col-lg-4 reveal delay-2">
-                    <div class="feat-card" style="--card-accent: linear-gradient(90deg, #7b61ff, #0066ff);">
-                        <div class="feat-icon" style="background:rgba(123,97,255,0.15); color:#7b61ff;">
-                            <i class="fa-solid fa-shield-halved"></i>
-                        </div>
-                        <h4>Karakter Bela Negara</h4>
-                        <p>Pembinaan karakter militer, kepemimpinan, dan semangat nasionalisme yang kokoh bagi setiap mahasiswa.</p>
+                <div class="feat-card-new reveal delay-2" style="--card-accent:linear-gradient(90deg,#002328,#0059bb);">
+                    <div class="feat-icon-new" style="background:rgba(0,35,40,0.1);">
+                        <span class="material-symbols-outlined" style="color:var(--tertiary-container);font-size:1.3rem;">military_tech</span>
                     </div>
+                    <h4>Karakter Bela Negara</h4>
+                    <p>Pembinaan karakter militer, kepemimpinan, dan semangat nasionalisme yang kokoh bagi setiap mahasiswa.</p>
                 </div>
 
-                <div class="col-sm-6 col-lg-4 reveal delay-3">
-                    <div class="feat-card" style="--card-accent: linear-gradient(90deg, #00c6ff, #00d264);">
-                        <div class="feat-icon" style="background:rgba(0,210,100,0.15); color:#00d264;">
-                            <i class="fa-solid fa-earth-asia"></i>
-                        </div>
-                        <h4>Kerja Sama Internasional</h4>
-                        <p>Jaringan kolaborasi dengan institusi dan perguruan tinggi dalam serta luar negeri di bidang teknologi pertahanan.</p>
+                <div class="feat-card-new reveal delay-3" style="--card-accent:linear-gradient(90deg,#0070ea,#00daf3);">
+                    <div class="feat-icon-new" style="background:rgba(0,112,234,0.1);">
+                        <span class="material-symbols-outlined" style="color:var(--secondary-container);font-size:1.3rem;">public</span>
                     </div>
+                    <h4>Kerja Sama Internasional</h4>
+                    <p>Jaringan kolaborasi dengan institusi dan perguruan tinggi dalam serta luar negeri di bidang teknologi pertahanan.</p>
                 </div>
 
-                <div class="col-sm-6 col-lg-4 reveal delay-1">
-                    <div class="feat-card" style="--card-accent: linear-gradient(90deg, #ffd700, #ff8c00);">
-                        <div class="feat-icon" style="background:rgba(255,215,0,0.12); color:#ffd700;">
-                            <i class="fa-solid fa-microchip"></i>
-                        </div>
-                        <h4>Kurikulum Komprehensif</h4>
-                        <p>Mencakup sistem kelistrikan, elektronika, kontrol, telekomunikasi, pemrograman, dan rekayasa pertahanan.</p>
+                <div class="feat-card-new reveal delay-1" style="--card-accent:linear-gradient(90deg,#0059bb,#002328);">
+                    <div class="feat-icon-new" style="background:rgba(0,89,187,0.1);">
+                        <span class="material-symbols-outlined" style="color:var(--secondary);font-size:1.3rem;">developer_board</span>
                     </div>
+                    <h4>Kurikulum Komprehensif</h4>
+                    <p>Mencakup sistem kelistrikan, elektronika, kontrol, telekomunikasi, pemrograman, dan rekayasa pertahanan.</p>
                 </div>
 
-                <div class="col-sm-6 col-lg-4 reveal delay-2">
-                    <div class="feat-card" style="--card-accent: linear-gradient(90deg, #ff6b7a, #ff4757);">
-                        <div class="feat-icon" style="background:rgba(255,71,87,0.12); color:#ff6b7a;">
-                            <i class="fa-solid fa-building-columns"></i>
-                        </div>
-                        <h4>Fasilitas Modern</h4>
-                        <p>Laboratorium dan fasilitas pendidikan tinggi yang modern, inovatif, dan mendukung pengembangan kompetensi mahasiswa.</p>
+                <div class="feat-card-new reveal delay-2" style="--card-accent:linear-gradient(90deg,#002328,#0059bb);">
+                    <div class="feat-icon-new" style="background:rgba(0,35,40,0.1);">
+                        <span class="material-symbols-outlined" style="color:var(--tertiary-container);font-size:1.3rem;">account_balance</span>
                     </div>
+                    <h4>Fasilitas Modern</h4>
+                    <p>Laboratorium dan fasilitas pendidikan tinggi yang modern, inovatif, dan mendukung pengembangan kompetensi mahasiswa.</p>
                 </div>
 
-                <div class="col-sm-6 col-lg-4 reveal delay-3">
-                    <div class="feat-card" style="--card-accent: linear-gradient(90deg, #00c6ff, #7b61ff);">
-                        <div class="feat-icon" style="background:rgba(0,198,255,0.15); color:#00c6ff;">
-                            <i class="fa-solid fa-users"></i>
-                        </div>
-                        <h4>Dosen Berpengalaman</h4>
-                        <p>Diampu oleh pengajar berpengalaman dari kalangan akademisi dan praktisi militer di bidang teknik elektro.</p>
+                <div class="feat-card-new reveal delay-3" style="--card-accent:linear-gradient(90deg,#0070ea,#0059bb);">
+                    <div class="feat-icon-new" style="background:rgba(0,112,234,0.1);">
+                        <span class="material-symbols-outlined" style="color:var(--secondary-container);font-size:1.3rem;">groups</span>
                     </div>
+                    <h4>Dosen Berpengalaman</h4>
+                    <p>Diampu oleh pengajar berpengalaman dari kalangan akademisi dan praktisi militer di bidang teknik elektro.</p>
                 </div>
 
             </div>
         </div>
     </section>
+
 
     <!-- ================================================================
          FOOTER
     ================================================================ -->
     <footer class="site-footer">
-        <div class="container">
-            <div class="row g-5">
+        <div class="footer-inner">
 
-                <div class="col-lg-4">
-                    <div class="footer-brand d-flex align-items-center mb-3">
-                        <img src="/images/logo-elektro.png" alt="Logo">
-                        <div>
-                            <div class="footer-brand-name">Teknik Elektro</div>
-                            <div class="footer-brand-sub">Indonesia Defense University</div>
-                        </div>
+            <div>
+                <div class="d-flex align-items-center mb-3">
+                    <img src="/images/logo-elektro.png" alt="Logo" class="footer-brand-img">
+                    <div>
+                        <div class="footer-brand-name">Teknik Elektro</div>
+                        <div class="footer-brand-sub">Indonesia Defense University</div>
                     </div>
-                    <p class="footer-tagline">
-                        Mencetak lulusan unggul, inovatif, dan berkarakter bela negara melalui
-                        pendidikan teknik elektro berbasis teknologi pertahanan.
-                    </p>
                 </div>
-
-                <div class="col-6 col-lg-2">
-                    <div class="footer-heading">Navigasi</div>
-                    <a href="#home" class="footer-link">Beranda</a>
-                    <a href="#about" class="footer-link">Tentang Kami</a>
-                    <a href="{{ route('login') }}" class="footer-link">SIMelek Login</a>
-                </div>
-
-                <div class="col-6 col-lg-3">
-                    <div class="footer-heading">Program</div>
-                    <a href="#" class="footer-link">Kurikulum</a>
-                    <a href="#" class="footer-link">Visi &amp; Misi</a>
-                    <a href="#" class="footer-link">Karir Lulusan</a>
-                    <a href="#" class="footer-link">Akreditasi</a>
-                </div>
-
-                <div class="col-lg-3">
-                    <div class="footer-heading">Kontak</div>
-                    <p class="footer-link" style="cursor:default;">
-                        <i class="fa-solid fa-location-dot me-2" style="color:var(--accent-cyan)"></i>
-                        Kawasan IPSC, Sentul, Bogor
-                    </p>
-                    <p class="footer-link" style="cursor:default;">
-                        <i class="fa-solid fa-envelope me-2" style="color:var(--accent-cyan)"></i>
-                        elektro@idu.ac.id
-                    </p>
-                    <p class="footer-link" style="cursor:default;">
-                        <i class="fa-solid fa-phone me-2" style="color:var(--accent-cyan)"></i>
-                        +62 21 XXXX XXXX
-                    </p>
-                </div>
-
+                <p class="footer-tagline">
+                    Mencetak lulusan unggul, inovatif, dan berkarakter bela negara melalui
+                    pendidikan teknik elektro berbasis teknologi pertahanan.
+                </p>
             </div>
 
-            <div class="footer-divider">
-                <div class="footer-copy">
-                    &copy; 2026 <span>SIMelek</span> — Web Prodi Teknik Elektro Unhan RI. All Rights Reserved.
-                </div>
-                <div class="footer-social">
-                    <a href="#" class="social-btn"><i class="fab fa-instagram"></i></a>
-                    <a href="#" class="social-btn"><i class="fab fa-youtube"></i></a>
-                    <a href="#" class="social-btn"><i class="fab fa-linkedin-in"></i></a>
-                </div>
+            <div>
+                <div class="footer-heading">Navigasi</div>
+                <a href="#home" class="footer-link">Beranda</a>
+                <a href="#about" class="footer-link">Tentang Kami</a>
+                <a href="#features" class="footer-link">Keunggulan</a>
+                <a href="{{ route('login') }}" class="footer-link">SIMelek Login</a>
+            </div>
+
+            <div>
+                <div class="footer-heading">Program</div>
+                <a href="#" class="footer-link">Kurikulum</a>
+                <a href="#" class="footer-link">Visi &amp; Misi</a>
+                <a href="#" class="footer-link">Karir Lulusan</a>
+                <a href="#" class="footer-link">Akreditasi</a>
+            </div>
+
+            <div>
+                <div class="footer-heading">Kontak</div>
+                <p class="footer-link" style="cursor:default;">
+                    <span class="material-symbols-outlined" style="font-size:0.9rem;color:var(--secondary-container);vertical-align:middle;margin-right:6px;">location_on</span>
+                    Kawasan IPSC, Sentul, Bogor
+                </p>
+                <p class="footer-link" style="cursor:default;">
+                    <span class="material-symbols-outlined" style="font-size:0.9rem;color:var(--secondary-container);vertical-align:middle;margin-right:6px;">mail</span>
+                    elektro@idu.ac.id
+                </p>
+                <p class="footer-link" style="cursor:default;">
+                    <span class="material-symbols-outlined" style="font-size:0.9rem;color:var(--secondary-container);vertical-align:middle;margin-right:6px;">phone</span>
+                    +62 21 XXXX XXXX
+                </p>
+            </div>
+
+        </div>
+
+        <div class="footer-divider">
+            <div class="footer-copy">
+                &copy; 2026 <span>SIMelek</span> — Web Prodi Teknik Elektro Unhan RI. All Rights Reserved.
+            </div>
+            <div class="footer-social">
+                <a href="#" class="social-btn"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="social-btn"><i class="fab fa-youtube"></i></a>
+                <a href="#" class="social-btn"><i class="fab fa-linkedin-in"></i></a>
             </div>
         </div>
     </footer>
@@ -1668,48 +1660,75 @@
 
     <script>
     // ---------------------------------------------------------------
-    // 1. CURSOR GLOW
-    // ---------------------------------------------------------------
-    const cursorGlow = document.getElementById('cursor-glow');
-    document.addEventListener('mousemove', e => {
-        cursorGlow.style.left = e.clientX + 'px';
-        cursorGlow.style.top  = e.clientY + 'px';
-    });
-
-    // ---------------------------------------------------------------
-    // 2. NAVBAR SCROLL
+    // 1. NAVBAR SCROLL
     // ---------------------------------------------------------------
     const navbar = document.getElementById('mainNavbar');
     window.addEventListener('scroll', () => {
         navbar.classList.toggle('scrolled', window.scrollY > 60);
     });
 
+    // ---------------------------------------------------------------
+    // 2. SCROLL REVEAL — animate only when scrolling DOWN
+    // ---------------------------------------------------------------
+    const revealEls = document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-zoom');
 
-    // ---------------------------------------------------------------
-    // 5. SCROLL REVEAL
-    // ---------------------------------------------------------------
-    const revealEls = document.querySelectorAll('.reveal, .reveal-left, .reveal-right');
+    let lastScrollY = window.scrollY;
+
     const revealObs = new IntersectionObserver((entries) => {
+        const scrollingDown = window.scrollY >= lastScrollY;
+
         entries.forEach(e => {
             if (e.isIntersecting) {
-                e.target.classList.add('visible');
-                revealObs.unobserve(e.target);
+                if (scrollingDown) {
+                    // Stagger sibling cards
+                    const siblings = e.target.parentElement
+                        ? [...e.target.parentElement.children].filter(c =>
+                              c.classList.contains('reveal') ||
+                              c.classList.contains('reveal-zoom'))
+                        : [];
+                    const idx = siblings.indexOf(e.target);
+                    e.target.style.transitionDelay = idx > 0 ? (idx * 0.09) + 's' : '0s';
+                    e.target.classList.add('visible');
+                } else {
+                    // Scrolling up: show instantly, no animation
+                    e.target.style.transition = 'none';
+                    e.target.style.transitionDelay = '0s';
+                    e.target.classList.add('visible');
+                    // Re-enable transition after a tick so future down-scroll animates
+                    requestAnimationFrame(() => {
+                        requestAnimationFrame(() => {
+                            e.target.style.transition = '';
+                        });
+                    });
+                }
+            } else {
+                // Element left viewport — reset so down-scroll re-triggers animation
+                e.target.style.transition = 'none';
+                e.target.style.transitionDelay = '0s';
+                e.target.classList.remove('visible');
+                requestAnimationFrame(() => {
+                    requestAnimationFrame(() => {
+                        e.target.style.transition = '';
+                    });
+                });
             }
         });
-    }, { threshold: 0.12 });
+    }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+
+    window.addEventListener('scroll', () => { lastScrollY = window.scrollY; }, { passive: true });
 
     revealEls.forEach(el => revealObs.observe(el));
 
     // ---------------------------------------------------------------
-    // 7. COUNTER ANIMATION
+    // 3. COUNTER ANIMATION
     // ---------------------------------------------------------------
     function animateCounter(el) {
         const target = +el.dataset.target;
-        const dur    = 1800;
-        const step   = 16;
-        const inc    = target / (dur / step);
-        let cur      = 0;
-        const timer  = setInterval(() => {
+        const dur = 1600;
+        const step = 16;
+        const inc = target / (dur / step);
+        let cur = 0;
+        const timer = setInterval(() => {
             cur += inc;
             if (cur >= target) { cur = target; clearInterval(timer); }
             el.textContent = Math.floor(cur);
@@ -1728,27 +1747,25 @@
     document.querySelectorAll('.stats-section').forEach(s => counterObs.observe(s));
 
     // ---------------------------------------------------------------
-    // 8. MODERN ACCORDION
+    // 4. ACCORDION
     // ---------------------------------------------------------------
     document.querySelectorAll('[data-accord-trigger]').forEach(trigger => {
         trigger.addEventListener('click', () => {
             const item = trigger.closest('[data-accord]');
             const isOpen = item.classList.contains('open');
 
-            // Close all
             document.querySelectorAll('[data-accord]').forEach(i => i.classList.remove('open'));
 
-            // Toggle clicked
             if (!isOpen) item.classList.add('open');
         });
     });
 
-    // Open first by default
+    // Open first accordion by default
     const firstAccord = document.querySelector('[data-accord]');
     if (firstAccord) firstAccord.classList.add('open');
 
     // ---------------------------------------------------------------
-    // 9. SMOOTH SCROLL for anchor links
+    // 5. SMOOTH SCROLL
     // ---------------------------------------------------------------
     document.querySelectorAll('a[href^="#"]').forEach(a => {
         a.addEventListener('click', e => {

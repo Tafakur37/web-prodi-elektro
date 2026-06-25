@@ -1,0 +1,505 @@
+﻿<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>UNHAN Electrical Engineering | Digital Sovereignty</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&amp;family=Inter:wght@400;500&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-tertiary-fixed": "#001f24",
+                    "primary": "#000613",
+                    "surface-dim": "#d9dadb",
+                    "tertiary-fixed-dim": "#00daf3",
+                    "on-error": "#ffffff",
+                    "surface-container-high": "#e7e8e9",
+                    "secondary-fixed": "#d8e2ff",
+                    "secondary-fixed-dim": "#adc7ff",
+                    "on-primary-container": "#6f88ad",
+                    "tertiary-container": "#002328",
+                    "outline": "#74777f",
+                    "error-container": "#ffdad6",
+                    "surface-tint": "#476083",
+                    "outline-variant": "#c4c6cf",
+                    "inverse-on-surface": "#f0f1f2",
+                    "inverse-primary": "#afc8f0",
+                    "primary-fixed-dim": "#afc8f0",
+                    "on-secondary-fixed-variant": "#004493",
+                    "surface-bright": "#f8f9fa",
+                    "surface-container-low": "#f3f4f5",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-container": "#edeeef",
+                    "secondary-container": "#0070ea",
+                    "surface-variant": "#e1e3e4",
+                    "on-tertiary-fixed-variant": "#004f58",
+                    "on-primary-fixed": "#001c3a",
+                    "on-surface": "#191c1d",
+                    "on-tertiary-container": "#0094a6",
+                    "on-primary": "#ffffff",
+                    "on-secondary-container": "#fefcff",
+                    "secondary": "#0059bb",
+                    "on-tertiary": "#ffffff",
+                    "background": "#f8f9fa",
+                    "tertiary": "#00070a",
+                    "on-error-container": "#93000a",
+                    "primary-container": "#001f3f",
+                    "surface-container-highest": "#e1e3e4",
+                    "primary-fixed": "#d4e3ff",
+                    "on-secondary-fixed": "#001a41",
+                    "on-secondary": "#ffffff",
+                    "on-surface-variant": "#43474e",
+                    "on-primary-fixed-variant": "#2f486a",
+                    "surface": "#f8f9fa",
+                    "error": "#ba1a1a",
+                    "on-background": "#191c1d",
+                    "inverse-surface": "#2e3132",
+                    "tertiary-fixed": "#9cf0ff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "margin-mobile": "20px",
+                    "gutter": "24px",
+                    "margin-desktop": "64px",
+                    "container-max": "1280px",
+                    "unit": "8px"
+            },
+            "fontFamily": {
+                    "label-sm": ["JetBrains Mono"],
+                    "body-lg": ["Inter"],
+                    "headline-lg": ["Montserrat"],
+                    "body-md": ["Inter"],
+                    "headline-md": ["Montserrat"],
+                    "headline-lg-mobile": ["Montserrat"],
+                    "label-md": ["JetBrains Mono"],
+                    "display": ["Montserrat"]
+            },
+            "fontSize": {
+                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                    "display": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 20px 40px rgba(0, 31, 63, 0.08);
+        }
+        .circuit-pattern {
+            background-color: #f8f9fa;
+            background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg stroke='%230059bb' stroke-width='0.5' stroke-opacity='0.05'%3E%3Cpath d='M40 40c0-8.8 7.2-16 16-16s16 7.2 16 16-7.2 16-16 16-16-7.2-16-16zM0 0h80v80H0V0zm1 1v78h78V1H1zm39 39c0-5.5 4.5-10 10-10s10 4.5 10 10-4.5 10-10 10-10-4.5-10-10z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface circuit-pattern selection:bg-secondary/30">
+<!-- TopNavBar -->
+<header class="bg-white/75 dark:bg-primary/75 backdrop-blur-md font-body-md text-body-md shadow-md border-b border-white/15 dark:border-primary-fixed/10 docked full-width top-0 sticky z-50">
+<nav class="flex justify-between items-center w-full px-margin-desktop max-w-container-max mx-auto h-20">
+<div class="flex items-center gap-4">
+<span class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed tracking-tighter">UNHAN Electrical Engineering</span>
+</div>
+<div class="hidden md:flex items-center gap-8 h-full">
+<a class="text-on-surface-variant dark:text-outline-variant hover:text-primary dark:hover:text-primary-fixed transition-all duration-200" href="#curriculum">Curriculum</a>
+<a class="text-on-surface-variant dark:text-outline-variant hover:text-primary dark:hover:text-primary-fixed transition-all duration-200" href="#facilities">Facilities</a>
+<a class="text-on-surface-variant dark:text-outline-variant hover:text-primary dark:hover:text-primary-fixed transition-all duration-200" href="#faculty">Faculty</a>
+<a class="text-on-surface-variant dark:text-outline-variant hover:text-primary dark:hover:text-primary-fixed transition-all duration-200" href="#research">Research</a>
+<a class="text-on-surface-variant dark:text-outline-variant hover:text-primary dark:hover:text-primary-fixed transition-all duration-200" href="#news">News</a>
+<a class="text-on-surface-variant dark:text-outline-variant hover:text-primary dark:hover:text-primary-fixed transition-all duration-200" href="#about">About</a>
+</div>
+<div class="flex items-center gap-4">
+<button class="px-6 py-2 rounded-lg font-medium text-secondary-container hover:bg-surface-container-low transition-all">Login</button>
+<button class="px-6 py-2 rounded-lg font-medium bg-primary text-on-primary shadow-lg hover:scale-105 active:scale-95 transition-all">Registrasi</button>
+</div>
+</nav>
+</header>
+<main>
+<!-- Hero Section -->
+<section class="relative min-h-[870px] flex items-center overflow-hidden">
+<div class="absolute inset-0 -z-10 opacity-20 pointer-events-none">
+
+</div>
+<div class="max-w-container-max mx-auto px-margin-desktop grid grid-cols-1 md:grid-cols-2 gap-gutter items-center">
+<div class="space-y-8">
+<div class="inline-flex items-center gap-2 px-3 py-1 bg-secondary-container/10 border border-secondary-container/20 rounded-full text-secondary-container font-label-md text-label-md">
+<span class="material-symbols-outlined text-[18px]">verified</span>
+                        Akreditasi Unggul
+                    </div>
+<h1 class="font-display text-display text-primary leading-none">Teknik Elektro<br/><span class="text-secondary">UNHAN</span></h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-lg">
+                        Membentuk kader intelektual pertahanan yang menguasai teknologi energi, sistem kontrol, dan telekomunikasi demi kedaulatan digital bangsa.
+                    </p>
+<div class="flex flex-wrap gap-4">
+<button class="px-8 py-4 bg-primary text-on-primary rounded-xl font-bold flex items-center gap-2 hover:bg-primary/90 transition-all shadow-xl group">
+                            Login Portal
+                            <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+<button class="px-8 py-4 border-2 border-primary text-primary rounded-xl font-bold hover:bg-primary/5 transition-all">
+                            Daftar Akun
+                        </button>
+</div>
+</div>
+<div class="relative hidden md:block">
+<!-- Asymmetric Vector Pattern Replacement -->
+<div class="relative w-full aspect-square glass-card rounded-full flex items-center justify-center animate-pulse duration-[4000ms]">
+<div class="absolute inset-4 border border-secondary/20 rounded-full"></div>
+<div class="absolute inset-12 border border-secondary/10 rounded-full"></div>
+<span class="material-symbols-outlined text-[160px] text-secondary/30">memory</span>
+<!-- Floating circuit-like bits -->
+<div class="absolute top-1/4 right-0 w-24 h-24 glass-card rounded-xl flex items-center justify-center rotate-12">
+<span class="material-symbols-outlined text-primary text-3xl">bolt</span>
+</div>
+<div class="absolute bottom-1/4 left-0 w-20 h-20 glass-card rounded-xl flex items-center justify-center -rotate-6">
+<span class="material-symbols-outlined text-secondary text-2xl">sensors</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- About Section -->
+<section class="py-24 bg-surface-container-low" id="about">
+<div class="max-w-container-max mx-auto px-margin-desktop">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-start">
+<div class="space-y-6">
+<h2 class="font-headline-lg text-headline-lg text-primary">Visi &amp; Misi</h2>
+<div class="w-20 h-1.5 bg-secondary rounded-full"></div>
+<p class="font-body-lg text-body-lg text-on-surface-variant">
+                            Menjadi Program Studi Teknik Elektro yang unggul di tingkat internasional pada tahun 2024 dengan kekhasan di bidang pertahanan.
+                        </p>
+<ul class="space-y-4">
+<li class="flex gap-4">
+<span class="material-symbols-outlined text-secondary">check_circle</span>
+<span class="font-body-md text-body-md text-on-surface">Penyelenggaraan pendidikan berbasis riset teknologi pertahanan.</span>
+</li>
+<li class="flex gap-4">
+<span class="material-symbols-outlined text-secondary">check_circle</span>
+<span class="font-body-md text-body-md text-on-surface">Pengabdian masyarakat melalui inovasi energi terbarukan.</span>
+</li>
+</ul>
+</div>
+<div class="glass-card p-10 rounded-2xl flex flex-col items-center text-center space-y-4 border-l-4 border-l-secondary">
+<span class="material-symbols-outlined text-[64px] text-primary">verified_user</span>
+<h3 class="font-headline-md text-headline-md text-primary">Status Akreditasi</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">
+                            Terakreditasi oleh Lembaga Akreditasi Mandiri Program Studi Teknik (LAM Teknik) dengan predikat **Unggul**.
+                        </p>
+<div class="font-label-md text-label-md px-4 py-2 bg-primary/5 rounded-lg text-primary">SK No. 0124/SK/LAM-TEKNIK/XII/2023</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Curriculum / Peminatan -->
+<section class="py-24" id="curriculum">
+<div class="max-w-container-max mx-auto px-margin-desktop">
+<div class="text-center mb-16 space-y-4">
+<h2 class="font-headline-lg text-headline-lg text-primary">Bidang Peminatan</h2>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-2xl mx-auto">Kurikulum kami dirancang untuk mengintegrasikan dasar-dasar teknik elektro dengan aplikasi strategis pertahanan nasional.</p>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+<!-- Card 1 -->
+<div class="glass-card p-8 rounded-2xl hover:-translate-y-2 transition-all duration-300 group">
+<div class="w-14 h-14 bg-primary/5 rounded-xl flex items-center justify-center mb-6 group-hover:bg-secondary group-hover:text-white transition-colors">
+<span class="material-symbols-outlined text-3xl">bolt</span>
+</div>
+<h4 class="font-headline-md text-[20px] mb-3">Power Systems</h4>
+<p class="font-body-md text-on-surface-variant text-sm">Fokus pada manajemen energi terintegrasi, microgrids, dan ketahanan infrastruktur energi nasional.</p>
+</div>
+<!-- Card 2 -->
+<div class="glass-card p-8 rounded-2xl hover:-translate-y-2 transition-all duration-300 group">
+<div class="w-14 h-14 bg-primary/5 rounded-xl flex items-center justify-center mb-6 group-hover:bg-secondary group-hover:text-white transition-colors">
+<span class="material-symbols-outlined text-3xl">developer_board</span>
+</div>
+<h4 class="font-headline-md text-[20px] mb-3">Electronics</h4>
+<p class="font-body-md text-on-surface-variant text-sm">Pengembangan sirkuit terpadu, sistem embedded untuk radar, dan perangkat militer canggih.</p>
+</div>
+<!-- Card 3 -->
+<div class="glass-card p-8 rounded-2xl hover:-translate-y-2 transition-all duration-300 group">
+<div class="w-14 h-14 bg-primary/5 rounded-xl flex items-center justify-center mb-6 group-hover:bg-secondary group-hover:text-white transition-colors">
+<span class="material-symbols-outlined text-3xl">settings_input_antenna</span>
+</div>
+<h4 class="font-headline-md text-[20px] mb-3">Telecommunications</h4>
+<p class="font-body-md text-on-surface-variant text-sm">Komunikasi satelit, enkripsi data, dan jaringan taktis untuk komunikasi medan tempur.</p>
+</div>
+<!-- Card 4 -->
+<div class="glass-card p-8 rounded-2xl hover:-translate-y-2 transition-all duration-300 group">
+<div class="w-14 h-14 bg-primary/5 rounded-xl flex items-center justify-center mb-6 group-hover:bg-secondary group-hover:text-white transition-colors">
+<span class="material-symbols-outlined text-3xl">precision_manufacturing</span>
+</div>
+<h4 class="font-headline-md text-[20px] mb-3">Control &amp; Instrumentation</h4>
+<p class="font-body-md text-on-surface-variant text-sm">Otomasi industri, robotika pertahanan, dan sistem kendali navigasi nirawak.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Facilities Section -->
+<section class="py-24 bg-surface-container" id="facilities">
+<div class="max-w-container-max mx-auto px-margin-desktop">
+<div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">
+<div class="max-w-xl">
+<h2 class="font-headline-lg text-headline-lg text-primary">Fasilitas Laboratorium</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-4">Laboratorium berstandar internasional yang dilengkapi dengan instrumen terkini untuk mendukung riset dan praktikum mahasiswa.</p>
+</div>
+<button class="font-label-md text-label-md text-secondary flex items-center gap-2 hover:underline">
+                        Lihat Semua Fasilitas <span class="material-symbols-outlined">north_east</span>
+</button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<div class="glass-card overflow-hidden rounded-2xl group">
+<div class="h-48 bg-primary/10 flex items-center justify-center relative overflow-hidden">
+<span class="material-symbols-outlined text-6xl text-primary/20">science</span>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/20 to-transparent"></div>
+</div>
+<div class="p-8">
+<h5 class="font-headline-md text-[20px] mb-2 text-primary">Lab. Elektronika Dasar</h5>
+<p class="font-body-md text-on-surface-variant text-sm">Dilengkapi dengan Oscilloscope, Function Generator, dan workstation pemrosesan sinyal.</p>
+</div>
+</div>
+<div class="glass-card overflow-hidden rounded-2xl group">
+<div class="h-48 bg-primary/10 flex items-center justify-center relative overflow-hidden">
+<span class="material-symbols-outlined text-6xl text-primary/20">router</span>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/20 to-transparent"></div>
+</div>
+<div class="p-8">
+<h5 class="font-headline-md text-[20px] mb-2 text-primary">Lab. Jaringan &amp; Telekomunikasi</h5>
+<p class="font-body-md text-on-surface-variant text-sm">Simulasi jaringan berbasis serat optik dan konfigurasi VSAT satelit militer.</p>
+</div>
+</div>
+<div class="glass-card overflow-hidden rounded-2xl group">
+<div class="h-48 bg-primary/10 flex items-center justify-center relative overflow-hidden">
+<span class="material-symbols-outlined text-6xl text-primary/20">smart_toy</span>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/20 to-transparent"></div>
+</div>
+<div class="p-8">
+<h5 class="font-headline-md text-[20px] mb-2 text-primary">Lab. Robotika &amp; Mekatronika</h5>
+<p class="font-body-md text-on-surface-variant text-sm">Pusat pengembangan drone (UAV) dan sistem otonom untuk pengintaian darat.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Faculty Section -->
+<section class="py-24" id="faculty">
+<div class="max-w-container-max mx-auto px-margin-desktop">
+<div class="text-center mb-16">
+<h2 class="font-headline-lg text-headline-lg text-primary">Tenaga Pengajar</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2">Dosen dengan latar belakang akademisi profesional dan praktisi militer.</p>
+</div>
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-8">
+<!-- Faculty Item -->
+<div class="text-center space-y-4">
+<div class="w-32 h-32 mx-auto rounded-full glass-card flex items-center justify-center border-2 border-secondary/20 shadow-lg">
+<span class="material-symbols-outlined text-5xl text-primary">person</span>
+</div>
+<div>
+<h6 class="font-headline-md text-[18px] text-primary">Kol. Dr. Ir. Suyatno</h6>
+<p class="font-label-md text-label-md text-secondary">Expertise: Radar Systems</p>
+</div>
+</div>
+<div class="text-center space-y-4">
+<div class="w-32 h-32 mx-auto rounded-full glass-card flex items-center justify-center border-2 border-secondary/20 shadow-lg">
+<span class="material-symbols-outlined text-5xl text-primary">person</span>
+</div>
+<div>
+<h6 class="font-headline-md text-[18px] text-primary">Dr. Eng. Ahmad R.</h6>
+<p class="font-label-md text-label-md text-secondary">Expertise: Renewable Energy</p>
+</div>
+</div>
+<div class="text-center space-y-4">
+<div class="w-32 h-32 mx-auto rounded-full glass-card flex items-center justify-center border-2 border-secondary/20 shadow-lg">
+<span class="material-symbols-outlined text-5xl text-primary">person</span>
+</div>
+<div>
+<h6 class="font-headline-md text-[18px] text-primary">Letkol. Marina, M.T.</h6>
+<p class="font-label-md text-label-md text-secondary">Expertise: Cyber Security</p>
+</div>
+</div>
+<div class="text-center space-y-4">
+<div class="w-32 h-32 mx-auto rounded-full glass-card flex items-center justify-center border-2 border-secondary/20 shadow-lg">
+<span class="material-symbols-outlined text-5xl text-primary">person</span>
+</div>
+<div>
+<h6 class="font-headline-md text-[18px] text-primary">Prof. Dr. Budiman</h6>
+<p class="font-label-md text-label-md text-secondary">Expertise: Smart Grids</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Research & Achievements -->
+<section class="py-24 bg-primary text-on-primary" id="research">
+<div class="max-w-container-max mx-auto px-margin-desktop">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+<div>
+<h2 class="font-headline-lg text-headline-lg mb-6">Inovasi &amp; Prestasi</h2>
+<p class="font-body-lg text-body-lg text-on-primary/70 mb-10">
+                            Kami terus mendorong batas teknologi melalui riset terapan yang langsung memberikan dampak pada kemandirian alutsista nasional.
+                        </p>
+<div class="grid grid-cols-2 gap-6">
+<div class="p-6 rounded-xl bg-white/5 border border-white/10">
+<h3 class="font-display text-display text-secondary text-4xl mb-1">45+</h3>
+<p class="font-label-md text-label-md">Jurnal Internasional</p>
+</div>
+<div class="p-6 rounded-xl bg-white/5 border border-white/10">
+<h3 class="font-display text-display text-secondary text-4xl mb-1">12</h3>
+<p class="font-label-md text-label-md">Paten Teknologi</p>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 gap-6">
+<div class="glass-card bg-white/5! border-white/10! p-6 rounded-2xl flex items-start gap-6">
+<div class="bg-secondary rounded-lg p-3">
+<span class="material-symbols-outlined text-white">military_tech</span>
+</div>
+<div>
+<h5 class="font-headline-md text-lg text-white mb-1">Juara 1 Kontes Robot Pertahanan</h5>
+<p class="text-white/60 text-sm">Inovasi robot pendeteksi ranjau otomatis pada kompetisi nasional 2023.</p>
+</div>
+</div>
+<div class="glass-card bg-white/5! border-white/10! p-6 rounded-2xl flex items-start gap-6">
+<div class="bg-secondary rounded-lg p-3">
+<span class="material-symbols-outlined text-white">rocket_launch</span>
+</div>
+<div>
+<h5 class="font-headline-md text-lg text-white mb-1">Pengembangan LAPAN-ORARI 2</h5>
+<p class="text-white/60 text-sm">Kolaborasi perancangan payload sistem navigasi satelit mikro.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- News Section -->
+<section class="py-24" id="news">
+<div class="max-w-container-max mx-auto px-margin-desktop">
+<h2 class="font-headline-lg text-headline-lg text-primary text-center mb-16">Berita &amp; Kegiatan</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
+<!-- News Card 1 -->
+<div class="glass-card rounded-2xl overflow-hidden flex flex-col">
+<div class="h-48 bg-primary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-5xl text-on-primary/20">newspaper</span>
+</div>
+<div class="p-8 space-y-4 flex-grow">
+<div class="text-secondary font-label-sm text-label-sm">24 OKTOBER 2024</div>
+<h4 class="font-headline-md text-lg leading-tight">Seminar Nasional Ketahanan Energi Terbarukan</h4>
+<p class="text-on-surface-variant text-sm line-clamp-2">Diskusi panel tentang implementasi PLTS di daerah perbatasan NKRI.</p>
+<a class="inline-flex items-center gap-1 text-primary font-bold text-sm hover:gap-2 transition-all" href="#">Baca Selengkapnya <span class="material-symbols-outlined text-sm">arrow_right_alt</span></a>
+</div>
+</div>
+<!-- News Card 2 -->
+<div class="glass-card rounded-2xl overflow-hidden flex flex-col">
+<div class="h-48 bg-secondary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-5xl text-on-primary/20">groups</span>
+</div>
+<div class="p-8 space-y-4 flex-grow">
+<div class="text-secondary font-label-sm text-label-sm">15 OKTOBER 2024</div>
+<h4 class="font-headline-md text-lg leading-tight">Kunjungan Industri ke PT PINDAD (Persero)</h4>
+<p class="text-on-surface-variant text-sm line-clamp-2">Eksplorasi sistem kontrol elektronik pada kendaraan tempur medium tank.</p>
+<a class="inline-flex items-center gap-1 text-primary font-bold text-sm hover:gap-2 transition-all" href="#">Baca Selengkapnya <span class="material-symbols-outlined text-sm">arrow_right_alt</span></a>
+</div>
+</div>
+<!-- News Card 3 -->
+<div class="glass-card rounded-2xl overflow-hidden flex flex-col">
+<div class="h-48 bg-tertiary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-5xl text-on-primary/20">workspace_premium</span>
+</div>
+<div class="p-8 space-y-4 flex-grow">
+<div class="text-secondary font-label-sm text-label-sm">02 OKTOBER 2024</div>
+<h4 class="font-headline-md text-lg leading-tight">Mahasiswa Teknik Elektro Raih Medali Emas PIMNAS</h4>
+<p class="text-on-surface-variant text-sm line-clamp-2">Inovasi charger nirkabel jarak jauh berbasis frekuensi radio.</p>
+<a class="inline-flex items-center gap-1 text-primary font-bold text-sm hover:gap-2 transition-all" href="#">Baca Selengkapnya <span class="material-symbols-outlined text-sm">arrow_right_alt</span></a>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-primary dark:bg-tertiary-container text-on-primary dark:text-on-tertiary-container font-body-md text-body-md border-t border-white/10 full-width">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-gutter px-margin-desktop py-12 max-w-container-max mx-auto">
+<div class="col-span-1 md:col-span-1">
+<span class="font-headline-sm text-headline-sm font-bold text-on-primary block mb-6">UNHAN Electrical Engineering</span>
+<p class="text-on-primary/70 mb-4">Kawasan IPSC, Sentul, Bogor, Jawa Barat, Indonesia.</p>
+<div class="flex gap-4">
+<a class="text-on-primary/70 hover:text-secondary-fixed transition-colors" href="#"><span class="material-symbols-outlined">public</span></a>
+<a class="text-on-primary/70 hover:text-secondary-fixed transition-colors" href="#"><span class="material-symbols-outlined">mail</span></a>
+<a class="text-on-primary/70 hover:text-secondary-fixed transition-colors" href="#"><span class="material-symbols-outlined">phone</span></a>
+</div>
+</div>
+<div class="space-y-4">
+<h6 class="font-bold text-white uppercase text-sm tracking-widest">Quick Links</h6>
+<nav class="flex flex-col gap-2">
+<a class="text-on-primary/70 dark:text-on-tertiary-container/70 hover:text-secondary-fixed transition-colors duration-200" href="#">Contact Us</a>
+<a class="text-on-primary/70 dark:text-on-tertiary-container/70 hover:text-secondary-fixed transition-colors duration-200" href="#">Privacy Policy</a>
+<a class="text-on-primary/70 dark:text-on-tertiary-container/70 hover:text-secondary-fixed transition-colors duration-200" href="#">Campus Map</a>
+<a class="text-on-primary/70 dark:text-on-tertiary-container/70 hover:text-secondary-fixed transition-colors duration-200" href="#">Directory</a>
+</nav>
+</div>
+<div class="space-y-4">
+<h6 class="font-bold text-white uppercase text-sm tracking-widest">Akademik</h6>
+<nav class="flex flex-col gap-2">
+<a class="text-on-primary/70 dark:text-on-tertiary-container/70 hover:text-secondary-fixed transition-colors duration-200" href="#">Kalender Akademik</a>
+<a class="text-on-primary/70 dark:text-on-tertiary-container/70 hover:text-secondary-fixed transition-colors duration-200" href="#">SIAKAD</a>
+<a class="text-on-primary/70 dark:text-on-tertiary-container/70 hover:text-secondary-fixed transition-colors duration-200" href="#">E-Learning</a>
+<a class="text-on-primary/70 dark:text-on-tertiary-container/70 hover:text-secondary-fixed transition-colors duration-200" href="#">Perpustakaan</a>
+</nav>
+</div>
+<div class="space-y-4">
+<h6 class="font-bold text-white uppercase text-sm tracking-widest">Newsletter</h6>
+<p class="text-on-primary/70 text-sm mb-4">Dapatkan update terkini seputar kegiatan Teknik Elektro UNHAN.</p>
+<div class="flex">
+<input class="bg-white/10 border-white/20 rounded-l-lg text-white px-4 py-2 w-full focus:ring-2 focus:ring-secondary focus:border-transparent" placeholder="Email Anda" type="email"/>
+<button class="bg-secondary text-white px-4 py-2 rounded-r-lg"><span class="material-symbols-outlined">send</span></button>
+</div>
+</div>
+</div>
+<div class="border-t border-white/5 py-8 px-margin-desktop text-center text-on-primary/50 text-sm">
+            Â© 2024 UNHAN Electrical Engineering Department. All Rights Reserved.
+        </div>
+</footer>
+<script>
+        // Smooth scroll implementation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Sticky Navbar effect on scroll
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 50) {
+                header.classList.add('shadow-xl');
+            } else {
+                header.classList.remove('shadow-xl');
+            }
+        });
+    </script>
+</body></html>

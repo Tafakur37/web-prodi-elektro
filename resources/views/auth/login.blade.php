@@ -1,191 +1,390 @@
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - SIMelek</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <meta name="description" content="Login SIMelek — Sistem Informasi Teknik Elektro UNHAN RI">
+    <title>Login – SIMelek | Teknik Elektro UNHAN RI</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+
     <style>
+        /* ── TOKENS (same as dashboard) ───────────────────────── */
+        :root {
+            --primary:            #000613;
+            --primary-container:  #001f3f;
+            --secondary:          #0059bb;
+            --secondary-container:#0070ea;
+            --background:         #f8f9fa;
+            --surface:            #ffffff;
+            --surface-low:        #f3f4f5;
+            --outline-variant:    #c4c6cf;
+            --on-surface:         #191c1d;
+            --on-surface-variant: #43474e;
+            --card-shadow: 0 1px 4px rgba(0,31,63,0.06), 0 2px 12px rgba(0,31,63,0.05);
+            --font-display: 'Montserrat', sans-serif;
+            --font-body:    'Inter', sans-serif;
+            --font-label:   'JetBrains Mono', monospace;
+            --ease-spring:  cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
         body {
             min-height: 100vh;
-            background:
-                linear-gradient(
-                    135deg,
-                    rgba(2, 6, 23, 0.94),
-                    rgba(3, 20, 90, 0.88)
-                ),
-                url('/images/bg-beranda.jpg');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            font-family: 'Inter', sans-serif;
+            font-family: var(--font-body);
+            background: var(--background);
+            background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg stroke='%230059bb' stroke-width='0.5' stroke-opacity='0.04'%3E%3Cpath d='M40 40c0-8.8 7.2-16 16-16s16 7.2 16 16-7.2 16-16 16-16-7.2-16-16zM0 0h80v80H0V0zm1 1v78h78V1H1zm39 39c0-5.5 4.5-10 10-10s10 4.5 10 10-4.5 10-10 10-10-4.5-10-10z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
             display: flex;
             align-items: center;
             justify-content: center;
+            position: relative;
+            overflow-x: hidden;
         }
 
-    .login-container {
-        width: 100%;
-        max-width: 430px;
-        padding: 20px;
-    }
+        /* Subtle ambient glow top */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -200px; left: 50%;
+            transform: translateX(-50%);
+            width: 800px; height: 600px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(0,89,187,0.06) 0%, transparent 65%);
+            pointer-events: none;
+            z-index: 0;
+        }
 
-    .login-card {
-        background: rgba(255, 255, 255, 0.07);
-        border: 1px solid rgba(255,255,255,0.10);
-        backdrop-filter: blur(18px);
-        border-radius: 28px;
-        padding: 42px 38px;
-        box-shadow:
-            0 10px 35px rgba(0,0,0,0.35),
-            0 0 20px rgba(0,102,255,0.08);
-    }
+        /* ── WRAP ─────────────────────────────────────────────── */
+        .auth-wrap {
+            position: relative; z-index: 1;
+            width: 100%; max-width: 460px; padding: 24px;
+            animation: page-in 0.6s var(--ease-spring) both;
+        }
 
-    .btn-primary {
-        border: none;
-        border-radius: 12px;
-        padding: 14px;
-        font-weight: 600;
-        font-size: 17px;
-        background: linear-gradient(
-            90deg,
-            #1565ff,
-            #298cff
-        );
-        box-shadow:
-            0 8px 20px rgba(21,101,255,0.28);
-        transition: all 0.3s ease;
-    }
+        @keyframes page-in {
+            from { opacity: 0; transform: translateY(28px) scale(0.97); }
+            to   { opacity: 1; transform: translateY(0) scale(1); }
+        }
 
-    .btn-primary:hover {
-        transform: translateY(-2px);
-        box-shadow:
-            0 12px 24px rgba(21,101,255,0.35);
-        background: linear-gradient(
-            90deg,
-            #0d5eff,
-            #4da2ff
-        );
-    }
+        /* ── BRAND ────────────────────────────────────────────── */
+        .auth-brand {
+            display: flex; align-items: center; gap: 12px;
+            justify-content: center; margin-bottom: 28px;
+        }
+        .auth-brand img {
+            width: 40px; height: 40px; border-radius: 50%;
+            border: 2px solid rgba(0,89,187,0.2);
+            box-shadow: 0 2px 8px rgba(0,31,63,0.1);
+            object-fit: cover;
+        }
+        .auth-brand .b-name {
+            font-family: var(--font-display);
+            font-size: 0.85rem; font-weight: 700;
+            color: var(--primary-container); line-height: 1.15;
+        }
+        .auth-brand .b-sub {
+            font-family: var(--font-label);
+            font-size: 0.58rem; color: var(--secondary);
+            letter-spacing: 0.1em; text-transform: uppercase;
+        }
 
-    .form-control {
-        background: rgba(255,255,255,0.08);
-        border: 1px solid rgba(255,255,255,0.12);
-        border-radius: 12px;
-        padding: 14px 16px;
-        color: white;
-        transition: all 0.3s ease;
-    }
+        /* ── CARD ─────────────────────────────────────────────── */
+        .auth-card {
+            background: var(--surface);
+            border: 1px solid rgba(0,31,63,0.08);
+            border-radius: 16px;
+            padding: 40px 36px;
+            box-shadow: var(--card-shadow);
+        }
 
-    .form-control::placeholder {
-        color: rgba(255,255,255,0.45);
-    }
+        /* stagger children */
+        .auth-card > * {
+            animation: child-in 0.5s var(--ease-spring) both;
+        }
+        .auth-card > *:nth-child(1) { animation-delay: 0.06s; }
+        .auth-card > *:nth-child(2) { animation-delay: 0.12s; }
+        .auth-card > *:nth-child(3) { animation-delay: 0.17s; }
+        .auth-card > *:nth-child(4) { animation-delay: 0.22s; }
+        .auth-card > *:nth-child(5) { animation-delay: 0.27s; }
+        .auth-card > *:nth-child(6) { animation-delay: 0.32s; }
+        .auth-card > *:nth-child(7) { animation-delay: 0.37s; }
 
-    .form-control:focus {
-        background: rgba(255,255,255,0.10);
-        border-color: #4f9dff;
-        box-shadow: 0 0 0 4px rgba(79,157,255,0.15);
-        color: white;
-    }
+        @keyframes child-in {
+            from { opacity: 0; transform: translateY(12px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
 
-    .simelek-title {
-        font-size: 52px;
-        font-weight: 800;
-        background: linear-gradient(
-            90deg,
-            #2d7fff,
-            #5ba8ff,
-            #b8d9ff
-        );
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        letter-spacing: 1px;
-        margin-bottom: 8px;
-    }
+        /* ── HEADER ───────────────────────────────────────────── */
+        .auth-eyebrow {
+            font-family: var(--font-label);
+            font-size: 0.65rem; letter-spacing: 0.18em;
+            text-transform: uppercase; color: var(--secondary);
+            display: flex; align-items: center; gap: 10px;
+            margin-bottom: 10px;
+        }
+        .auth-eyebrow::before {
+            content: ''; width: 18px; height: 1px;
+            background: var(--secondary); opacity: 0.4;
+        }
 
-    a {
-        transition: 0.3s ease;
-    }
+        .auth-title {
+            font-family: var(--font-display);
+            font-size: 1.65rem; font-weight: 800;
+            letter-spacing: -0.02em;
+            color: var(--primary-container);
+            margin-bottom: 6px;
+        }
 
-    a:hover {
-        opacity: 0.8;
-    }
+        .auth-subtitle {
+            font-family: var(--font-body);
+            font-size: 0.85rem; line-height: 1.65;
+            color: var(--on-surface-variant);
+            margin-bottom: 28px;
+        }
 
-    @media (max-width: 576px) {
+        /* ── FORM ─────────────────────────────────────────────── */
+        .form-group { margin-bottom: 18px; }
 
-    .login-card {
-        padding: 35px 28px;
-    }
+        .form-label-custom {
+            display: flex; justify-content: space-between; align-items: center;
+            font-family: var(--font-label); font-size: 0.65rem;
+            letter-spacing: 0.1em; text-transform: uppercase;
+            color: var(--on-surface-variant); margin-bottom: 7px;
+        }
 
-    .simelek-title {
-        font-size: 42px;
-    }
-}
+        .input-wrap { position: relative; }
 
+        .input-icon {
+            position: absolute; left: 13px; top: 50%;
+            transform: translateY(-50%);
+            color: var(--outline-variant); font-size: 1.05rem;
+            pointer-events: none; transition: color 0.2s;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 14px 12px 42px;
+            font-family: var(--font-body); font-size: 0.875rem;
+            color: var(--on-surface);
+            background: var(--surface-low);
+            border: 1.5px solid var(--outline-variant);
+            border-radius: 8px; outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+        }
+        .form-input::placeholder { color: #b0b4bb; }
+        .form-input:focus {
+            background: #fff;
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 3px rgba(0,89,187,0.1);
+        }
+        .input-wrap:focus-within .input-icon { color: var(--secondary); }
+        .form-input.is-invalid { border-color: #c0392b; box-shadow: 0 0 0 3px rgba(192,57,43,0.08); }
+
+        /* password toggle */
+        .pw-toggle {
+            position: absolute; right: 12px; top: 50%;
+            transform: translateY(-50%);
+            background: none; border: none; cursor: pointer;
+            color: var(--outline-variant); transition: color 0.2s;
+            padding: 0; line-height: 1;
+        }
+        .pw-toggle:hover { color: var(--secondary); }
+
+        /* with toggle: add right padding */
+        .has-toggle { padding-right: 42px; }
+
+        .invalid-msg {
+            font-family: var(--font-label); font-size: 0.65rem;
+            color: #c0392b; margin-top: 5px;
+            display: flex; align-items: center; gap: 4px;
+        }
+
+        .forgot-link {
+            font-family: var(--font-body); font-size: 0.78rem;
+            font-weight: 500; color: var(--secondary);
+            text-decoration: none; transition: opacity 0.2s;
+        }
+        .forgot-link:hover { opacity: 0.75; }
+
+        /* alerts */
+        .alert-err {
+            background: #fef2f2; border: 1px solid #fecaca;
+            border-left: 3px solid #ef4444;
+            border-radius: 8px; padding: 12px 14px; margin-bottom: 20px;
+        }
+        .alert-err p { font-family: var(--font-body); font-size: 0.82rem; color: #b91c1c; }
+
+        .alert-ok {
+            background: #f0fdf4; border: 1px solid #bbf7d0;
+            border-left: 3px solid #22c55e;
+            border-radius: 8px; padding: 12px 14px; margin-bottom: 20px;
+            display: flex; align-items: flex-start; gap: 10px;
+        }
+        .alert-ok .ao-icon { color: #16a34a; flex-shrink: 0; font-size: 1rem; margin-top: 1px; }
+        .alert-ok p { font-family: var(--font-body); font-size: 0.82rem; color: #15803d; }
+
+        /* ── SUBMIT ───────────────────────────────────────────── */
+        .btn-auth {
+            width: 100%; padding: 13px;
+            background: var(--primary-container); color: #fff;
+            font-family: var(--font-display); font-size: 0.875rem; font-weight: 700;
+            border: none; border-radius: 8px; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 16px rgba(0,31,63,0.18);
+            position: relative; overflow: hidden; margin-top: 6px;
+        }
+        .btn-auth::after {
+            content: ''; position: absolute; inset: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.07) 0%, transparent 55%);
+            pointer-events: none;
+        }
+        .btn-auth:hover { background: var(--primary); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,31,63,0.25); }
+        .btn-auth:active { transform: translateY(0); }
+        .btn-arrow { transition: transform 0.2s; margin-left: auto; }
+        .btn-auth:hover .btn-arrow { transform: translateX(4px); }
+
+        /* ── DIVIDER ──────────────────────────────────────────── */
+        .auth-divider {
+            display: flex; align-items: center; gap: 12px; margin: 22px 0;
+        }
+        .auth-divider::before, .auth-divider::after {
+            content: ''; flex: 1; height: 1px; background: var(--outline-variant); opacity: 0.5;
+        }
+        .auth-divider span {
+            font-family: var(--font-label); font-size: 0.6rem;
+            letter-spacing: 0.1em; text-transform: uppercase;
+            color: var(--on-surface-variant); opacity: 0.6;
+        }
+
+        /* ── FOOTER ───────────────────────────────────────────── */
+        .auth-footer { text-align: center; }
+        .auth-footer p { font-family: var(--font-body); font-size: 0.83rem; color: var(--on-surface-variant); }
+        .auth-link { font-weight: 700; color: var(--secondary); text-decoration: none; transition: opacity 0.2s; }
+        .auth-link:hover { opacity: 0.75; }
+
+        .back-link {
+            display: inline-flex; align-items: center; gap: 6px;
+            font-family: var(--font-body); font-size: 0.78rem;
+            color: var(--on-surface-variant); text-decoration: none;
+            margin-top: 22px; transition: color 0.2s; opacity: 0.7;
+        }
+        .back-link:hover { color: var(--secondary); opacity: 1; }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        @media (max-width: 520px) {
+            .auth-card { padding: 28px 20px; }
+            .auth-wrap { padding: 16px; }
+        }
     </style>
 </head>
-
 <body>
 
-    <div class="container login-container">
-        <div class="login-card">
-            <div class="text-center mb-2">
-                <h1 class="simelek-title">SIMelek
-                </h1>
-                <p class="text-light opacity-75">Masuk ke akun Anda
-                </p>
-            </div>
+    <div class="auth-wrap">
 
-            <form action="{{ route('login') }}" method="POST">
+        <div class="auth-brand">
+            <img src="/images/logo-elektro.png" alt="Logo Elektro">
+            <div>
+                <div class="b-name">ELECTRICAL ENGINEERING</div>
+                <div class="b-sub">Teknik Elektro · UNHAN RI</div>
+            </div>
+        </div>
+
+        <div class="auth-card">
+
+            <div class="auth-eyebrow">Portal Akademik</div>
+            <h1 class="auth-title">Masuk ke Akun</h1>
+            <p class="auth-subtitle">Gunakan NIM / username dan password yang terdaftar di sistem.</p>
+
+            @if (session('error'))
+                <div class="alert-err"><p>{{ session('error') }}</p></div>
+            @endif
+
+            <form action="{{ route('login') }}" method="POST" id="loginForm">
                 @csrf
 
-                <div class="mb-3">
-                    <label for="nim" class="form-label text-light">Username / NIM</label>
-                    <input type="text" name="nim" id="nim" class="form-control @error('nim') is-invalid @enderror"
-                        placeholder="Masukkan NIM atau Username" value="{{ old('nim') }}" required autofocus>
+                <div class="form-group">
+                    <label for="nim" class="form-label-custom">NIM / Username</label>
+                    <div class="input-wrap">
+                        <span class="material-symbols-outlined input-icon">badge</span>
+                        <input type="text" name="nim" id="nim"
+                            class="form-input @error('nim') is-invalid @enderror"
+                            placeholder="Masukkan NIM atau username"
+                            value="{{ old('nim') }}" required autofocus>
+                    </div>
                     @error('nim')
-                    <div class="invalid-feedback">{{ $message }}</div>
+                        <div class="invalid-msg">
+                            <span class="material-symbols-outlined" style="font-size:0.8rem;">error</span>
+                            {{ $message }}
+                        </div>
                     @enderror
                 </div>
 
-                <div class="mb-3">
-                    <label for="password" class="form-label text-light">Password</label>
-                    <input type="password" name="password" id="password"
-                        class="form-control @error('password') is-invalid @enderror" placeholder="Masukkan password"
-                        required>
+                <div class="form-group">
+                    <label for="password" class="form-label-custom">
+                        Password
+                        <a href="{{ route('password.request') }}" class="forgot-link">Lupa password?</a>
+                    </label>
+                    <div class="input-wrap">
+                        <span class="material-symbols-outlined input-icon">lock</span>
+                        <input type="password" name="password" id="password"
+                            class="form-input has-toggle @error('password') is-invalid @enderror"
+                            placeholder="Masukkan password" required>
+                        <button type="button" class="pw-toggle" id="pwToggle">
+                            <span class="material-symbols-outlined" id="pwIcon" style="font-size:1rem;">visibility</span>
+                        </button>
+                    </div>
                     @error('password')
-                    <div class="invalid-feedback">{{ $message }}</div>
+                        <div class="invalid-msg">
+                            <span class="material-symbols-outlined" style="font-size:0.8rem;">error</span>
+                            {{ $message }}
+                        </div>
                     @enderror
                 </div>
 
-                <div class="text-end mb-3">
-                    <a href="{{ route('password.request') }}" class="small text-decoration-none">Lupa password?</a>
-                </div>
-
-                <button type="submit" class="btn btn-primary w-100 mb-3">Masuk</button>
-
-                <div class="text-center">
-                    <a href="{{ url('/') }}"
-                        class="text-decoration-none small text-primary d-inline-flex align-items-center">
-                        <i class="bi bi-arrow-left me-2"></i> Kembali ke Beranda
-                    </a>
-                </div>
+                <button type="submit" class="btn-auth" id="submitBtn">
+                    <span class="material-symbols-outlined" style="font-size:1rem;">login</span>
+                    Masuk ke SIMelek
+                    <span class="material-symbols-outlined btn-arrow" style="font-size:0.95rem;">arrow_forward</span>
+                </button>
             </form>
 
-            <div class="text-center mt-4 pt-3 border-top">
-                <p class="small text-light">Belum punya akun?
-                    <a href="{{ route('register') }}" class="text-decoration-none fw-bold text-primary">Daftar
-                        Sekarang</a>
-                </p>
+            <div class="auth-divider"><span>atau</span></div>
+
+            <div class="auth-footer">
+                <p>Belum punya akun? <a href="{{ route('register') }}" class="auth-link">Daftar Sekarang</a></p>
             </div>
+
+            <div style="text-align:center;">
+                <a href="{{ url('/') }}" class="back-link">
+                    <span class="material-symbols-outlined" style="font-size:0.9rem;">arrow_back</span>
+                    Kembali ke Beranda
+                </a>
+            </div>
+
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.getElementById('pwToggle').addEventListener('click', () => {
+            const inp  = document.getElementById('password');
+            const icon = document.getElementById('pwIcon');
+            const show = inp.type === 'password';
+            inp.type         = show ? 'text' : 'password';
+            icon.textContent = show ? 'visibility_off' : 'visibility';
+        });
+
+        document.getElementById('loginForm').addEventListener('submit', function () {
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            btn.innerHTML = `<span class="material-symbols-outlined" style="font-size:1rem;animation:spin 0.8s linear infinite;">progress_activity</span> Memproses...`;
+        });
+    </script>
+
 </body>
-
 </html>
-
-

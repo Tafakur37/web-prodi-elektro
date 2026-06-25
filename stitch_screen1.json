@@ -1,0 +1,28 @@
+﻿{
+    "id":  7,
+    "jsonrpc":  "2.0",
+    "result":  {
+                   "content":  [
+                                   {
+                                       "text":  "{\"name\":\"projects/4260244025325716183/screens/259227cc70df4153a362bcdbd63aea8f\",\"title\":\"Beranda Teknik Elektro UNHAN\",\"screenshot\":{\"name\":\"projects/4260244025325716183/files/d5ad2a895a7548b593d6a80d38c5db43\",\"downloadUrl\":\"https://lh3.googleusercontent.com/aida/AP1WRLsOxJtFKmqa7Jo8_Fru7nV4Jw1Sq0GAaIKj0r6fulp49Bxf757TM_SENHnfTpAzZ9LUJ-Q0-6ubUKRmm7fklRP_aM0dkmZ5q5B09wotfH2EP-JE5iRvQg9jnRgsbBuw1iQfipq2LPrDZtU7p8InZF-C0aHgW9UMRwSxNwgKHUvWUus62iFp_1RdS7EgO5MUNKTXUUFp9jdhI0igHVyJgAu_IhJox3Sob5XfzsB7xhFqBZ1ciDxvhEGPNeA\"},\"htmlCode\":{\"name\":\"projects/4260244025325716183/files/35cabb7087fa4571ba239d484a8a89cc\",\"downloadUrl\":\"https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ7Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpaCiVodG1sXzA5NzhhM2IwNzY3MDRlMTk5OGMyZDAwMDViMTg5MjM5EgsSBxCzgLHU3gYYAZIBIwoKcHJvamVjdF9pZBIVQhM0MjYwMjQ0MDI1MzI1NzE2MTgz\u0026filename=\u0026opi=89354086\",\"mimeType\":\"text/html\"},\"width\":\"2560\",\"height\":\"9818\",\"deviceType\":\"DESKTOP\"}",
+                                       "type":  "text"
+                                   }
+                               ],
+                   "structuredContent":  {
+                                             "deviceType":  "DESKTOP",
+                                             "height":  "9818",
+                                             "htmlCode":  {
+                                                              "downloadUrl":  "https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ7Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpaCiVodG1sXzA5NzhhM2IwNzY3MDRlMTk5OGMyZDAwMDViMTg5MjM5EgsSBxCzgLHU3gYYAZIBIwoKcHJvamVjdF9pZBIVQhM0MjYwMjQ0MDI1MzI1NzE2MTgz\u0026filename=\u0026opi=89354086",
+                                                              "mimeType":  "text/html",
+                                                              "name":  "projects/4260244025325716183/files/35cabb7087fa4571ba239d484a8a89cc"
+                                                          },
+                                             "name":  "projects/4260244025325716183/screens/259227cc70df4153a362bcdbd63aea8f",
+                                             "screenshot":  {
+                                                                "downloadUrl":  "https://lh3.googleusercontent.com/aida/AP1WRLsOxJtFKmqa7Jo8_Fru7nV4Jw1Sq0GAaIKj0r6fulp49Bxf757TM_SENHnfTpAzZ9LUJ-Q0-6ubUKRmm7fklRP_aM0dkmZ5q5B09wotfH2EP-JE5iRvQg9jnRgsbBuw1iQfipq2LPrDZtU7p8InZF-C0aHgW9UMRwSxNwgKHUvWUus62iFp_1RdS7EgO5MUNKTXUUFp9jdhI0igHVyJgAu_IhJox3Sob5XfzsB7xhFqBZ1ciDxvhEGPNeA",
+                                                                "name":  "projects/4260244025325716183/files/d5ad2a895a7548b593d6a80d38c5db43"
+                                                            },
+                                             "title":  "Beranda Teknik Elektro UNHAN",
+                                             "width":  "2560"
+                                         }
+               }
+}
