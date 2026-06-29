@@ -10,7 +10,7 @@
     <!-- Sentinels of Silicon Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
     <style>
         /* Sentinels of Silicon — Design Tokens */
@@ -60,7 +60,7 @@
         body {
             background-color: var(--body-bg);
             background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg stroke='%230059bb' stroke-width='0.5' stroke-opacity='0.03'%3E%3Cpath d='M40 40c0-8.8 7.2-16 16-16s16 7.2 16 16-7.2 16-16 16-16-7.2-16-16zM0 0h80v80H0V0zm1 1v78h78V1H1zm39 39c0-5.5 4.5-10 10-10s10 4.5 10 10-4.5 10-10 10-10-4.5-10-10z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-            font-family: 'Inter', 'Montserrat', 'Segoe UI', system-ui, sans-serif;
+            font-family: 'Plus Jakarta Sans', 'Segoe UI', system-ui, sans-serif;
             color: var(--stitch-on-surface);
             overflow-x: hidden;
             min-height: 100vh;
@@ -436,38 +436,49 @@
         .user-avatar {
             width: 40px;
             height: 40px;
-            border-radius: 12px;
-            background: linear-gradient(135deg, #6366f1, #818cf8);
+            border-radius: 50%;
+            background: var(--stitch-secondary);
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 1.1rem;
+            font-size: 1rem;
+            font-weight: 700;
+            overflow: hidden;
         }
 
-        /* ======================== CARDS ======================== */
+        /* ======================== CARDS — Glassmorphism ======================== */
         .card-custom {
             border: none;
             border-radius: 14px;
-            box-shadow: var(--card-shadow);
-            transition: box-shadow 0.2s ease;
+            background: rgba(255,255,255,0.72);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            box-shadow: 0 4px 24px rgba(0,31,63,0.07);
+            transition: box-shadow 0.2s ease, transform 0.2s ease, background 0.2s ease;
         }
 
         .card-custom:hover {
-            box-shadow: var(--card-shadow-hover);
+            box-shadow: 0 12px 36px rgba(0,31,63,0.11);
+            transform: translateY(-2px);
+            background: rgba(255,255,255,0.88);
         }
 
         /* Admin-specific card style */
         .admin-card {
-            background: #fff;
             border: none;
             border-radius: 14px;
-            box-shadow: var(--card-shadow);
-            transition: box-shadow 0.2s ease;
+            background: rgba(255,255,255,0.72);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            box-shadow: 0 4px 24px rgba(0,31,63,0.07);
+            transition: box-shadow 0.2s ease, transform 0.2s ease, background 0.2s ease;
         }
 
         .admin-card:hover {
-            box-shadow: var(--card-shadow-hover);
+            box-shadow: 0 12px 36px rgba(0,31,63,0.11);
+            transform: translateY(-2px);
+            background: rgba(255,255,255,0.88);
         }
 
         .accent-color {

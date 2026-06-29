@@ -2,23 +2,65 @@
 
 @section('title', 'Riwayat Pelanggaran')
 
+@push('styles')
+<style>
+.violation-summary-card {
+    border-radius: var(--radius-xl);
+    padding: 20px 22px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    animation: fadeInUp 0.4s cubic-bezier(0.22,1,0.36,1) both;
+}
+.violation-summary-card.has-violation {
+    background: var(--danger-light);
+    border: 1px solid rgba(186,26,26,0.2);
+}
+.violation-summary-card.no-violation {
+    background: var(--success-light);
+    border: 1px solid rgba(0,165,80,0.2);
+}
+.vscard-icon {
+    width: 52px; height: 52px; flex-shrink: 0;
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem;
+}
+.vscard-icon.danger { background: rgba(186,26,26,0.12); color: var(--danger); }
+.vscard-icon.success { background: rgba(0,165,80,0.12); color: var(--success); }
+.vscard-body { flex: 1; }
+.vscard-label { font-family: var(--font-label); font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 2px; }
+.vscard-label.danger { color: var(--danger); opacity: 0.7; }
+.vscard-label.success { color: var(--success); opacity: 0.7; }
+.vscard-value { font-family: var(--font-display); font-size: 1.6rem; font-weight: 800; line-height: 1; margin-bottom: 3px; }
+.vscard-value.danger { color: var(--danger); }
+.vscard-value.success { color: var(--success); }
+.vscard-sub { font-size: 0.78rem; opacity: 0.72; }
+.vscard-sub.danger { color: var(--danger); }
+.vscard-sub.success { color: var(--success); }
+</style>
+@endpush
+
 @section('content')
 
 {{-- Total Points Alert --}}
 @if($totalPoints > 0)
-<div class="mhs-alert danger" style="margin-bottom:20px;">
-    <i class="bi bi-exclamation-triangle-fill"></i>
-    <div>
-        <div style="font-size:0.84rem;font-weight:700;margin-bottom:2px;">Total Poin Pelanggaran Aktif</div>
-        <div style="font-size:1.4rem;font-weight:800;">{{ $totalPoints }} Poin</div>
-        <div style="font-size:0.75rem;opacity:0.75;margin-top:2px;">Hindari pelanggaran lebih lanjut untuk menjaga IPK!</div>
+<div class="violation-summary-card has-violation">
+    <div class="vscard-icon danger"><i class="bi bi-exclamation-octagon-fill"></i></div>
+    <div class="vscard-body">
+        <div class="vscard-label danger">Total Poin Pelanggaran Aktif</div>
+        <div class="vscard-value danger">{{ $totalPoints }} <small style="font-size:0.9rem;font-weight:600;">Poin</small></div>
+        <div class="vscard-sub danger">Hindari pelanggaran lebih lanjut untuk menjaga IPK!</div>
     </div>
 </div>
 @else
-<div class="mhs-alert success" style="margin-bottom:20px;">
-    <i class="bi bi-check-circle-fill"></i>
-    <div>
-        <strong>Bagus!</strong> Belum ada poin pelanggaran aktif. Terus jaga disiplin!
+<div class="violation-summary-card no-violation">
+    <div class="vscard-icon success"><i class="bi bi-shield-check-fill"></i></div>
+    <div class="vscard-body">
+        <div class="vscard-label success">Status Pelanggaran</div>
+        <div class="vscard-value success">0 <small style="font-size:0.9rem;font-weight:600;">Poin</small></div>
+        <div class="vscard-sub success">Bagus! Belum ada poin pelanggaran aktif. Terus jaga disiplin!</div>
     </div>
 </div>
 @endif

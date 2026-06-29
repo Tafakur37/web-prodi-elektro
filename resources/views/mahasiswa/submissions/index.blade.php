@@ -20,7 +20,7 @@
         <table class="mhs-table">
             <thead>
                 <tr>
-                    <th style="padding-left:20px;">Pengajuan</th>
+                    <th style="padding-left:18px;">Pengajuan</th>
                     <th>Tipe</th>
                     <th>Status</th>
                     <th style="text-align:center;">Aksi</th>
@@ -28,10 +28,10 @@
             </thead>
             <tbody>
                 @forelse($submissions as $submission)
-                <tr>
-                    <td style="padding-left:20px;">
+                <tr style="animation:fadeInUp 0.3s ease {{ $loop->index * 0.03 }}s both;">
+                    <td style="padding-left:18px;">
                         <div style="font-weight:700;color:var(--text-1);margin-bottom:3px;">{{ $submission->title }}</div>
-                        <div style="font-size:0.72rem;color:var(--text-3);"><i class="bi bi-calendar me-1"></i>{{ $submission->created_at->format('d M Y') }}</div>
+                        <div style="font-size:0.71rem;color:var(--text-3);"><i class="bi bi-calendar me-1"></i>{{ $submission->created_at->format('d M Y') }}</div>
                     </td>
                     <td>
                         <span class="mhs-badge muted">{{ $submission->type }}</span>
@@ -48,20 +48,20 @@
                         @endif
                     </td>
                     <td style="text-align:center;">
-                        <div style="display:flex;gap:6px;justify-content:center;">
+                        <div style="display:flex;gap:5px;justify-content:center;">
                             <a href="{{ route('mahasiswa.submissions.show', $submission->id) }}"
                                class="mhs-btn mhs-btn-ghost mhs-btn-sm" title="Detail">
                                 <i class="bi bi-eye"></i>
                             </a>
                             @if(in_array($submission->status, ['pending', 'revision']))
                             <a href="{{ route('mahasiswa.submissions.edit', $submission->id) }}"
-                               class="mhs-btn mhs-btn-ghost mhs-btn-sm" title="Edit" style="border-color:rgba(0,102,255,0.3);color:var(--primary);">
+                               class="mhs-btn mhs-btn-ghost mhs-btn-sm" title="Edit" style="border-color:rgba(0,89,187,0.25);color:var(--secondary);">
                                 <i class="bi bi-pencil"></i>
                             </a>
                             @endif
                             @if($submission->status !== 'approved')
                             <form action="{{ route('mahasiswa.submissions.destroy', $submission->id) }}" method="POST" class="d-inline"
-                                  onsubmit="return confirm('Apakah Anda yakin ingin menghapus pengajuan ini?');">
+                                  onsubmit="return confirm('Hapus pengajuan ini?');">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="mhs-btn mhs-btn-danger mhs-btn-sm" title="Hapus">
@@ -75,7 +75,7 @@
                 @empty
                 <tr>
                     <td colspan="4">
-                        <div class="mhs-empty" style="padding:40px;">
+                        <div class="mhs-empty" style="padding:48px;">
                             <i class="bi bi-folder-x"></i>
                             <p>Belum ada pengajuan berkas.</p>
                         </div>

@@ -8,6 +8,7 @@ use App\Models\Material;
 use App\Services\MaterialService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * =============================================================================
@@ -131,7 +132,51 @@ class MaterialController extends Controller
     {
         PermissionHelper::canOrAbort('materials', 'view_all');
 
+        if (!$this->materialService->canAccess($material, auth()->user())) {
+            abort(403, 'Anda tidak memiliki akses ke bahan ajar ini.');
+        }
+
         return view('mahasiswa.materials.show', compact('material'));
+    }
+
+    /**
+     * Preview materi inline untuk file yang didukung browser.
+     */
+    public function preview(Material $material)
+    {
+        PermissionHelper::canOrAbort('materials', 'view_all');
+
+        if (!$this->materialService->canAccess($material, auth()->user())) {
+            abort(403, 'Anda tidak memiliki akses ke bahan ajar ini.');
+        }
+
+        if (!$material->file_path || !Storage::disk('public')->exists($material->file_path)) {
+            abort(404, 'File bahan ajar tidak ditemukan.');
+        }
+
+        $ext = strtolower($material->file_type ?: pathinfo($material->file_path, PATHINFO_EXTENSION));
+        $previewMimes = [
+            'pdf' => 'application/pdf',
+            'jpg' => 'image/jpeg',
+            'jpeg' => 'image/jpeg',
+            'png' => 'image/png',
+            'gif' => 'image/gif',
+            'webp' => 'image/webp',
+        ];
+
+        if (!array_key_exists($ext, $previewMimes)) {
+            abort(415, 'Format file ini tidak dapat dipratinjau langsung di browser.');
+        }
+
+        $filePath = Storage::disk('public')->path($material->file_path);
+        $mime = $previewMimes[$ext];
+        $fileName = $material->file_name ?: basename($filePath);
+
+        return response()->file($filePath, [
+            'Content-Type' => $mime,
+            'Content-Disposition' => 'inline; filename="' . addslashes($fileName) . '"',
+            'X-Content-Type-Options' => 'nosniff',
+        ]);
     }
 
     /**
@@ -141,7 +186,13 @@ class MaterialController extends Controller
     {
         PermissionHelper::canOrAbort('materials', 'download');
 
-        return $this->materialService->download($material);
+        $response = $this->materialService->download($material, auth()->user());
+
+        if (!$response) {
+            abort(404, 'File bahan ajar tidak ditemukan atau tidak dapat diakses.');
+        }
+
+        return $response;
     }
 
     /**

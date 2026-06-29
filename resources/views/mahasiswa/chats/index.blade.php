@@ -6,13 +6,16 @@
 <style>
 .chat-layout {
     display: grid;
-    grid-template-columns: 300px 1fr;
+    grid-template-columns: 290px 1fr;
     gap: 0;
     height: calc(100vh - 130px);
-    background: var(--card-bg);
-    border: 1px solid var(--card-border);
-    border-radius: var(--radius-xl);
+    background: var(--card-glass-bg);
+    backdrop-filter: blur(30px) saturate(160%);
+    -webkit-backdrop-filter: blur(30px) saturate(160%);
+    border: 1px solid var(--card-glass-border);
+    border-radius: var(--radius-lg);
     overflow: hidden;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.08);
 }
 
 /* Contact List */
@@ -21,62 +24,60 @@
     flex-direction: column;
     border-right: 1px solid var(--border);
     overflow: hidden;
+    background: var(--surface-container-low);
 }
 
 .chat-sidebar-header {
-    padding: 16px 16px 12px;
+    padding: 14px 14px 11px;
     border-bottom: 1px solid var(--border);
-    background: rgba(255,255,255,0.02);
 }
 
 .chat-sidebar-title {
     font-family: var(--font-display);
-    font-size: 0.9rem;
+    font-size: 0.88rem;
     font-weight: 700;
     color: var(--text-1);
-    margin-bottom: 10px;
+    margin-bottom: 9px;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 7px;
 }
 
-.chat-search-wrap {
-    position: relative;
-}
+.chat-search-wrap { position: relative; }
 
 .chat-search-input {
     width: 100%;
-    padding: 8px 12px 8px 34px;
-    background: rgba(255,255,255,0.05);
+    padding: 7px 11px 7px 32px;
+    background: var(--surface-container);
     border: 1px solid var(--border);
-    border-radius: 20px;
-    font-size: 0.82rem;
-    color: var(--text-1);
+    border-radius: 18px;
+    font-size: 0.81rem;
+    color: var(--on-surface);
     font-family: var(--font);
     outline: none;
     transition: border-color 0.2s;
 }
 
 .chat-search-input::placeholder { color: var(--text-3); }
-.chat-search-input:focus { border-color: var(--primary); }
+.chat-search-input:focus { border-color: var(--secondary); background: var(--surface-container-lowest); }
 
 .chat-search-icon {
     position: absolute;
-    left: 11px; top: 50%;
+    left: 10px; top: 50%;
     transform: translateY(-50%);
     color: var(--text-3);
-    font-size: 0.8rem;
+    font-size: 0.78rem;
     pointer-events: none;
 }
 
 .search-dropdown {
     position: absolute;
     left: 0; right: 0;
-    top: calc(100% + 6px);
-    background: #0d1a2e;
+    top: calc(100% + 5px);
+    background: var(--surface-container-lowest);
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
     z-index: 1050;
     max-height: 220px;
     overflow-y: auto;
@@ -88,24 +89,24 @@
 .search-result-item {
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 10px 14px;
+    gap: 9px;
+    padding: 9px 12px;
     cursor: pointer;
     text-decoration: none;
-    color: var(--text-1);
-    transition: background 0.15s;
+    color: var(--on-surface);
+    transition: background 0.14s;
     border-bottom: 1px solid var(--border);
 }
 
 .search-result-item:last-child { border-bottom: none; }
-.search-result-item:hover { background: rgba(0,102,255,0.08); }
+.search-result-item:hover { background: var(--info-light); }
 
 .search-result-avatar {
-    width: 30px; height: 30px;
-    border-radius: 9px;
-    background: var(--primary-light);
+    width: 29px; height: 29px;
+    border-radius: 8px;
+    background: var(--info-light);
     display: flex; align-items: center; justify-content: center;
-    font-size: 0.8rem; color: var(--primary);
+    font-size: 0.78rem; color: var(--secondary);
     font-weight: 700;
     flex-shrink: 0; overflow: hidden;
 }
@@ -118,36 +119,35 @@
 .chat-contact-item {
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 12px 16px;
+    gap: 11px;
+    padding: 11px 14px;
     cursor: pointer;
     text-decoration: none;
-    color: var(--text-1);
-    transition: background 0.15s;
-    border-bottom: 1px solid rgba(255,255,255,0.04);
+    color: var(--on-surface);
+    transition: background 0.14s;
+    border-bottom: 1px solid var(--surface-container-high);
 }
 
-.chat-contact-item:hover { background: rgba(255,255,255,0.04); }
+.chat-contact-item:hover { background: var(--info-light); }
 
 .chat-contact-avatar {
-    width: 42px; height: 42px;
-    border-radius: 14px;
-    background: linear-gradient(135deg, var(--primary), var(--cyan));
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--secondary), #0070ea);
     display: flex; align-items: center; justify-content: center;
-    font-size: 1rem; color: #fff; font-weight: 700;
+    font-size: 0.95rem; color: #fff; font-weight: 700;
     flex-shrink: 0; overflow: hidden;
-    position: relative;
 }
 
 .chat-contact-avatar img { width: 100%; height: 100%; object-fit: cover; }
 
 .chat-contact-info { flex: 1; min-width: 0; }
-.chat-contact-name  { font-size: 0.84rem; font-weight: 700; margin-bottom: 2px; color: var(--text-1); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.chat-contact-last  { font-size: 0.72rem; color: var(--text-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.chat-contact-name  { font-size: 0.83rem; font-weight: 700; margin-bottom: 2px; color: var(--on-surface); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.chat-contact-last  { font-size: 0.71rem; color: var(--text-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
 .chat-contact-meta { text-align: right; flex-shrink: 0; }
-.chat-contact-time  { font-size: 0.65rem; color: var(--text-3); margin-bottom: 4px; }
-.chat-unread-badge  { background: var(--danger); color: #fff; font-size: 0.6rem; font-weight: 700; padding: 2px 6px; border-radius: 10px; }
+.chat-contact-time  { font-size: 0.63rem; color: var(--text-3); margin-bottom: 3px; }
+.chat-unread-badge  { background: var(--danger); color: #fff; font-size: 0.58rem; font-weight: 700; padding: 2px 6px; border-radius: 10px; }
 
 /* Chat empty (right) */
 .chat-empty-right {
@@ -156,12 +156,12 @@
     align-items: center;
     justify-content: center;
     flex: 1;
-    background: rgba(0,0,0,0.1);
+    background: var(--surface-container-lowest);
     color: var(--text-3);
 }
 
-.chat-empty-right i { font-size: 3.5rem; margin-bottom: 14px; }
-.chat-empty-right p { font-size: 0.88rem; margin: 0; }
+.chat-empty-right i { font-size: 3.2rem; margin-bottom: 12px; opacity: 0.35; }
+.chat-empty-right p { font-size: 0.87rem; margin: 0; }
 </style>
 @endpush
 

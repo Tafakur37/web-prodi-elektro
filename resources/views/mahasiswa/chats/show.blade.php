@@ -131,8 +131,8 @@
 
 .chat-contact-avatar {
     width: 42px; height: 42px;
-    border-radius: 14px;
-    background: linear-gradient(135deg, var(--primary), var(--cyan));
+    border-radius: 50%;
+    background: var(--secondary);
     display: flex; align-items: center; justify-content: center;
     font-size: 1rem; color: #fff; font-weight: 700;
     flex-shrink: 0; overflow: hidden;

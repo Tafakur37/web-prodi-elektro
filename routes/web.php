@@ -273,6 +273,7 @@ Route::middleware(['auth'])->group(function () {
         // Material (Shared Controller)
         Route::get('/materials',                     [SharedMaterialController::class, 'index'])->name('materials.index');
         Route::get('/materials/{material}/show',     [SharedMaterialController::class, 'show'])->name('materials.show');
+        Route::get('/materials/{material}/preview',  [SharedMaterialController::class, 'preview'])->name('materials.preview');
         Route::get('/materials/{material}/download', [SharedMaterialController::class, 'download'])->name('materials.download');
 
         // Surat (Submissions)
